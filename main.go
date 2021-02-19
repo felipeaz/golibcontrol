@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/FelipeAz/golibcontrol/database"
+	"github.com/FelipeAz/golibcontrol/webservice"
 )
 
 func main() {
-	db := database.Connect()
-	defer database.CloseConnection(db)
+	webservice.Start()
 }
