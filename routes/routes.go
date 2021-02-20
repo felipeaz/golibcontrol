@@ -17,5 +17,5 @@ func getRoutes() {
 // Run Starts the server
 func Run() {
 	getRoutes()
-	router.Run()
+	router.Run(":8080")
 }

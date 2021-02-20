@@ -1,13 +1,16 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/FelipeAz/golibcontrol/controllers"
+	"github.com/gin-gonic/gin"
+)
 
 func addCategoryRoute(r *gin.RouterGroup) {
 	category := r.Group("category")
 
-	category.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Category Route!",
-		})
-	})
+	category.GET("/", controllers.GetCategories)
+	category.GET("/:id", controllers.GetCategory)
+	category.POST("/", controllers.CreateCategory)
+	category.PUT("/:id", controllers.UpdateCategory)
+	category.DELETE("/:id", controllers.DeleteCategory)
 }

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/FelipeAz/golibcontrol/database/schema/table"
+	"github.com/FelipeAz/golibcontrol/database/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -32,16 +32,18 @@ func createDatabase() (env *Env) {
 }
 
 func (env *Env) createTables() {
-	env.db.Migrator().AutoMigrate(&table.Student{})
-	env.db.Migrator().AutoMigrate(&table.Book{})
-	env.db.Migrator().AutoMigrate(&table.Category{})
-	env.db.Migrator().AutoMigrate(&table.Lending{})
+	env.db.Migrator().AutoMigrate(&models.Student{})
+	env.db.Migrator().AutoMigrate(&models.Book{})
+	env.db.Migrator().AutoMigrate(&models.Category{})
+	env.db.Migrator().AutoMigrate(&models.Lending{})
 }
 
 // Create create database and tables if notmysql exists
 func Create() *gorm.DB {
 	env := createDatabase()
 	env.createTables()
+
+	models.DB = env.db
 
 	return env.db
 }

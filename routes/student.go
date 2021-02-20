@@ -1,12 +1,16 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 func addStudentRoutes(r *gin.RouterGroup) {
 	student := r.Group("student")
 
 	student.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"message": "Student Route!",
 		})
 	})
