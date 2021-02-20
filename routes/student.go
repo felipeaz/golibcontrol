@@ -1,17 +1,16 @@
 package routes
 
 import (
-	"net/http"
-
+	"github.com/FelipeAz/golibcontrol/controllers"
 	"github.com/gin-gonic/gin"
 )
 
 func addStudentRoutes(r *gin.RouterGroup) {
 	student := r.Group("student")
 
-	student.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Student Route!",
-		})
-	})
+	student.GET("/", controllers.GetStudents)
+	student.GET("/:id", controllers.GetStudent)
+	student.POST("/", controllers.CreateStudent)
+	student.PUT("/:id", controllers.UpdateStudent)
+	student.DELETE("/:id", controllers.DeleteStudent)
 }
