@@ -12,6 +12,7 @@ func GetBooks(c *gin.Context) {
 	var books []models.Book
 
 	models.DB.Find(&books)
+
 	c.JSON(http.StatusOK, gin.H{"data": books})
 }
 
@@ -34,7 +35,12 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	book := models.Book{Title: input.Title, Author: input.Author, CategoryID: input.CategoryID}
+	book := models.Book{
+		Title:          input.Title,
+		Author:         input.Author,
+		RegisterNumber: input.RegisterNumber,
+		CategoryID:     input.CategoryID,
+	}
 	models.DB.Create(&book)
 
 	c.JSON(http.StatusOK, gin.H{"data": book})

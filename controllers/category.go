@@ -12,6 +12,7 @@ func GetCategories(c *gin.Context) {
 	var categories []models.Category
 
 	models.DB.Find(&categories)
+
 	c.JSON(http.StatusOK, gin.H{"data": categories})
 }
 
@@ -30,8 +31,6 @@ func GetCategory(c *gin.Context) {
 // CreateCategory insert category on DB.
 func CreateCategory(c *gin.Context) {
 	var input models.Category
-
-	// Validate bind fields
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

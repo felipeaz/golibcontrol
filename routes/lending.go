@@ -12,5 +12,5 @@ func addLendingRoutes(r *gin.RouterGroup) {
 	lending.GET("/:id", controllers.GetLending)
 	lending.POST("/", controllers.CreateLending)
 	lending.PUT("/:id", controllers.UpdateLending)
-	lending.DELETE("/:id", controllers.DeleteStudent)
+	lending.DELETE("/:id", controllers.DeleteLending)
 }
