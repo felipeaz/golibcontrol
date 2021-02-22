@@ -1,4 +1,5 @@
 # golibcontrol
+golibcontrol is a Library Control API where you can control which books are available or check which student has lend the book.
 
 # Installation
 This project requires MySQL (8+ recommended), curl, gorm, gorm mysql driver and gin to work propperly.
