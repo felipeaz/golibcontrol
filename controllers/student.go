@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/FelipeAz/golibcontrol/database/models"
 	"github.com/gin-gonic/gin"
@@ -35,12 +36,20 @@ func CreateStudent(c *gin.Context) {
 		return
 	}
 
+	birthStr := input.Birthday
+	dateFormated, err := time.Parse("02/01/2006", birthStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format"})
+		return
+	}
+
 	student := models.Student{
 		RegisterNumber: input.RegisterNumber,
 		Name:           input.Name,
 		Email:          input.Email,
 		Phone:          input.Phone,
-		// Birthday:       input.Birthday,
+		Birthday:       dateFormated.Format("02/01/2006"),
+		Grade:          input.Grade,
 	}
 	models.DB.Create(&student)
 

@@ -30,14 +30,15 @@ var DB *gorm.DB
 
 // Student contains all Student's table properties.
 type Student struct {
-	ID             uint   `json:"id" gorm:"primaryKey;autoIncrement;not null"`
-	RegisterNumber string `json:"registerNumber" binding:"required"`
-	Name           string `json:"name" binding:"required"`
-	Email          string `json:"email" binding:"required"`
-	Phone          string `json:"phone" binding:"required"`
-	// Birthday       *time.Time `json:"birthday" binding:"required" time_format:"02/01/2006" time_utc:"1"`
-	CreatedAt time.Time `time_format:"2006-01-02 15:04:05"`
-	UpdatedAt time.Time `time_format:"2006-01-02 15:04:05"`
+	ID             uint      `json:"id" gorm:"primaryKey;autoIncrement;not null"`
+	RegisterNumber string    `json:"registerNumber" binding:"required"`
+	Name           string    `json:"name" binding:"required"`
+	Email          string    `json:"email" binding:"required"`
+	Phone          string    `json:"phone" binding:"required"`
+	Grade          string    `json:"grade" binding:"required"`
+	Birthday       string    `json:"birthday" binding:"required"`
+	CreatedAt      time.Time `time_format:"2006-01-02 15:04:05"`
+	UpdatedAt      time.Time `time_format:"2006-01-02 15:04:05"`
 }
 
 // Book contains all Book's table properties.
