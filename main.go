@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/FelipeAz/golibcontrol/webservice"
+	"github.com/FelipeAz/golibcontrol/api/server"
 )
 
 func main() {
-	webservice.Start()
+	server.Start()
 }
