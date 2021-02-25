@@ -68,7 +68,22 @@ func UpdateBook(c *gin.Context) {
 		return
 	}
 
-	models.DB.Model(&book).Updates(&input)
+	var category models.Category
+	if err := models.DB.Where("id = ?", input.CategoryID).First(&category).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Category Not Found!"})
+		return
+	}
+
+	if err := models.DB.Model(&book).Updates(map[string]interface{}{
+		"Title":          input.Title,
+		"Author":         input.Author,
+		"RegisterNumber": input.RegisterNumber,
+		"Available":      input.Available,
+		"CategoryID":     input.CategoryID,
+	}).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": book})
 }
