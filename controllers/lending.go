@@ -8,6 +8,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func validateBook(c *gin.Context, input models.Lending) (bool, string) {
+	var book models.Book
+	if err := models.DB.Where("id = ?", input.BookID).First(&book).Error; err != nil {
+		return false, "Book Not Found"
+	}
+
+	return true, ""
+}
+
+func validateStudent(c *gin.Context, input models.Lending) (bool, string) {
+	var student models.Student
+	if err := models.DB.Where("id = ?", input.StudentID).First(&student).Error; err != nil {
+		return false, "Student Not Found"
+	}
+
+	return true, ""
+}
+
 // GetLendings return all lendings.
 func GetLendings(c *gin.Context) {
 	var lendings []models.Lending
@@ -38,6 +56,16 @@ func CreateLending(c *gin.Context) {
 		return
 	}
 
+	if status, msg := validateBook(c, input); status == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
+		return
+	}
+
+	if status, msg := validateStudent(c, input); status == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
+		return
+	}
+
 	lending := models.Lending{BookID: input.BookID, StudentID: input.StudentID, LendingDate: time.Now()}
 	models.DB.Create(&lending)
 
@@ -55,6 +83,16 @@ func UpdateLending(c *gin.Context) {
 	var input models.Lending
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if status, msg := validateBook(c, input); status == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
+		return
+	}
+
+	if status, msg := validateStudent(c, input); status == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
 		return
 	}
 

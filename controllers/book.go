@@ -7,6 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func validateCategory(c *gin.Context, input models.Book) (bool, string) {
+	var category models.Category
+	if err := models.DB.Where("id = ?", input.CategoryID).First(&category).Error; err != nil {
+		return false, "Category Not Found"
+	}
+
+	return true, ""
+}
+
 // GetBooks return all books.
 func GetBooks(c *gin.Context) {
 	var books []models.Book
@@ -35,10 +44,8 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	// Check if the category exists
-	var category models.Category
-	if err := models.DB.Where("id = ?", input.CategoryID).First(&category).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Category Not Found"})
+	if status, msg := validateCategory(c, input); status == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
 		return
 	}
 
@@ -68,9 +75,8 @@ func UpdateBook(c *gin.Context) {
 		return
 	}
 
-	var category models.Category
-	if err := models.DB.Where("id = ?", input.CategoryID).First(&category).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Category Not Found!"})
+	if status, msg := validateCategory(c, input); status == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
 		return
 	}
 
