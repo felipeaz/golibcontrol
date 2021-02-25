@@ -17,7 +17,7 @@ func GetStudents(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": student})
 }
 
-// GetStudent return one studant.
+// GetStudent return one student.
 func GetStudent(c *gin.Context) {
 	var student models.Student
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&student).Error; err != nil {

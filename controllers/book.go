@@ -35,10 +35,18 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
+	// Check if the category exists
+	var category models.Category
+	if err := models.DB.Where("id = ?", input.CategoryID).First(&category).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Category Not Found"})
+		return
+	}
+
 	book := models.Book{
 		Title:          input.Title,
 		Author:         input.Author,
 		RegisterNumber: input.RegisterNumber,
+		Available:      input.Available,
 		CategoryID:     input.CategoryID,
 	}
 	models.DB.Create(&book)
