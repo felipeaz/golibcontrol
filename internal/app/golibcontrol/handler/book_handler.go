@@ -1,21 +1,34 @@
 package handler
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/module"
+	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/module"
+	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/repository"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
 
 // BookHandler handle the book router calls.
 type BookHandler struct {
-	module module.BookModule
+	Module module.BookModule
+}
+
+// NewBookHandler returns an instance of this handler.
+func NewBookHandler(DB *gorm.DB) BookHandler {
+	return BookHandler {
+		Module: module.BookModule {
+			Repository: repository.BookRepository {
+				DB: DB,
+			},
+		},
+	}
 }
 
 // GetBooks returns all books.
 func (h BookHandler) GetBooks(c *gin.Context) {
-	books, err := h.module.GetBooks()
+	books, err := h.Module.GetBooks()
 	responseHandler(books, err, c)
 }
 
@@ -27,7 +40,7 @@ func (h BookHandler) GetBook(c *gin.Context) {
 		return
 	}
 
-	book, err := h.module.GetBook(id)
+	book, err := h.Module.GetBook(id)
 	responseHandler(book, err, c)
 }
 
@@ -39,7 +52,7 @@ func (h BookHandler) CreateBook(c *gin.Context) {
 		return
 	}
 
-	id, err := h.module.CreateBook(book)
+	id, err := h.Module.CreateBook(book)
 	responseHandler(id, err, c)
 }
 
@@ -57,7 +70,7 @@ func (h BookHandler) UpdateBook(c *gin.Context) {
 		return
 	}
 
-	book, err := h.module.UpdateBook(id, upBook)
+	book, err := h.Module.UpdateBook(id, upBook)
 	responseHandler(book, err, c)
 }
 
@@ -69,7 +82,7 @@ func (h BookHandler) DeleteBook(c *gin.Context) {
 		return
 	}
 
-	status, err := h.module.DeleteBook(id)
+	status, err := h.Module.DeleteBook(id)
 	responseHandler(status, err, c)
 }
 

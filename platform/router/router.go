@@ -1,24 +1,33 @@
 package router
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/handler"
 	"github.com/FelipeAz/golibcontrol/platform/router/build"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func buildRoutes() (err error) {
+func buildRoutes(db *gorm.DB) (err error) {
 	router := gin.Default()
 
-	build.StudentRoutes(router)
-	build.BookRoutes(router)
-	build.CategoryRoute(router)
-	build.LendingRoutes(router)
+	bookHandler := handler.NewBookHandler(db)
+	build.BookRoutes(router, bookHandler)
+
+	//studentHandler := handler.NewStudentHandler(db)
+	//build.StudentRoutes(router)
+
+	//categoryHandler := handler.NewCategoryHandler(db)
+	//build.CategoryRoute(router)
+
+	//lendingHandler := handler.NewLendingHandler
+	//build.LendingRoutes(router)
 
 	err = router.Run()
 	return
 }
 
 // Run Starts the server
-func Run() (err error) {
-	err = buildRoutes()
+func Run(db *gorm.DB) (err error) {
+	err = buildRoutes(db)
 	return
 }

@@ -1,42 +1,42 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/repository"
 )
 
 // BookModule process the request recieved from handler.
 type BookModule struct {
-	repository repository.BookRepository
+	Repository repository.BookRepository
 }
 
 // GetBooks returns all books on DB.
 func (m BookModule) GetBooks() (books []model.Book, err error) {
-	books, err = m.repository.GetBooks()
+	books, err = m.Repository.GetBooks()
 	return
 }
 
 // GetBook returns all books on DB.
 func (m BookModule) GetBook(id int) (book model.Book, err error) {
-	book, err = m.repository.GetBook(id)
+	book, err = m.Repository.GetBook(id)
 	return
 }
 
 // CreateBook persist a book to the database.
 func (m BookModule) CreateBook(book model.Book) (id uint, err error) {
-	id, err = m.repository.CreateBook(book)
+	id, err = m.Repository.CreateBook(book)
 	return
 }
 
 // UpdateBook update an existent book.
 func (m BookModule) UpdateBook(id int, upBook model.Book) (book model.Book, err error) {
-	book, err = m.repository.UpdateBook(id, upBook)
+	book, err = m.Repository.UpdateBook(id, upBook)
 	return
 }
 
 // DeleteBook delete an existent book.
 func (m BookModule) DeleteBook(id int) (bool, error) {
-	err := m.repository.DeleteBook(id)
+	err := m.Repository.DeleteBook(id)
 	if err != nil {
 		return false, err
 	}

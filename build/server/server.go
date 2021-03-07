@@ -15,6 +15,6 @@ func Start() (err error) {
 	}
 	defer mysql.CloseConnection(db)
 
-	err = router.Run()
+	err = router.Run(db)
 	return
 }

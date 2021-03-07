@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"fmt"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/constants/model"
 	"log"
 	"os"
 
