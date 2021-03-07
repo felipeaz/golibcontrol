@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/server"
+	"github.com/FelipeAz/golibcontrol/build/server"
 	"log"
 )
 
