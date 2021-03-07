@@ -29,7 +29,12 @@ func NewBookHandler(DB *gorm.DB) BookHandler {
 // GetBooks returns all books.
 func (h BookHandler) GetBooks(c *gin.Context) {
 	books, err := h.Module.GetBooks()
-	responseHandler(books, err, c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": books})
 }
 
 // GetBook return one book by ID.
@@ -41,7 +46,12 @@ func (h BookHandler) GetBook(c *gin.Context) {
 	}
 
 	book, err := h.Module.GetBook(id)
-	responseHandler(book, err, c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
 // CreatBook creates a book.
@@ -53,7 +63,12 @@ func (h BookHandler) CreateBook(c *gin.Context) {
 	}
 
 	id, err := h.Module.CreateBook(book)
-	responseHandler(id, err, c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
 // UpdateBook update an existent book.
@@ -71,7 +86,12 @@ func (h BookHandler) UpdateBook(c *gin.Context) {
 	}
 
 	book, err := h.Module.UpdateBook(id, upBook)
-	responseHandler(book, err, c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
 // DeleteBook delete an existent book by id.
@@ -82,18 +102,13 @@ func (h BookHandler) DeleteBook(c *gin.Context) {
 		return
 	}
 
-	status, err := h.Module.DeleteBook(id)
-	responseHandler(status, err, c)
-}
-
-// responseHandler deals with json responses validating the error.
-func responseHandler(data interface{}, err error, c *gin.Context) {
+	err = h.Module.DeleteBook(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": data})
+	c.JSON(http.StatusOK, gin.H{"deleted": true})
 }
 
 // associateInput is responsible of associate the params to the model.

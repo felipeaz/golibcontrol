@@ -35,11 +35,7 @@ func (m BookModule) UpdateBook(id int, upBook model.Book) (book model.Book, err 
 }
 
 // DeleteBook delete an existent book.
-func (m BookModule) DeleteBook(id int) (bool, error) {
-	err := m.Repository.DeleteBook(id)
-	if err != nil {
-		return false, err
-	}
-
-	return true, nil
+func (m BookModule) DeleteBook(id int) (err error) {
+	err = m.Repository.DeleteBook(id)
+	return
 }
