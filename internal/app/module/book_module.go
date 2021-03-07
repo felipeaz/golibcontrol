@@ -1,8 +1,8 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 )
 
 // BookModule process the request recieved from handler.

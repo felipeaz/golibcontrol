@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/module"
-	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/module"
+	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -17,9 +17,9 @@ type BookHandler struct {
 
 // NewBookHandler returns an instance of this handler.
 func NewBookHandler(DB *gorm.DB) BookHandler {
-	return BookHandler {
-		Module: module.BookModule {
-			Repository: repository.BookRepository {
+	return BookHandler{
+		Module: module.BookModule{
+			Repository: repository.BookRepository{
 				DB: DB,
 			},
 		},

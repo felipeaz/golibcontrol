@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/golibcontrol/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"gorm.io/gorm"
 )
 
