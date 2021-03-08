@@ -27,8 +27,8 @@ func NewBookHandler(DB *gorm.DB) BookHandler {
 }
 
 // GetBooks returns all books.
-func (h BookHandler) GetBooks(c *gin.Context) {
-	books, err := h.Module.GetBooks()
+func (h BookHandler) Get(c *gin.Context) {
+	books, err := h.Module.Get()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -38,14 +38,14 @@ func (h BookHandler) GetBooks(c *gin.Context) {
 }
 
 // GetBook return one book by ID.
-func (h BookHandler) GetBook(c *gin.Context) {
+func (h BookHandler) Find(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID should be a number"})
 		return
 	}
 
-	book, err := h.Module.GetBook(id)
+	book, err := h.Module.Find(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -55,14 +55,14 @@ func (h BookHandler) GetBook(c *gin.Context) {
 }
 
 // CreatBook creates a book.
-func (h BookHandler) CreateBook(c *gin.Context) {
+func (h BookHandler) Create(c *gin.Context) {
 	book, err := associateInput(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := h.Module.CreateBook(book)
+	id, err := h.Module.Create(book)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -72,7 +72,7 @@ func (h BookHandler) CreateBook(c *gin.Context) {
 }
 
 // UpdateBook update an existent book.
-func (h BookHandler) UpdateBook(c *gin.Context) {
+func (h BookHandler) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID should be a number"})
@@ -85,7 +85,7 @@ func (h BookHandler) UpdateBook(c *gin.Context) {
 		return
 	}
 
-	book, err := h.Module.UpdateBook(id, upBook)
+	book, err := h.Module.Update(id, upBook)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -95,14 +95,14 @@ func (h BookHandler) UpdateBook(c *gin.Context) {
 }
 
 // DeleteBook delete an existent book by id.
-func (h BookHandler) DeleteBook(c *gin.Context) {
+func (h BookHandler) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID should be a number"})
 		return
 	}
 
-	err = h.Module.DeleteBook(id)
+	err = h.Module.Delete(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

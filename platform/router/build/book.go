@@ -9,9 +9,9 @@ import (
 func BookRoutes(r *gin.Engine, bookHandler handler.BookHandler) {
 	rg := r.Group("/book")
 
-	rg.GET("/", bookHandler.GetBooks)
-	rg.GET("/:id", bookHandler.GetBook)
-	rg.POST("/", bookHandler.CreateBook)
-	rg.PUT("/:id", bookHandler.UpdateBook)
-	rg.DELETE("/:id", bookHandler.DeleteBook)
+	rg.GET("/", bookHandler.Get)
+	rg.GET("/:id", bookHandler.Find)
+	rg.POST("/", bookHandler.Create)
+	rg.PUT("/:id", bookHandler.Update)
+	rg.DELETE("/:id", bookHandler.Delete)
 }
