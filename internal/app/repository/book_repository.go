@@ -41,17 +41,27 @@ func (r BookRepository) CreateBook(book model.Book) (uint, error) {
 }
 
 // UpdateBook update an existent book.
-func (r BookRepository) UpdateBook(id int, upBook model.Book) (book model.Book, err error) {
-	result := r.DB.Model(model.Book{}).Updates(upBook)
-	if err = result.Error; err != nil {
+func (r BookRepository) UpdateBook(id int, upBook model.Book) (model.Book, error) {
+	book, err := r.GetBook(id)
+	if err != nil {
 		return model.Book{}, err
 	}
 
-	return
+	result := r.DB.Model(&book).Updates(upBook)
+	if err := result.Error; err != nil {
+		return model.Book{}, err
+	}
+
+	return book, nil
 }
 
 func (r BookRepository) DeleteBook(id int) error {
-	result := r.DB.Delete(&model.Book{}, id)
+	book, err := r.GetBook(id)
+	if err != nil {
+		return err
+	}
+
+	result := r.DB.Delete(&book)
 
 	return result.Error
 }
