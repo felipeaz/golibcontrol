@@ -32,7 +32,7 @@ func Connect() (*gorm.DB, error) {
 }
 
 // CloseConnection closes the connection to the MYSQL server.
-func CloseConnection(db *gorm.DB){
+func CloseConnection(db *gorm.DB) {
 	sql, err := db.DB()
 	if err != nil {
 		log.Fatal(err)
@@ -47,7 +47,7 @@ func CloseConnection(db *gorm.DB){
 // autoMigrateTables creates tables based on constants defined on internal if those tables doesn't exists.
 // If the tables exists, this function will check if all properties of the structs are set on the tables
 // and if the properties aren't set, updates them just like the struct definition.
-func (db *DBHandler) autoMigrateTables() (err error){
+func (db *DBHandler) autoMigrateTables() (err error) {
 	err = db.conn.Migrator().AutoMigrate(
 		&model.Student{},
 		&model.Book{},

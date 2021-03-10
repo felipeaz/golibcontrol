@@ -1,10 +1,11 @@
 package router
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/handler"
-	"github.com/FelipeAz/golibcontrol/platform/router/build"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+
+	"github.com/FelipeAz/golibcontrol/internal/app/handler"
+	"github.com/FelipeAz/golibcontrol/platform/router/build"
 )
 
 func buildRoutes(db *gorm.DB) (err error) {
@@ -13,11 +14,11 @@ func buildRoutes(db *gorm.DB) (err error) {
 	bookHandler := handler.NewBookHandler(db)
 	build.BookRoutes(router, bookHandler)
 
-	//studentHandler := handler.NewStudentHandler(db)
-	//build.StudentRoutes(router)
-
 	//categoryHandler := handler.NewCategoryHandler(db)
 	//build.CategoryRoute(router)
+
+	//studentHandler := handler.NewStudentHandler(db)
+	//build.StudentRoutes(router)
 
 	//lendingHandler := handler.NewLendingHandler
 	//build.LendingRoutes(router)

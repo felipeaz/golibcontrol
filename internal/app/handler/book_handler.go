@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+
 	"net/http"
 	"strconv"
 )

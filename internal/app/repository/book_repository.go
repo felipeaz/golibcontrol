@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"gorm.io/gorm"
+
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
 // BookRepository is responsible of getting information from DB.
@@ -11,7 +12,7 @@ type BookRepository struct {
 }
 
 // GetBooks returns all books on DB.
-func (r BookRepository) Get() (books []model.Book, err error){
+func (r BookRepository) Get() (books []model.Book, err error) {
 	result := r.DB.Find(&books)
 	if err = result.Error; err != nil {
 		return nil, err

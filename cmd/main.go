@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/FelipeAz/golibcontrol/build/server"
 	"log"
+
+	"github.com/FelipeAz/golibcontrol/build/server"
 )
 
 func main() {

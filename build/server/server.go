@@ -1,9 +1,10 @@
 package server
 
 import (
+	"log"
+
 	"github.com/FelipeAz/golibcontrol/platform/mysql"
 	"github.com/FelipeAz/golibcontrol/platform/router"
-	"log"
 )
 
 // Start initialize the webservice

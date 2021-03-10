@@ -1,8 +1,9 @@
 package build
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/handler"
 	"github.com/gin-gonic/gin"
+
+	"github.com/FelipeAz/golibcontrol/internal/app/handler"
 )
 
 // BookRoutes initialize Book routes.
