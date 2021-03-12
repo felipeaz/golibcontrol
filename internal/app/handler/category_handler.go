@@ -1,70 +1,70 @@
 package handler
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
-
-	"net/http"
-	"strconv"
 )
 
-// BookHandler handle the book router calls.
-type BookHandler struct {
-	Module module.BookModule
+// CategoryHandler handle the category router call.
+type CategoryHandler struct {
+	Module module.CategoryModule
 }
 
-// NewBookHandler returns an instance of this handler.
-func NewBookHandler(DB *gorm.DB) BookHandler {
-	return BookHandler{
-		Module: module.BookModule{
-			Repository: repository.BookRepository{
-				DB: DB,
+// NewCategoryHandler returns an instance of category handler.
+func NewCategoryHandler(db *gorm.DB) CategoryHandler {
+	return CategoryHandler{
+		Module: module.CategoryModule{
+			Repository: repository.CategoryRepository{
+				DB: db,
 			},
 		},
 	}
 }
 
-// Get returns all books.
-func (h BookHandler) Get(c *gin.Context) {
-	books, err := h.Module.Get()
+// Get returns all categories.
+func (h CategoryHandler) Get(c *gin.Context) {
+	categories, err := h.Module.Get()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": books})
+	c.JSON(http.StatusOK, gin.H{"data": categories})
 }
 
-// Find return one book by ID.
-func (h BookHandler) Find(c *gin.Context) {
+// Find return one category by ID.
+func (h CategoryHandler) Find(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	book, err := h.Module.Find(id)
+	category, err := h.Module.Find(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": book})
+	c.JSON(http.StatusOK, gin.H{"data": category})
 }
 
-// Create creates a book.
-func (h BookHandler) Create(c *gin.Context) {
-	book, err := pkg.AssociateBookInput(c)
+// Create persist a category to the database.
+func (h CategoryHandler) Create(c *gin.Context) {
+	category, err := pkg.AssociateCategoryInput(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := h.Module.Create(book)
+	id, err := h.Module.Create(category)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -73,31 +73,31 @@ func (h BookHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
-// Update update an existent book.
-func (h BookHandler) Update(c *gin.Context) {
+// Update update an existent category.
+func (h CategoryHandler) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	upBook, err := pkg.AssociateBookInput(c)
+	upCategory, err := pkg.AssociateCategoryInput(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	book, err := h.Module.Update(id, upBook)
+	category, err := h.Module.Update(id, upCategory)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": book})
+	c.JSON(http.StatusOK, gin.H{"data": category})
 }
 
-// Delete delete an existent book by id.
-func (h BookHandler) Delete(c *gin.Context) {
+// Delete delete an existent category.
+func (h CategoryHandler) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

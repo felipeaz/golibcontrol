@@ -14,8 +14,8 @@ func buildRoutes(db *gorm.DB) (err error) {
 	bookHandler := handler.NewBookHandler(db)
 	build.BookRoutes(router, bookHandler)
 
-	//categoryHandler := handler.NewCategoryHandler(db)
-	//build.CategoryRoute(router)
+	categoryHandler := handler.NewCategoryHandler(db)
+	build.CategoryRoutes(router, categoryHandler)
 
 	//studentHandler := handler.NewStudentHandler(db)
 	//build.StudentRoutes(router)
