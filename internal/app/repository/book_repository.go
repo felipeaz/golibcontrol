@@ -15,7 +15,7 @@ type BookRepository struct {
 
 // Get returns all books from DB.
 func (r BookRepository) Get() (books []model.Book, err error) {
-	result := r.DB.Find(&books)
+	result := r.DB.Preload("BookCategory").Find(&books)
 	if err = result.Error; err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (r BookRepository) Get() (books []model.Book, err error) {
 
 // Find return one book from DB by ID.
 func (r BookRepository) Find(id int) (book model.Book, err error) {
-	result := r.DB.Model(model.Book{}).Where("id = ?", id).First(&book)
+	result := r.DB.Preload("BookCategory").Model(model.Book{}).Where("id = ?", id).First(&book)
 	if err = result.Error; err != nil {
 		return model.Book{}, err
 	}
