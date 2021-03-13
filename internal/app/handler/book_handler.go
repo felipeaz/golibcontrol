@@ -1,15 +1,15 @@
 package handler
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
-
-	"net/http"
-	"strconv"
 )
 
 // BookHandler handle the book router calls.
@@ -21,7 +21,10 @@ type BookHandler struct {
 func NewBookHandler(DB *gorm.DB) BookHandler {
 	return BookHandler{
 		Module: module.BookModule{
-			Repository: repository.BookRepository{
+			BookRepository: repository.BookRepository{
+				BookCategoryRepository: repository.BookCategoryRepository{
+					DB: DB,
+				},
 				DB: DB,
 			},
 		},

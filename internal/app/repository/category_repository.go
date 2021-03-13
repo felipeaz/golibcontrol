@@ -6,6 +6,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
+// CategoryRepository is responsible of getting/saving information from DB.
 type CategoryRepository struct {
 	DB *gorm.DB
 }

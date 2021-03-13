@@ -4,11 +4,13 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/pkg"
 )
 
-// BookRepository is responsible of getting information from DB.
+// BookRepository is responsible of getting/saving information from DB.
 type BookRepository struct {
-	DB *gorm.DB
+	DB                     *gorm.DB
+	BookCategoryRepository BookCategoryRepository
 }
 
 // Get returns all books from DB.
@@ -38,6 +40,7 @@ func (r BookRepository) Create(book model.Book) (uint, error) {
 		return 0, err
 	}
 
+	r.AfterCreate(book.ID, book.CategoriesId)
 	return book.ID, nil
 }
 
@@ -48,8 +51,9 @@ func (r BookRepository) Update(id int, upBook model.Book) (model.Book, error) {
 		return model.Book{}, err
 	}
 
+	r.BeforeUpdate(book.ID, upBook.CategoriesId)
 	result := r.DB.Model(&book).Updates(upBook)
-	if err := result.Error; err != nil {
+	if err = result.Error; err != nil {
 		return model.Book{}, err
 	}
 
@@ -63,7 +67,23 @@ func (r BookRepository) Delete(id int) (err error) {
 		return
 	}
 
+	r.BeforeDelete(book.ID)
 	err = r.DB.Delete(&book).Error
-
 	return
+}
+
+// AfterCreate persists categories on BookCategory Table after the book persists.
+func (r BookRepository) AfterCreate(bookId uint, categoriesId string) {
+	r.BookCategoryRepository.CreateCategories(bookId, pkg.ExtractCategoryId(categoriesId))
+}
+
+// BeforeUpdate removes book category before updating data from DB.
+func (r BookRepository) BeforeUpdate(bookId uint, categoriesId string) {
+	r.BookCategoryRepository.DeleteCategories(bookId)
+	r.BookCategoryRepository.CreateCategories(bookId, pkg.ExtractCategoryId(categoriesId))
+}
+
+// BeforeDelete removes book category before removing data from DB.
+func (r BookRepository) BeforeDelete(bookId uint) {
+	r.BookCategoryRepository.DeleteCategories(bookId)
 }

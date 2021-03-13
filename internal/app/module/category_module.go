@@ -5,6 +5,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 )
 
+// CategoryModule process the request recieved from handler
 type CategoryModule struct {
 	Repository repository.CategoryRepository
 }
