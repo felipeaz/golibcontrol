@@ -17,11 +17,11 @@ func buildRoutes(db *gorm.DB) (err error) {
 	categoryHandler := handler.NewCategoryHandler(db)
 	build.CategoryRoutes(router, categoryHandler)
 
-	//studentHandler := handler.NewStudentHandler(db)
-	//build.StudentRoutes(router)
+	studentHandler := handler.NewStudentHandler(db)
+	build.StudentRoutes(router, studentHandler)
 
-	//lendingHandler := handler.NewLendingHandler
-	//build.LendingRoutes(router)
+	lendingHandler := handler.NewLendingHandler(db)
+	build.LendingRoutes(router, lendingHandler)
 
 	err = router.Run()
 	return
