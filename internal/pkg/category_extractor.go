@@ -17,7 +17,7 @@ func ExtractCategoryId(categoriesString string) (categoriesId []uint) {
 	categoriesId = make([]uint, 0)
 	for _, val := range tmpSlice {
 		tmpId, err := strconv.Atoi(val)
-		if err != nil || tmpId < 0 {
+		if err != nil || tmpId <= 0 {
 			continue
 		}
 
