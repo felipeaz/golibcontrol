@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
@@ -25,6 +27,10 @@ func (r CategoryRepository) Get() (categories []model.Category, err error) {
 func (r CategoryRepository) Find(id int) (category model.Category, err error) {
 	result := r.DB.Model(model.Category{}).Where("id = ?", id).First(&category)
 	if err = result.Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return model.Category{}, fmt.Errorf("category not found")
+		}
+
 		return model.Category{}, err
 	}
 

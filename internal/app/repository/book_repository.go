@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
@@ -27,6 +29,9 @@ func (r BookRepository) Get() (books []model.Book, err error) {
 func (r BookRepository) Find(id int) (book model.Book, err error) {
 	result := r.DB.Preload("BookCategory").Model(model.Book{}).Where("id = ?", id).First(&book)
 	if err = result.Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return model.Book{}, fmt.Errorf("book not found")
+		}
 		return model.Book{}, err
 	}
 

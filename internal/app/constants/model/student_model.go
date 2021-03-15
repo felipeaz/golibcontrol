@@ -5,7 +5,7 @@ import "time"
 // Student contains all Student's table properties.
 type Student struct {
 	ID             uint      `json:"id" gorm:"primaryKey;autoIncrement;not null"`
-	RegisterNumber string    `json:"registerNumber" binding:"required"`
+	RegisterNumber string    `json:"registerNumber" binding:"required" gorm:"unique"`
 	Name           string    `json:"name" binding:"required"`
 	Email          string    `json:"email" binding:"required"`
 	Phone          string    `json:"phone" binding:"required"`
