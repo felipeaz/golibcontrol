@@ -46,7 +46,7 @@ func (r LendingRepository) Create(lending model.Lending) (uint, error) {
 		return 0, err
 	}
 
-	err = r.beforeCreate(lending.BookID)
+	err = r.beforeCreate(lending.StudentID, lending.BookID)
 	if err != nil {
 		return 0, err
 	}
@@ -116,11 +116,16 @@ func (r LendingRepository) beforeCreateAndUpdate(studentId, bookId uint) error {
 }
 
 // beforeCreate validate if the book is already lent.
-func (r LendingRepository) beforeCreate(bookId uint) error {
+func (r LendingRepository) beforeCreate(studentId, bookId uint) error {
 	var lending model.Lending
 	result := r.DB.Where("book_id = ?", bookId).First(&lending)
 	if result.RowsAffected > 0 {
 		return fmt.Errorf("book is already lent")
+	}
+
+	result = r.DB.Where("student_id = ?", studentId).First(&lending)
+	if result.RowsAffected > 0 {
+		return fmt.Errorf("student has already lent a book")
 	}
 
 	return nil
