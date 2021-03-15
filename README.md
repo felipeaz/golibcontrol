@@ -22,8 +22,12 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 ```
 ./golibcontrol/
 ├── build
-│   └──server    
-│      └── server.go
+│   └── docker    
+│   │   └── json-server.go
+│   │   │   └── db.json
+│   │   └── Dockerfile
+│   └── server    
+│       └── server.go
 ├── cmd
 │   └── main.go
 ├── internal
@@ -62,8 +66,15 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 │       │   ├── book_routes.go               
 │       │   └── category_routes.go
 │       └──  router.go
+├── scripts
+│   ├── install.sh
+│   ├── run.sh
+│   ├── rund.sh
+│   ├── stop.sh
+│   └── tests.sh
 ├── vendor
 │   └── dependencies
+├── docker-compose.yml
 ├── go.mod
 │   └── go.sum
 └── README.md
