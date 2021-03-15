@@ -2,7 +2,18 @@
 golibcontrol is a Library Control API where you can control which books are available for lending or which student has lent a book.
 
 # Installation
-(Docker is comming!)
+The first installation of this application you must run the command `make install`, but if you have already installed it, you can start this application with `make run` (with terminal attached) or `make rund` (with terminal dettached)
+
+### Commands
+`make install` install & run the application with terminal attached. Must be used the first time you run this application.
+
+`make run` run the application with terminal attached.
+
+`make rund` run the application with terminal dettached.
+
+`make stop` stops the application.
+
+`make tests` run all tests implemented.
 
 # Architecture
 This project is being constructed following the golang standards project layout. You can see more about the standard layout clicking on the reference bellow.
@@ -94,7 +105,19 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 | platform | The Platform folder contains all tools used by this application. |
 
 # Dependencies
+### GORM
+GORM make database commands easier to understand and work. This lib is used to transform the models structs into tables in our database.
+
+### GIN
+GIN simplifies the HTTP functions making easy to get the context, create routes (with and without groups) and sending response. 
+
+### REDIS
+(redis is coming!)
+
+### MYSQL
+MYSQL is the database choosen for this application.
 
 # Tests
+The tests can be executed using the command `make tests`
 
 # API
