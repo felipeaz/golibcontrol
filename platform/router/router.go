@@ -4,23 +4,23 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/handler/rest"
 	"github.com/FelipeAz/golibcontrol/platform/router/build"
 )
 
 func buildRoutes(db *gorm.DB) (err error) {
 	router := gin.Default()
 
-	bookHandler := handler.NewBookHandler(db)
+	bookHandler := rest.NewBookHandler(db)
 	build.BookRoutes(router, bookHandler)
 
-	categoryHandler := handler.NewCategoryHandler(db)
+	categoryHandler := rest.NewCategoryHandler(db)
 	build.CategoryRoutes(router, categoryHandler)
 
-	studentHandler := handler.NewStudentHandler(db)
+	studentHandler := rest.NewStudentHandler(db)
 	build.StudentRoutes(router, studentHandler)
 
-	lendingHandler := handler.NewLendingHandler(db)
+	lendingHandler := rest.NewLendingHandler(db)
 	build.LendingRoutes(router, lendingHandler)
 
 	err = router.Run()

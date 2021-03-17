@@ -1,6 +1,7 @@
 package module
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 )
@@ -11,31 +12,31 @@ type StudentModule struct {
 }
 
 // Get returns all students.
-func (m StudentModule) Get() (students []model.Student, err error) {
-	students, err = m.Repository.Get()
+func (m StudentModule) Get() (students []model.Student, apiError *errors.ApiError) {
+	students, apiError = m.Repository.Get()
 	return
 }
 
 // Find return one student by ID.
-func (m StudentModule) Find(id int) (student model.Student, err error) {
-	student, err = m.Repository.Find(id)
+func (m StudentModule) Find(id string) (student model.Student, apiError *errors.ApiError) {
+	student, apiError = m.Repository.Find(id)
 	return
 }
 
 // Create persist a student to the database.
-func (m StudentModule) Create(student model.Student) (id uint, err error) {
-	id, err = m.Repository.Create(student)
+func (m StudentModule) Create(student model.Student) (id uint, apiError *errors.ApiError) {
+	id, apiError = m.Repository.Create(student)
 	return
 }
 
 // Update update an existent student.
-func (m StudentModule) Update(id int, upStudent model.Student) (student model.Student, err error) {
-	student, err = m.Repository.Update(id, upStudent)
+func (m StudentModule) Update(id string, upStudent model.Student) (student model.Student, apiError *errors.ApiError) {
+	student, apiError = m.Repository.Update(id, upStudent)
 	return
 }
 
 // Delete delete an existent student.
-func (m StudentModule) Delete(id int) (err error) {
-	err = m.Repository.Delete(id)
+func (m StudentModule) Delete(id string) (apiError *errors.ApiError) {
+	apiError = m.Repository.Delete(id)
 	return
 }

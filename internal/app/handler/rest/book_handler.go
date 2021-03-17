@@ -1,8 +1,7 @@
-package handler
+package rest
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -33,9 +32,9 @@ func NewBookHandler(DB *gorm.DB) BookHandler {
 
 // Get returns all books.
 func (h BookHandler) Get(c *gin.Context) {
-	books, err := h.Module.Get()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	books, apiError := h.Module.Get()
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -44,15 +43,9 @@ func (h BookHandler) Get(c *gin.Context) {
 
 // Find return one book by ID.
 func (h BookHandler) Find(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	book, err := h.Module.Find(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	book, apiError := h.Module.Find(c.Param("id"))
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -63,13 +56,13 @@ func (h BookHandler) Find(c *gin.Context) {
 func (h BookHandler) Create(c *gin.Context) {
 	book, err := pkg.AssociateBookInput(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status, err)
 		return
 	}
 
-	id, err := h.Module.Create(book)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	id, apiError := h.Module.Create(book)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -78,21 +71,15 @@ func (h BookHandler) Create(c *gin.Context) {
 
 // Update update an existent book.
 func (h BookHandler) Update(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	upBook, err := pkg.AssociateBookInput(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status, err)
 		return
 	}
 
-	book, err := h.Module.Update(id, upBook)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	book, apiError := h.Module.Update(c.Param("id"), upBook)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -101,15 +88,9 @@ func (h BookHandler) Update(c *gin.Context) {
 
 // Delete delete an existent book by id.
 func (h BookHandler) Delete(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.Module.Delete(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	apiError := h.Module.Delete(c.Param("id"))
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 

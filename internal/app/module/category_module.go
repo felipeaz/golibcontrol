@@ -1,6 +1,7 @@
 package module
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 )
@@ -11,31 +12,31 @@ type CategoryModule struct {
 }
 
 // Get returns all categories.
-func (m CategoryModule) Get() (categories []model.Category, err error) {
-	categories, err = m.Repository.Get()
+func (m CategoryModule) Get() (categories []model.Category, apiError *errors.ApiError) {
+	categories, apiError = m.Repository.Get()
 	return
 }
 
 // Find return one category by ID.
-func (m CategoryModule) Find(id int) (category model.Category, err error) {
-	category, err = m.Repository.Find(id)
+func (m CategoryModule) Find(id string) (category model.Category, apiError *errors.ApiError) {
+	category, apiError = m.Repository.Find(id)
 	return
 }
 
 // Create persist a category to the database.
-func (m CategoryModule) Create(category model.Category) (id uint, err error) {
-	id, err = m.Repository.Create(category)
+func (m CategoryModule) Create(category model.Category) (id uint, apiError *errors.ApiError) {
+	id, apiError = m.Repository.Create(category)
 	return
 }
 
 // Update update an existent category.
-func (m CategoryModule) Update(id int, upCategory model.Category) (category model.Category, err error) {
-	category, err = m.Repository.Update(id, upCategory)
+func (m CategoryModule) Update(id string, upCategory model.Category) (category model.Category, apiError *errors.ApiError) {
+	category, apiError = m.Repository.Update(id, upCategory)
 	return
 }
 
 // Delete delete an existent category.
-func (m CategoryModule) Delete(id int) (err error) {
-	err = m.Repository.Delete(id)
+func (m CategoryModule) Delete(id string) (apiError *errors.ApiError) {
+	apiError = m.Repository.Delete(id)
 	return
 }

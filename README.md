@@ -45,16 +45,19 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 │   └── app
 │       └── constants
 │       │   └── model
-│       │       ├── book_category_model.go
-│       │       ├── book_model.go
-│       │       ├── category_model.go
-│       │       ├── lending_model.go
-│       │       └── student_model.go
+│       │   │   ├── book_category_model.go
+│       │   │   ├── book_model.go
+│       │   │   ├── category_model.go
+│       │   │   ├── lending_model.go
+│       │   │   └── student_model.go
+│       │   └── errors
+│       │       └── api_errors.go
 │       ├── handler
-│       │   ├── book_handler.go
-│       │   ├── category_handler.go
-│       │   ├── lending_handler.go
-│       │   └── student_handler.go
+│       │   └── rest
+│       │       ├── book_handler.go
+│       │       ├── category_handler.go
+│       │       ├── lending_handler.go
+│       │       └── student_handler.go
 │       ├── middleware
 │       │   └── 
 │       ├── module

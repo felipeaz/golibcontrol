@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"fmt"
+	"net/http"
 
 	"gorm.io/gorm"
 
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
@@ -14,61 +15,91 @@ type StudentRepository struct {
 }
 
 // Get returns all students.
-func (r StudentRepository) Get() (students []model.Student, err error) {
+func (r StudentRepository) Get() (students []model.Student, apiError *errors.ApiError) {
 	result := r.DB.Find(&students)
-	if err = result.Error; err != nil {
-		return nil, err
+	if err := result.Error; err != nil {
+		return nil, &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.NotFoundMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	return
 }
 
 // Find return one student from DB by ID.
-func (r StudentRepository) Find(id int) (student model.Student, err error) {
+func (r StudentRepository) Find(id string) (student model.Student, apiError *errors.ApiError) {
 	result := r.DB.Model(model.Student{}).Where("id = ?", id).First(&student)
-	if err = result.Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return model.Student{}, fmt.Errorf("student not found")
+	if err := result.Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			return model.Student{}, &errors.ApiError{
+				Status:  http.StatusInternalServerError,
+				Message: errors.NotFoundMessage,
+				Error:   err.Error(),
+			}
 		}
 
-		return model.Student{}, err
+		return model.Student{}, &errors.ApiError{
+			Status:  http.StatusNotFound,
+			Message: errors.NotFoundMessage,
+			Error:   "student not found",
+		}
 	}
 
 	return
 }
 
 // Create persist a student to the DB.
-func (r StudentRepository) Create(student model.Student) (uint, error) {
+func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError) {
 	result := r.DB.Create(&student)
 	if err := result.Error; err != nil {
-		return 0, err
+		return 0, &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.CreateFailedMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	return student.ID, nil
 }
 
 // Update update an existent student.
-func (r StudentRepository) Update(id int, upStudent model.Student) (model.Student, error) {
-	student, err := r.Find(id)
-	if err != nil {
-		return model.Student{}, err
+func (r StudentRepository) Update(id string, upStudent model.Student) (model.Student, *errors.ApiError) {
+	student, apiError := r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.UpdateFailedMessage
+		return model.Student{}, apiError
 	}
 
 	result := r.DB.Model(&student).Updates(upStudent)
 	if err := result.Error; err != nil {
-		return model.Student{}, err
+		return model.Student{}, &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailedMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	return student, nil
 }
 
 // Delete delete an existent student from DB.
-func (r StudentRepository) Delete(id int) (err error) {
-	student, err := r.Find(id)
-	if err != nil {
+func (r StudentRepository) Delete(id string) (apiError *errors.ApiError) {
+	student, apiError := r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.DeleteFailedMessage
 		return
 	}
 
-	err = r.DB.Delete(&student).Error
+	err := r.DB.Delete(&student).Error
+	if err != nil {
+		return &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.DeleteFailedMessage,
+			Error:   err.Error(),
+		}
+	}
+
 	return
 }

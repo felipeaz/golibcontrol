@@ -1,8 +1,7 @@
-package handler
+package rest
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -30,9 +29,9 @@ func NewCategoryHandler(db *gorm.DB) CategoryHandler {
 
 // Get returns all categories.
 func (h CategoryHandler) Get(c *gin.Context) {
-	categories, err := h.Module.Get()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	categories, apiError := h.Module.Get()
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -41,15 +40,9 @@ func (h CategoryHandler) Get(c *gin.Context) {
 
 // Find return one category by ID.
 func (h CategoryHandler) Find(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	category, err := h.Module.Find(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	category, apiError := h.Module.Find(c.Param("id"))
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -60,13 +53,13 @@ func (h CategoryHandler) Find(c *gin.Context) {
 func (h CategoryHandler) Create(c *gin.Context) {
 	category, err := pkg.AssociateCategoryInput(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status, err)
 		return
 	}
 
-	id, err := h.Module.Create(category)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	id, apiError := h.Module.Create(category)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -75,21 +68,15 @@ func (h CategoryHandler) Create(c *gin.Context) {
 
 // Update update an existent category.
 func (h CategoryHandler) Update(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	upCategory, err := pkg.AssociateCategoryInput(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status, err)
 		return
 	}
 
-	category, err := h.Module.Update(id, upCategory)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	category, apiError := h.Module.Update(c.Param("id"), upCategory)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -98,15 +85,9 @@ func (h CategoryHandler) Update(c *gin.Context) {
 
 // Delete delete an existent category.
 func (h CategoryHandler) Delete(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.Module.Delete(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	apiError := h.Module.Delete(c.Param("id"))
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 

@@ -1,8 +1,7 @@
-package handler
+package rest
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -30,9 +29,9 @@ func NewLendingHandler(db *gorm.DB) LendingHandler {
 
 // Get returns all lendings.
 func (h LendingHandler) Get(c *gin.Context) {
-	lendings, err := h.Module.Get()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	lendings, apiError := h.Module.Get()
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -41,15 +40,9 @@ func (h LendingHandler) Get(c *gin.Context) {
 
 // Find return one lending by ID.
 func (h LendingHandler) Find(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	lending, err := h.Module.Find(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	lending, apiError := h.Module.Find(c.Param("id"))
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -60,13 +53,13 @@ func (h LendingHandler) Find(c *gin.Context) {
 func (h LendingHandler) Create(c *gin.Context) {
 	lending, err := pkg.AssociateLendingInput(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status, err)
 		return
 	}
 
-	id, err := h.Module.Create(lending)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	id, apiError := h.Module.Create(lending)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -75,21 +68,15 @@ func (h LendingHandler) Create(c *gin.Context) {
 
 // Update update an existent lending.
 func (h LendingHandler) Update(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	upLending, err := pkg.AssociateLendingInput(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status, err)
 		return
 	}
 
-	lending, err := h.Module.Update(id, upLending)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	lending, apiError := h.Module.Update(c.Param("id"), upLending)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -98,15 +85,9 @@ func (h LendingHandler) Update(c *gin.Context) {
 
 // Delete delete an existent lending.
 func (h LendingHandler) Delete(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = h.Module.Delete(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	apiError := h.Module.Delete(c.Param("id"))
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 

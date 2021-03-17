@@ -3,11 +3,11 @@ package build
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/handler/rest"
 )
 
 // StudentRoutes initialize Category routes.
-func StudentRoutes(r *gin.Engine, studentHandler handler.StudentHandler) {
+func StudentRoutes(r *gin.Engine, studentHandler rest.StudentHandler) {
 	rg := r.Group("/student")
 
 	rg.GET("/", studentHandler.Get)
