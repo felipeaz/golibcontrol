@@ -54,6 +54,12 @@ func (r BookRepository) Find(id string) (book model.Book, apiError *errors.ApiEr
 
 // Create persist a book to the DB.
 func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
+	categoriesIds, apiError := r.BeforeCreate(book.CategoriesId)
+	if apiError != nil {
+		apiError.Message = errors.CreateFailedMessage
+		return 0, apiError
+	}
+
 	result := r.DB.Create(&book)
 	if err := result.Error; err != nil {
 		return 0, &errors.ApiError{
@@ -63,7 +69,7 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 		}
 	}
 
-	r.AfterCreate(book.ID, book.CategoriesId)
+	r.AfterCreate(book.ID, categoriesIds)
 	return book.ID, nil
 }
 
@@ -75,7 +81,12 @@ func (r BookRepository) Update(id string, upBook model.Book) (model.Book, *error
 		return model.Book{}, apiError
 	}
 
-	r.BeforeUpdate(book.ID, upBook.CategoriesId)
+	apiError = r.BeforeUpdate(book.ID, upBook.CategoriesId)
+	if apiError != nil {
+		apiError.Message = errors.UpdateFailedMessage
+		return model.Book{}, apiError
+	}
+
 	result := r.DB.Model(&book).Updates(upBook)
 	if err := result.Error; err != nil {
 		return model.Book{}, &errors.ApiError{
@@ -109,15 +120,26 @@ func (r BookRepository) Delete(id string) (apiError *errors.ApiError) {
 	return
 }
 
+// BeforeCreate validate if the request categories exists
+func (r BookRepository) BeforeCreate(categoriesId string) ([]uint, *errors.ApiError) {
+	return r.BookCategoryRepository.ValidateCategories(pkg.ExtractCategoryId(categoriesId))
+}
+
 // AfterCreate persists categories on BookCategory Table after the book persists.
-func (r BookRepository) AfterCreate(bookId uint, categoriesId string) {
-	r.BookCategoryRepository.CreateCategories(bookId, pkg.ExtractCategoryId(categoriesId))
+func (r BookRepository) AfterCreate(bookId uint, categoriesId []uint) {
+	r.BookCategoryRepository.CreateCategories(bookId, categoriesId)
 }
 
 // BeforeUpdate removes book category before updating data from DB.
-func (r BookRepository) BeforeUpdate(bookId uint, categoriesId string) {
-	r.BookCategoryRepository.DeleteCategories(bookId)
-	r.BookCategoryRepository.CreateCategories(bookId, pkg.ExtractCategoryId(categoriesId))
+func (r BookRepository) BeforeUpdate(bookId uint, categoriesId string) *errors.ApiError {
+	categoriesIdSlice, apiError := r.BeforeCreate(categoriesId)
+	if apiError != nil {
+		return apiError
+	}
+
+	r.BookCategoryRepository.CreateCategories(bookId, categoriesIdSlice)
+
+	return nil
 }
 
 // BeforeDelete removes book category before removing data from DB.
