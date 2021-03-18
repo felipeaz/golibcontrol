@@ -37,20 +37,6 @@ func AssociateCategoryInput(c *gin.Context) (category model.Category, apiError *
 	return
 }
 
-// AssociateBookCategoryInput is responsible of associating the params to the bookCategory model.
-func AssociateBookCategoryInput(c *gin.Context) (bookCategory model.BookCategory, apiError *errors.ApiError) {
-	err := c.ShouldBindJSON(&bookCategory)
-	if err != nil {
-		return model.BookCategory{}, &errors.ApiError{
-			Status:  http.StatusBadRequest,
-			Message: errors.FailedFieldsAssociationMessage,
-			Error:   err.Error(),
-		}
-	}
-
-	return
-}
-
 // AssociateStudentInput is responsible of associating the params to the student model.
 func AssociateStudentInput(c *gin.Context) (student model.Student, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&student)
