@@ -11,5 +11,11 @@ func TestExtractCategoryId(t *testing.T) {
 	expectedSlice := []uint{3, 4, 9, 15, 13, 20, 25}
 	returnedSlice := ExtractCategoryId(categoryString)
 
+	assert.NotNil(t, returnedSlice)
 	assert.Equal(t, expectedSlice, returnedSlice)
+}
+
+func TestExtractCategoryWithEmptyString(t *testing.T) {
+	returnedSlice := ExtractCategoryId("")
+	assert.Nil(t, returnedSlice)
 }

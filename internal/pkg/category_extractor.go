@@ -8,7 +8,7 @@ import (
 // ExtractCategoryId get categories ID from request string and return as uint slice.
 func ExtractCategoryId(categoriesString string) (categoriesId []uint) {
 	if len(categoriesString) <= 0 {
-		return
+		return nil
 	}
 
 	rgx := regexp.MustCompile(`[,\s+]`)
