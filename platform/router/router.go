@@ -8,7 +8,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/platform/router/build"
 )
 
-func buildRoutes(db *gorm.DB) (err error) {
+func buildRoutes(db *gorm.DB) error {
 	router := gin.Default()
 
 	bookHandler := rest.NewBookHandler(db)
@@ -23,12 +23,10 @@ func buildRoutes(db *gorm.DB) (err error) {
 	lendingHandler := rest.NewLendingHandler(db)
 	build.LendingRoutes(router, lendingHandler)
 
-	err = router.Run()
-	return
+	return router.Run()
 }
 
 // Run Starts the server
-func Run(db *gorm.DB) (err error) {
-	err = buildRoutes(db)
-	return
+func Run(db *gorm.DB) error {
+	return buildRoutes(db)
 }
