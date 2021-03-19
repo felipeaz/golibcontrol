@@ -3,12 +3,12 @@ package module
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/interfaces/repository"
 )
 
 // LendingModule process the request recieved from handler.
 type LendingModule struct {
-	Repository repository.LendingRepository
+	Repository repository.LendingRepositoryInterface
 }
 
 // Get returns all lendings.

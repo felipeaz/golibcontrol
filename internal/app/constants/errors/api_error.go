@@ -3,10 +3,10 @@ package errors
 // Default return messages
 const (
 	// Rest Messages
-	NotFoundMessage     = "Failed to fetch data"
-	CreateFailedMessage = "Failed to create data"
-	UpdateFailedMessage = "Failed to update data"
-	DeleteFailedMessage = "Failed to delete data"
+	FailMessage       = "Failed to fetch data"
+	CreateFailMessage = "Failed to create data"
+	UpdateFailMessage = "Failed to update data"
+	DeleteFailMessage = "Failed to delete data"
 
 	// Input Association Messages
 	FailedFieldsAssociationMessage = "Failed while associating fields from request"

@@ -3,12 +3,12 @@ package module
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/interfaces/repository"
 )
 
 // BookModule process the request recieved from handler.
 type BookModule struct {
-	BookRepository repository.BookRepository
+	BookRepository repository.BookRepositoryInterface
 }
 
 // Get returns all books on DB.

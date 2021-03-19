@@ -23,7 +23,7 @@ func (r LendingRepository) Get() (lendings []model.Lending, apiError *errors.Api
 	if err := result.Error; err != nil {
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -38,14 +38,14 @@ func (r LendingRepository) Find(id string) (lending model.Lending, apiError *err
 		if err != gorm.ErrRecordNotFound {
 			return model.Lending{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
-				Message: errors.NotFoundMessage,
+				Message: errors.FailMessage,
 				Error:   err.Error(),
 			}
 		}
 
 		return model.Lending{}, &errors.ApiError{
 			Status:  http.StatusNotFound,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   "lending not found",
 		}
 	}
@@ -55,20 +55,20 @@ func (r LendingRepository) Find(id string) (lending model.Lending, apiError *err
 
 // Create persist a lending to the DB.
 func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError) {
-	err := r.beforeCreateAndUpdate(lending.StudentID, lending.BookID)
+	err := r.BeforeCreateAndUpdate(lending.StudentID, lending.BookID)
 	if err != nil {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailedMessage,
+			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
 
-	err = r.beforeCreate(lending.StudentID, lending.BookID)
+	err = r.BeforeCreate(lending.StudentID, lending.BookID)
 	if err != nil {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailedMessage,
+			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -77,7 +77,7 @@ func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError
 	if err = result.Error; err != nil {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailedMessage,
+			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -89,15 +89,15 @@ func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError
 func (r LendingRepository) Update(id string, upLending model.Lending) (model.Lending, *errors.ApiError) {
 	lending, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.UpdateFailedMessage
+		apiError.Message = errors.UpdateFailMessage
 		return model.Lending{}, apiError
 	}
 
-	err := r.beforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
+	err := r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
 	if err != nil {
 		return model.Lending{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailedMessage,
+			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -106,7 +106,7 @@ func (r LendingRepository) Update(id string, upLending model.Lending) (model.Len
 	if err = result.Error; err != nil {
 		return model.Lending{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailedMessage,
+			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -118,7 +118,7 @@ func (r LendingRepository) Update(id string, upLending model.Lending) (model.Len
 func (r LendingRepository) Delete(id string) (apiError *errors.ApiError) {
 	lending, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.DeleteFailedMessage
+		apiError.Message = errors.DeleteFailMessage
 		return
 	}
 
@@ -126,7 +126,7 @@ func (r LendingRepository) Delete(id string) (apiError *errors.ApiError) {
 	if err != nil {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.DeleteFailedMessage,
+			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -135,7 +135,7 @@ func (r LendingRepository) Delete(id string) (apiError *errors.ApiError) {
 }
 
 // beforeCreateAndUpdate validate if the student or book exists before create the lending.
-func (r LendingRepository) beforeCreateAndUpdate(studentId, bookId uint) error {
+func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) error {
 	var student model.Student
 	result := r.DB.First(&student, studentId)
 	if err := result.Error; err != nil {
@@ -160,7 +160,7 @@ func (r LendingRepository) beforeCreateAndUpdate(studentId, bookId uint) error {
 }
 
 // beforeCreate validate if the book is already lent.
-func (r LendingRepository) beforeCreate(studentId, bookId uint) error {
+func (r LendingRepository) BeforeCreate(studentId, bookId uint) error {
 	var lending model.Lending
 	result := r.DB.Where("book_id = ?", bookId).First(&lending)
 	if result.RowsAffected > 0 {

@@ -3,12 +3,12 @@ package module
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/interfaces/repository"
 )
 
 // StudentModule process the request recieved from handler.
 type StudentModule struct {
-	Repository repository.StudentRepository
+	Repository repository.StudentRepositoryInterface
 }
 
 // Get returns all students.

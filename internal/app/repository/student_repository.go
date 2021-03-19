@@ -20,7 +20,7 @@ func (r StudentRepository) Get() (students []model.Student, apiError *errors.Api
 	if err := result.Error; err != nil {
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -35,14 +35,14 @@ func (r StudentRepository) Find(id string) (student model.Student, apiError *err
 		if err != gorm.ErrRecordNotFound {
 			return model.Student{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
-				Message: errors.NotFoundMessage,
+				Message: errors.FailMessage,
 				Error:   err.Error(),
 			}
 		}
 
 		return model.Student{}, &errors.ApiError{
 			Status:  http.StatusNotFound,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   "student not found",
 		}
 	}
@@ -56,7 +56,7 @@ func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError
 	if err := result.Error; err != nil {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailedMessage,
+			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -68,7 +68,7 @@ func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError
 func (r StudentRepository) Update(id string, upStudent model.Student) (model.Student, *errors.ApiError) {
 	student, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.UpdateFailedMessage
+		apiError.Message = errors.UpdateFailMessage
 		return model.Student{}, apiError
 	}
 
@@ -76,7 +76,7 @@ func (r StudentRepository) Update(id string, upStudent model.Student) (model.Stu
 	if err := result.Error; err != nil {
 		return model.Student{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailedMessage,
+			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -88,7 +88,7 @@ func (r StudentRepository) Update(id string, upStudent model.Student) (model.Stu
 func (r StudentRepository) Delete(id string) (apiError *errors.ApiError) {
 	student, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.DeleteFailedMessage
+		apiError.Message = errors.DeleteFailMessage
 		return
 	}
 
@@ -96,7 +96,7 @@ func (r StudentRepository) Delete(id string) (apiError *errors.ApiError) {
 	if err != nil {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.DeleteFailedMessage,
+			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
 		}
 	}

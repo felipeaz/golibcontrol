@@ -22,7 +22,7 @@ func (r BookRepository) Get() (books []model.Book, apiError *errors.ApiError) {
 	if err := result.Error; err != nil {
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -37,14 +37,14 @@ func (r BookRepository) Find(id string) (book model.Book, apiError *errors.ApiEr
 		if err != gorm.ErrRecordNotFound {
 			return model.Book{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
-				Message: errors.NotFoundMessage,
+				Message: errors.FailMessage,
 				Error:   err.Error(),
 			}
 		}
 
 		return model.Book{}, &errors.ApiError{
 			Status:  http.StatusNotFound,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   "book not found",
 		}
 	}
@@ -56,7 +56,7 @@ func (r BookRepository) Find(id string) (book model.Book, apiError *errors.ApiEr
 func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 	categoriesIds, apiError := r.BeforeCreate(book.CategoriesId)
 	if apiError != nil {
-		apiError.Message = errors.CreateFailedMessage
+		apiError.Message = errors.CreateFailMessage
 		return 0, apiError
 	}
 
@@ -64,7 +64,7 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 	if err := result.Error; err != nil {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailedMessage,
+			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -77,13 +77,13 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 func (r BookRepository) Update(id string, upBook model.Book) (model.Book, *errors.ApiError) {
 	book, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.UpdateFailedMessage
+		apiError.Message = errors.UpdateFailMessage
 		return model.Book{}, apiError
 	}
 
 	apiError = r.BeforeUpdate(book.ID, upBook.CategoriesId)
 	if apiError != nil {
-		apiError.Message = errors.UpdateFailedMessage
+		apiError.Message = errors.UpdateFailMessage
 		return model.Book{}, apiError
 	}
 
@@ -91,7 +91,7 @@ func (r BookRepository) Update(id string, upBook model.Book) (model.Book, *error
 	if err := result.Error; err != nil {
 		return model.Book{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailedMessage,
+			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -103,7 +103,7 @@ func (r BookRepository) Update(id string, upBook model.Book) (model.Book, *error
 func (r BookRepository) Delete(id string) (apiError *errors.ApiError) {
 	book, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.DeleteFailedMessage
+		apiError.Message = errors.DeleteFailMessage
 		return
 	}
 
@@ -112,7 +112,7 @@ func (r BookRepository) Delete(id string) (apiError *errors.ApiError) {
 	if err != nil {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.DeleteFailedMessage,
+			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
 		}
 	}

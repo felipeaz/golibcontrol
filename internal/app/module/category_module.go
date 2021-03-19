@@ -3,12 +3,12 @@ package module
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/interfaces/repository"
 )
 
 // CategoryModule process the request recieved from handler
 type CategoryModule struct {
-	Repository repository.CategoryRepository
+	Repository repository.CategoryRepositoryInterface
 }
 
 // Get returns all categories.

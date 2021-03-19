@@ -20,7 +20,7 @@ func (r CategoryRepository) Get() (categories []model.Category, apiError *errors
 	if err := result.Error; err != nil {
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -35,14 +35,14 @@ func (r CategoryRepository) Find(id string) (category model.Category, apiError *
 		if err != gorm.ErrRecordNotFound {
 			return model.Category{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
-				Message: errors.NotFoundMessage,
+				Message: errors.FailMessage,
 				Error:   err.Error(),
 			}
 		}
 
 		return model.Category{}, &errors.ApiError{
 			Status:  http.StatusNotFound,
-			Message: errors.NotFoundMessage,
+			Message: errors.FailMessage,
 			Error:   "category not found",
 		}
 	}
@@ -56,7 +56,7 @@ func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiEr
 	if err := result.Error; err != nil {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailedMessage,
+			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -68,7 +68,7 @@ func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiEr
 func (r CategoryRepository) Update(id string, upCategory model.Category) (model.Category, *errors.ApiError) {
 	category, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.UpdateFailedMessage
+		apiError.Message = errors.UpdateFailMessage
 		return model.Category{}, apiError
 	}
 
@@ -76,7 +76,7 @@ func (r CategoryRepository) Update(id string, upCategory model.Category) (model.
 	if err := result.Error; err != nil {
 		return model.Category{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailedMessage,
+			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
 	}
@@ -88,7 +88,7 @@ func (r CategoryRepository) Update(id string, upCategory model.Category) (model.
 func (r CategoryRepository) Delete(id string) (apiError *errors.ApiError) {
 	category, apiError := r.Find(id)
 	if apiError != nil {
-		apiError.Message = errors.DeleteFailedMessage
+		apiError.Message = errors.DeleteFailMessage
 		return
 	}
 
@@ -96,7 +96,7 @@ func (r CategoryRepository) Delete(id string) (apiError *errors.ApiError) {
 	if err != nil {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.DeleteFailedMessage,
+			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
 		}
 	}
