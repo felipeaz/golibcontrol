@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -22,7 +23,7 @@ func (r BookCategoryRepository) ValidateCategories(categoriesIds []uint) (catego
 		if err := result.Error; err != nil {
 			return nil, &errors.ApiError{
 				Status: http.StatusBadRequest,
-				Error:  "category not found",
+				Error:  fmt.Sprintf("category with ID: %v not found", categoryId),
 			}
 		}
 

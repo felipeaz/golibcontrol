@@ -8,88 +8,12 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/mock"
 )
-
-type BookRepositoryMock struct {
-	TestError         bool
-	TestNotFoundError bool
-}
-
-func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError) {
-	if r.TestError {
-		return nil, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.FailMessage,
-			Error:   "mocked test get error",
-		}
-	}
-
-	books = []model.Book{
-		model.Book{
-			RegisterNumber: "123",
-			Title:          "Mocked Book",
-			Author:         "Mocked Author",
-			Available:      true,
-		},
-	}
-
-	return
-}
-
-func (r BookRepositoryMock) Find(id string) (book model.Book, apiError *errors.ApiError) {
-	if r.TestError {
-		return model.Book{}, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.FailMessage,
-			Error:   "mocked test find error",
-		}
-	} else if r.TestNotFoundError {
-
-		return model.Book{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.FailMessage,
-			Error:   "mocked test find not found error",
-		}
-	}
-
-	book = model.Book{
-		ID:             uint(25),
-		RegisterNumber: "123",
-		Title:          "Mocked Book",
-		Author:         "Mocked Author",
-		Available:      false,
-	}
-
-	return
-}
-
-func (r BookRepositoryMock) Create(book model.Book) (uint, *errors.ApiError) {
-	return 0, nil
-}
-
-func (r BookRepositoryMock) Update(id string, upBook model.Book) (model.Book, *errors.ApiError) {
-	return model.Book{}, nil
-}
-
-func (r BookRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
-	return nil
-}
-
-func (r BookRepositoryMock) BeforeCreate(categoriesId string) ([]uint, *errors.ApiError) {
-	return []uint{}, nil
-}
-
-func (r BookRepositoryMock) AfterCreate(bookId uint, categoriesId []uint) {}
-
-func (r BookRepositoryMock) BeforeUpdate(bookId uint, categoriesId string) *errors.ApiError {
-	return nil
-}
-
-func (r BookRepositoryMock) BeforeDelete(bookId uint) {}
 
 func TestGet(t *testing.T) {
 	// Init
-	var bookRepositoryMock = BookRepositoryMock{}
+	var bookRepositoryMock = mock.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 
 	// Exec
@@ -106,7 +30,7 @@ func TestGet(t *testing.T) {
 
 func TestGetError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = BookRepositoryMock{}
+	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 
@@ -114,8 +38,8 @@ func TestGetError(t *testing.T) {
 	books, apiError := m.Get()
 
 	// Validation
-	assert.Nil(t, books)
 	assert.NotNil(t, apiError)
+	assert.Nil(t, books)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.FailMessage, apiError.Message)
 	assert.Equal(t, "mocked test get error", apiError.Error)
@@ -123,7 +47,7 @@ func TestGetError(t *testing.T) {
 
 func TestFind(t *testing.T) {
 	// Init
-	var bookRepositoryMock = BookRepositoryMock{}
+	var bookRepositoryMock = mock.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 
 	// Exec
@@ -131,17 +55,18 @@ func TestFind(t *testing.T) {
 
 	// Validation
 	assert.Nil(t, apiError)
+	assert.NotEqual(t, model.Book{}, book)
 	assert.Equal(t, 25, int(book.ID))
 	assert.Equal(t, "Mocked Book", book.Title)
 	assert.Equal(t, "Mocked Book", book.Title)
 	assert.Equal(t, "Mocked Author", book.Author)
 	assert.Equal(t, "123", book.RegisterNumber)
-	assert.Equal(t, false, book.Available)
+	assert.Equal(t, true, book.Available)
 }
 
 func TestFindError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = BookRepositoryMock{}
+	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 
@@ -150,8 +75,8 @@ func TestFindError(t *testing.T) {
 
 	// Validation
 
-	assert.Equal(t, model.Book{}, books)
 	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Book{}, books)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.FailMessage, apiError.Message)
 	assert.Equal(t, "mocked test find error", apiError.Error)
@@ -159,7 +84,7 @@ func TestFindError(t *testing.T) {
 
 func TestFindNotFoundError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = BookRepositoryMock{}
+	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 
@@ -168,8 +93,8 @@ func TestFindNotFoundError(t *testing.T) {
 
 	// Validation
 
-	assert.Equal(t, model.Book{}, books)
 	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Book{}, books)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.FailMessage, apiError.Message)
 	assert.Equal(t, "mocked test find not found error", apiError.Error)
@@ -177,5 +102,193 @@ func TestFindNotFoundError(t *testing.T) {
 
 func TestCreate(t *testing.T) {
 	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	m := BookModule{BookRepository: bookRepositoryMock}
+	book := model.Book{
+		RegisterNumber: "123",
+		Title:          "Mocked Book",
+		Author:         "Mocked Author",
+		Available:      true,
+	}
 
+	// Exec
+	bookId, apiError := m.Create(book)
+
+	// Validation
+	assert.Nil(t, apiError)
+	assert.NotNil(t, bookId)
+	assert.Equal(t, 25, int(bookId))
+}
+
+func TestCreateWithCategoryError(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	bookRepositoryMock.TestCategoryNotFoundError = true
+	m := BookModule{BookRepository: bookRepositoryMock}
+	book := model.Book{
+		RegisterNumber: "123",
+		Title:          "Mocked Book",
+		Author:         "Mocked Author",
+		CategoriesId:   "1,2,5",
+		Available:      true,
+	}
+
+	// Exec
+	bookId, apiError := m.Create(book)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, 0, int(bookId))
+	assert.Equal(t, http.StatusBadRequest, apiError.Status)
+	assert.Equal(t, errors.CreateFailMessage, apiError.Message)
+	assert.Equal(t, "category with ID: 5 not found", apiError.Error)
+}
+
+func TestCreateWithError(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	bookRepositoryMock.TestError = true
+	m := BookModule{BookRepository: bookRepositoryMock}
+	book := model.Book{
+		RegisterNumber: "123",
+		Title:          "Mocked Book",
+		Author:         "Mocked Author",
+		CategoriesId:   "1,2,5",
+		Available:      true,
+	}
+
+	// Exec
+	bookId, apiError := m.Create(book)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, 0, int(bookId))
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.CreateFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
+}
+
+func TestUpdate(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	m := BookModule{BookRepository: bookRepositoryMock}
+	id := "25"
+	book := model.Book{
+		RegisterNumber: "123",
+		Title:          "Mocked Book",
+		Author:         "Mocked Author",
+		Available:      true,
+	}
+
+	// Exec
+	book, apiError := m.Update(id, book)
+
+	// Validation
+	assert.Nil(t, apiError)
+	assert.NotEqual(t, model.Book{}, book)
+	assert.Equal(t, 25, int(book.ID))
+	assert.Equal(t, "Mocked Book", book.Title)
+	assert.Equal(t, "Mocked Author", book.Author)
+	assert.Equal(t, true, book.Available)
+}
+
+func TestUpdateNotFound(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	bookRepositoryMock.TestNotFoundError = true
+	m := BookModule{BookRepository: bookRepositoryMock}
+	id := "25"
+	book := model.Book{
+		RegisterNumber: "123",
+		Title:          "Mocked Book",
+		Author:         "Mocked Author",
+		Available:      true,
+	}
+
+	// Exec
+	book, apiError := m.Update(id, book)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, http.StatusNotFound, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "book not found", apiError.Error)
+}
+
+func TestUpdateCategoryNotFound(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	bookRepositoryMock.TestCategoryNotFoundError = true
+	m := BookModule{BookRepository: bookRepositoryMock}
+	id := "25"
+	book := model.Book{
+		RegisterNumber: "123",
+		Title:          "Mocked Book",
+		Author:         "Mocked Author",
+		CategoriesId:   "1,2,5",
+		Available:      true,
+	}
+
+	// Exec
+	book, apiError := m.Update(id, book)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, http.StatusNotFound, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "category with ID: 5 not found", apiError.Error)
+}
+
+func TestUpdateWithError(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	bookRepositoryMock.TestError = true
+	m := BookModule{BookRepository: bookRepositoryMock}
+	id := "25"
+	book := model.Book{
+		RegisterNumber: "123",
+		Title:          "Mocked Book",
+		Author:         "Mocked Author",
+		CategoriesId:   "1,2,5",
+		Available:      true,
+	}
+
+	// Exec
+	book, apiError := m.Update(id, book)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
+}
+
+func TestDelete(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	m := BookModule{BookRepository: bookRepositoryMock}
+	id := "25"
+
+	// Exec
+	apiError := m.Delete(id)
+
+	// Validation
+	assert.Nil(t, apiError)
+}
+
+func TestDeleteNotFound(t *testing.T) {
+	// Init
+	var bookRepositoryMock = mock.BookRepositoryMock{}
+	bookRepositoryMock.TestNotFoundError = true
+	m := BookModule{BookRepository: bookRepositoryMock}
+	id := "25"
+
+	// Exec
+	apiError := m.Delete(id)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, http.StatusNotFound, apiError.Status)
+	assert.Equal(t, errors.DeleteFailMessage, apiError.Message)
+	assert.Equal(t, "book not found", apiError.Error)
 }
