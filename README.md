@@ -43,33 +43,38 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 │   └── main.go
 ├── internal
 │   └── app
-│       └── constants
-│       │   └── model
-│       │   │   ├── book_category_model.go
-│       │   │   ├── book_model.go
-│       │   │   ├── category_model.go
-│       │   │   ├── lending_model.go
-│       │   │   └── student_model.go
-│       │   └── errors
-│       │       └── api_errors.go
-│       ├── handler
-│       │   └── rest
-│       │       ├── book_handler.go
-│       │       ├── category_handler.go
-│       │       ├── lending_handler.go
-│       │       └── student_handler.go
-│       ├── middleware
-│       │   └── 
-│       ├── module
-│       │   ├── book_module.go
-│       │   ├── category_module.go
-│       │   ├── lending_module.go
-│       │   └── student_module.go
-│       └── repository
-│           ├── book_repository.go
-│           ├── category_repository.go
-│           ├── lending_repository.go
-│           └── student_repository.go
+│   │   └── constants
+│   │    │   └── model
+│   │    │   │   ├── book_category_model.go
+│   │    │   │   ├── book_model.go
+│   │    │   │   ├── category_model.go
+│   │    │   │   ├── lending_model.go
+│   │    │   │   └── student_model.go
+│   │    │   └── errors
+│   │    │       └── api_errors.go
+│   │    ├── handler
+│   │    │   └── rest
+│   │    │       ├── book_handler.go
+│   │    │       ├── category_handler.go
+│   │    │       ├── lending_handler.go
+│   │    │       └── student_handler.go
+│   │    ├── middleware
+│   │    │   └── 
+│   │    ├── module
+│   │    │   ├── book_module.go
+│   │    │   ├── category_module.go
+│   │    │   ├── lending_module.go
+│   │    │   └── student_module.go
+│   │    └── repository
+│   │       ├── book_repository.go
+│   │       ├── category_repository.go
+│   │       ├── lending_repository.go
+│   │       └── student_repository.go
+│   └── pkg
+│       ├── category_extractor.go
+│       ├── category_extractor_test.go
+│       ├── input_associator.go
+│       └── input_associator_test.go
 ├── platform
 │   └── mysql
 │   │   └── mysql.go    
