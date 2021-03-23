@@ -11,7 +11,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/mock"
 )
 
-func TestGet(t *testing.T) {
+func TestGetBook(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
@@ -22,13 +22,14 @@ func TestGet(t *testing.T) {
 
 	// Validation
 	assert.Nil(t, apiError)
+	assert.Equal(t, 25, int(book.ID))
 	assert.Equal(t, "Mocked Book", book.Title)
 	assert.Equal(t, "Mocked Author", book.Author)
 	assert.Equal(t, "123", book.RegisterNumber)
 	assert.Equal(t, true, book.Available)
 }
 
-func TestGetError(t *testing.T) {
+func TestGetBookError(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
@@ -45,7 +46,7 @@ func TestGetError(t *testing.T) {
 	assert.Equal(t, "mocked test get error", apiError.Error)
 }
 
-func TestFind(t *testing.T) {
+func TestFindBook(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
@@ -64,7 +65,7 @@ func TestFind(t *testing.T) {
 	assert.Equal(t, true, book.Available)
 }
 
-func TestFindError(t *testing.T) {
+func TestFindBookError(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
@@ -82,7 +83,7 @@ func TestFindError(t *testing.T) {
 	assert.Equal(t, "mocked test find error", apiError.Error)
 }
 
-func TestFindNotFoundError(t *testing.T) {
+func TestFindBookNotFoundError(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestNotFoundError = true
@@ -100,7 +101,7 @@ func TestFindNotFoundError(t *testing.T) {
 	assert.Equal(t, "mocked test find not found error", apiError.Error)
 }
 
-func TestCreate(t *testing.T) {
+func TestCreateBook(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
@@ -120,7 +121,7 @@ func TestCreate(t *testing.T) {
 	assert.Equal(t, 25, int(bookId))
 }
 
-func TestCreateWithCategoryError(t *testing.T) {
+func TestCreateBookWithCategoryError(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestCategoryNotFoundError = true
@@ -144,7 +145,7 @@ func TestCreateWithCategoryError(t *testing.T) {
 	assert.Equal(t, "category with ID: 5 not found", apiError.Error)
 }
 
-func TestCreateWithError(t *testing.T) {
+func TestCreateBookWithError(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
@@ -168,31 +169,31 @@ func TestCreateWithError(t *testing.T) {
 	assert.Equal(t, "mocked error", apiError.Error)
 }
 
-func TestUpdate(t *testing.T) {
+func TestBookUpdate(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
-	book := model.Book{
+	upBook := model.Book{
 		RegisterNumber: "123",
-		Title:          "Mocked Book",
-		Author:         "Mocked Author",
-		Available:      true,
+		Title:          "Mocked Book Updated",
+		Author:         "Mocked Author Updated",
+		Available:      false,
 	}
 
 	// Exec
-	book, apiError := m.Update(id, book)
+	book, apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.Nil(t, apiError)
 	assert.NotEqual(t, model.Book{}, book)
 	assert.Equal(t, 25, int(book.ID))
-	assert.Equal(t, "Mocked Book", book.Title)
-	assert.Equal(t, "Mocked Author", book.Author)
-	assert.Equal(t, true, book.Available)
+	assert.Equal(t, upBook.Title, book.Title)
+	assert.Equal(t, upBook.Author, book.Author)
+	assert.Equal(t, upBook.Available, book.Available)
 }
 
-func TestUpdateNotFound(t *testing.T) {
+func TestUpdateBookNotFound(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestNotFoundError = true
@@ -215,7 +216,7 @@ func TestUpdateNotFound(t *testing.T) {
 	assert.Equal(t, "book not found", apiError.Error)
 }
 
-func TestUpdateCategoryNotFound(t *testing.T) {
+func TestUpdateBookCategoryNotFound(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestCategoryNotFoundError = true
@@ -239,7 +240,7 @@ func TestUpdateCategoryNotFound(t *testing.T) {
 	assert.Equal(t, "category with ID: 5 not found", apiError.Error)
 }
 
-func TestUpdateWithError(t *testing.T) {
+func TestUpdateBookWithError(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
@@ -263,7 +264,7 @@ func TestUpdateWithError(t *testing.T) {
 	assert.Equal(t, "mocked error", apiError.Error)
 }
 
-func TestDelete(t *testing.T) {
+func TestDeleteBook(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
@@ -276,7 +277,7 @@ func TestDelete(t *testing.T) {
 	assert.Nil(t, apiError)
 }
 
-func TestDeleteNotFound(t *testing.T) {
+func TestDeleteBookNotFound(t *testing.T) {
 	// Init
 	var bookRepositoryMock = mock.BookRepositoryMock{}
 	bookRepositoryMock.TestNotFoundError = true

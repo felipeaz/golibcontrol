@@ -2,6 +2,7 @@ package mock
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
@@ -24,10 +25,13 @@ func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError
 
 	books = []model.Book{
 		model.Book{
+			ID:             25,
 			RegisterNumber: "123",
 			Title:          "Mocked Book",
 			Author:         "Mocked Author",
 			Available:      true,
+			CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+			UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 		},
 	}
 
@@ -56,6 +60,8 @@ func (r BookRepositoryMock) Find(id string) (book model.Book, apiError *errors.A
 		Title:          "Mocked Book",
 		Author:         "Mocked Author",
 		Available:      true,
+		CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
 	return
@@ -92,10 +98,10 @@ func (r BookRepositoryMock) Update(id string, upBook model.Book) (model.Book, *e
 
 	return model.Book{
 		ID:             25,
-		RegisterNumber: "123",
-		Title:          "Mocked Book",
-		Author:         "Mocked Author",
-		Available:      true,
+		RegisterNumber: upBook.RegisterNumber,
+		Title:          upBook.Title,
+		Author:         upBook.Author,
+		Available:      upBook.Available,
 	}, err
 }
 
