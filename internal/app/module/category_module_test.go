@@ -147,7 +147,6 @@ func TestCategoryUpdate(t *testing.T) {
 	// Validation
 	assert.Nil(t, apiError)
 	assert.NotEqual(t, model.Category{}, category)
-	assert.Equal(t, 5, int(category.ID))
 	assert.Equal(t, upCategory.Name, category.Name)
 }
 

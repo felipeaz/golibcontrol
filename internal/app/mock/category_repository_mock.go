@@ -2,7 +2,6 @@ package mock
 
 import (
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -86,9 +85,6 @@ func (r CategoryRepositoryMock) Update(id string, upCategory model.Category) (mo
 			Error:   "mocked error",
 		}
 	}
-
-	idInt, _ := strconv.Atoi(id)
-	upCategory.ID = uint(idInt)
 
 	return upCategory, nil
 }

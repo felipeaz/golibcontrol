@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"net/http"
 
 	"gorm.io/gorm"
@@ -55,26 +54,18 @@ func (r LendingRepository) Find(id string) (lending model.Lending, apiError *err
 
 // Create persist a lending to the DB.
 func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError) {
-	err := r.BeforeCreateAndUpdate(lending.StudentID, lending.BookID)
-	if err != nil {
-		return 0, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailMessage,
-			Error:   err.Error(),
-		}
+	if apiError := r.BeforeCreateAndUpdate(lending.StudentID, lending.BookID); apiError != nil {
+		apiError.Message = errors.CreateFailMessage
+		return 0, apiError
 	}
 
-	err = r.BeforeCreate(lending.StudentID, lending.BookID)
-	if err != nil {
-		return 0, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailMessage,
-			Error:   err.Error(),
-		}
+	if apiError := r.BeforeCreate(lending.StudentID, lending.BookID); apiError != nil {
+		apiError.Message = errors.CreateFailMessage
+		return 0, apiError
 	}
 
 	result := r.DB.Create(&lending)
-	if err = result.Error; err != nil {
+	if err := result.Error; err != nil {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
@@ -93,17 +84,14 @@ func (r LendingRepository) Update(id string, upLending model.Lending) (model.Len
 		return model.Lending{}, apiError
 	}
 
-	err := r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
-	if err != nil {
-		return model.Lending{}, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailMessage,
-			Error:   err.Error(),
-		}
+	apiError = r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
+	if apiError != nil {
+		apiError.Message = errors.UpdateFailMessage
+		return model.Lending{}, apiError
 	}
 
 	result := r.DB.Model(&lending).Updates(upLending)
-	if err = result.Error; err != nil {
+	if err := result.Error; err != nil {
 		return model.Lending{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -135,41 +123,65 @@ func (r LendingRepository) Delete(id string) (apiError *errors.ApiError) {
 }
 
 // beforeCreateAndUpdate validate if the student or book exists before create the lending.
-func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) error {
+func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors.ApiError {
 	var student model.Student
 	result := r.DB.First(&student, studentId)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return fmt.Errorf("student not found")
+			return &errors.ApiError{
+				Status:  http.StatusNotFound,
+				Message: errors.UpdateFailMessage,
+				Error:   "student not found",
+			}
 		}
 
-		return err
+		return &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	var book model.Book
 	result = r.DB.First(&book, bookId)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return fmt.Errorf("book not found")
+			return &errors.ApiError{
+				Status:  http.StatusNotFound,
+				Message: errors.UpdateFailMessage,
+				Error:   "book not found",
+			}
 		}
 
-		return err
+		return &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	return nil
 }
 
 // beforeCreate validate if the book is already lent.
-func (r LendingRepository) BeforeCreate(studentId, bookId uint) error {
+func (r LendingRepository) BeforeCreate(studentId, bookId uint) *errors.ApiError {
 	var lending model.Lending
 	result := r.DB.Where("book_id = ?", bookId).First(&lending)
 	if result.RowsAffected > 0 {
-		return fmt.Errorf("book is already lent")
+		return &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   "book is already lent",
+		}
 	}
 
 	result = r.DB.Where("student_id = ?", studentId).First(&lending)
 	if result.RowsAffected > 0 {
-		return fmt.Errorf("student has already lent a book")
+		return &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   "student has already lent a book",
+		}
 	}
 
 	return nil
