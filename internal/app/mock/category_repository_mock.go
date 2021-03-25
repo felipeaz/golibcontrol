@@ -10,6 +10,8 @@ import (
 
 type CategoryRepositoryMock struct {
 	TestError         bool
+	TestUpdateError   bool
+	TestDeleteError   bool
 	TestNotFoundError bool
 }
 
@@ -72,13 +74,13 @@ func (r CategoryRepositoryMock) Create(category model.Category) (uint, *errors.A
 }
 
 func (r CategoryRepositoryMock) Update(id string, upCategory model.Category) (model.Category, *errors.ApiError) {
-	if r.TestNotFoundError {
-		return model.Category{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.UpdateFailMessage,
-			Error:   "category not found",
-		}
-	} else if r.TestError {
+	_, apiError := r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.UpdateFailMessage
+		return model.Category{}, apiError
+	}
+
+	if r.TestUpdateError {
 		return model.Category{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -90,13 +92,13 @@ func (r CategoryRepositoryMock) Update(id string, upCategory model.Category) (mo
 }
 
 func (r CategoryRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
-	if r.TestNotFoundError {
-		return &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.DeleteFailMessage,
-			Error:   "category not found",
-		}
-	} else if r.TestError {
+	_, apiError = r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.DeleteFailMessage
+		return
+	}
+
+	if r.TestDeleteError {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,

@@ -9,9 +9,11 @@ import (
 )
 
 type BookRepositoryMock struct {
-	TestError                 bool
-	TestCategoryNotFoundError bool
-	TestNotFoundError         bool
+	TestError                     bool
+	TestFindError                 bool
+	TestCategoryNotFoundError     bool
+	TestNotFoundError             bool
+	TestBeforeUpdateNotFoundError bool
 }
 
 func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError) {
@@ -19,7 +21,7 @@ func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
-			Error:   "mocked test get error",
+			Error:   "mocked error",
 		}
 	}
 
@@ -39,18 +41,18 @@ func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError
 }
 
 func (r BookRepositoryMock) Find(id string) (book model.Book, apiError *errors.ApiError) {
-	if r.TestError {
+	if r.TestFindError {
 		return model.Book{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
-			Error:   "mocked test find error",
+			Error:   "mocked error",
 		}
 	} else if r.TestNotFoundError {
 
 		return model.Book{}, &errors.ApiError{
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
-			Error:   "mocked test find not found error",
+			Error:   "book not found",
 		}
 	}
 
@@ -68,9 +70,10 @@ func (r BookRepositoryMock) Find(id string) (book model.Book, apiError *errors.A
 }
 
 func (r BookRepositoryMock) Create(book model.Book) (uint, *errors.ApiError) {
-	_, err := r.BeforeCreate(book.CategoriesId)
+	_, apiError := r.BeforeCreate(book.CategoriesId)
 	if r.TestCategoryNotFoundError {
-		return 0, err
+		apiError.Message = errors.CreateFailMessage
+		return 0, apiError
 	} else if r.TestError {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
@@ -79,14 +82,18 @@ func (r BookRepositoryMock) Create(book model.Book) (uint, *errors.ApiError) {
 		}
 	}
 
-	return 25, err
+	return 25, nil
 }
 
 func (r BookRepositoryMock) Update(id string, upBook model.Book) (model.Book, *errors.ApiError) {
+	_, apiError := r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.UpdateFailMessage
+		return model.Book{}, apiError
+	}
+
 	err := r.BeforeUpdate(upBook.ID, upBook.CategoriesId)
-	if r.TestNotFoundError {
-		return model.Book{}, err
-	} else if r.TestCategoryNotFoundError {
+	if r.TestCategoryNotFoundError {
 		return model.Book{}, err
 	} else if r.TestError {
 		return model.Book{}, &errors.ApiError{
@@ -106,12 +113,18 @@ func (r BookRepositoryMock) Update(id string, upBook model.Book) (model.Book, *e
 }
 
 func (r BookRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
+	_, apiError = r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.DeleteFailMessage
+		return
+	}
+
 	r.BeforeDelete(1)
-	if r.TestNotFoundError {
+	if r.TestError {
 		return &errors.ApiError{
-			Status:  http.StatusNotFound,
+			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
-			Error:   "book not found",
+			Error:   "mocked error",
 		}
 	}
 	return nil
@@ -133,7 +146,7 @@ func (r BookRepositoryMock) BeforeCreate(categoriesId string) ([]uint, *errors.A
 func (r BookRepositoryMock) AfterCreate(bookId uint, categoriesId []uint) {}
 
 func (r BookRepositoryMock) BeforeUpdate(bookId uint, categoriesId string) *errors.ApiError {
-	if r.TestNotFoundError {
+	if r.TestBeforeUpdateNotFoundError {
 		return &errors.ApiError{
 			Status:  http.StatusNotFound,
 			Message: errors.UpdateFailMessage,

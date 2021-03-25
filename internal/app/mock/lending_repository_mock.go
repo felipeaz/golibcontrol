@@ -92,15 +92,13 @@ func (r LendingRepositoryMock) Create(lending model.Lending) (uint, *errors.ApiE
 
 // Update update an existent lending.
 func (r LendingRepositoryMock) Update(id string, upLending model.Lending) (model.Lending, *errors.ApiError) {
-	if r.TestNotFoundError {
-		return model.Lending{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.UpdateFailMessage,
-			Error:   "lending not found",
-		}
+	_, apiError := r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.UpdateFailMessage
+		return model.Lending{}, apiError
 	}
 
-	apiError := r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
+	apiError = r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
 		return model.Lending{}, apiError
@@ -119,12 +117,10 @@ func (r LendingRepositoryMock) Update(id string, upLending model.Lending) (model
 
 // Delete delete an existent lending from DB.
 func (r LendingRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
-	if r.TestNotFoundError {
-		return &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.DeleteFailMessage,
-			Error:   "lending not found",
-		}
+	_, apiError = r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.DeleteFailMessage
+		return
 	}
 
 	if r.TestError {

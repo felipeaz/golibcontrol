@@ -192,6 +192,27 @@ func TestUpdateCategoryWithError(t *testing.T) {
 	assert.Equal(t, "mocked error", apiError.Error)
 }
 
+func TestUpdateCategoryError(t *testing.T) {
+	// Init
+	repository := mock.CategoryRepositoryMock{}
+	repository.TestUpdateError = true
+	m := CategoryModule{Repository: repository}
+	id := "5"
+	upCategory := model.Category{
+		Name: "Sci-Fi Updated",
+	}
+
+	// Exec
+	category, apiError := m.Update(id, upCategory)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Category{}, category)
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
+}
+
 func TestDeleteCategory(t *testing.T) {
 	// Init
 	repository := mock.CategoryRepositoryMock{}
@@ -222,10 +243,27 @@ func TestDeleteCategoryNotFound(t *testing.T) {
 	assert.Equal(t, "category not found", apiError.Error)
 }
 
-func TestDeleteCategoryError(t *testing.T) {
+func TestDeleteCategoryWithError(t *testing.T) {
 	// Init
 	repository := mock.CategoryRepositoryMock{}
 	repository.TestError = true
+	m := CategoryModule{Repository: repository}
+	id := "5"
+
+	// Exec
+	apiError := m.Delete(id)
+
+	// Validation
+	assert.NotNil(t, apiError)
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.DeleteFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
+}
+
+func TestDeleteCategoryError(t *testing.T) {
+	// Init
+	repository := mock.CategoryRepositoryMock{}
+	repository.TestDeleteError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
 
