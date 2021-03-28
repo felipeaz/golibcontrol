@@ -10,6 +10,8 @@ import (
 
 type LendingRepositoryMock struct {
 	TestError                   bool
+	TestUpdateError             bool
+	TestDeleteError             bool
 	TestNotFoundError           bool
 	TestBookNotFoundError       bool
 	TestStudentNotFoundError    bool
@@ -79,7 +81,7 @@ func (r LendingRepositoryMock) Create(lending model.Lending) (uint, *errors.ApiE
 		return 0, apiError
 	}
 
-	if r.TestError {
+	if r.TestError && !r.TestBookNotFoundError && !r.TestStudentNotFoundError {
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
@@ -104,7 +106,7 @@ func (r LendingRepositoryMock) Update(id string, upLending model.Lending) (model
 		return model.Lending{}, apiError
 	}
 
-	if r.TestError {
+	if r.TestUpdateError {
 		return model.Lending{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -123,7 +125,7 @@ func (r LendingRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 		return
 	}
 
-	if r.TestError {
+	if r.TestDeleteError {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
