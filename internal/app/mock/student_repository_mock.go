@@ -11,6 +11,8 @@ import (
 type StudentRepositoryMock struct {
 	TestError         bool
 	TestNotFoundError bool
+	TestUpdateError   bool
+	TestDeleteError   bool
 }
 
 // Get returns all students.
@@ -88,15 +90,13 @@ func (r StudentRepositoryMock) Create(student model.Student) (uint, *errors.ApiE
 
 // Update update an existent student.
 func (r StudentRepositoryMock) Update(id string, upStudent model.Student) (model.Student, *errors.ApiError) {
-	if r.TestNotFoundError {
-		return model.Student{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.UpdateFailMessage,
-			Error:   "student not found",
-		}
+	_, apiError := r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.UpdateFailMessage
+		return model.Student{}, apiError
 	}
 
-	if r.TestError {
+	if r.TestUpdateError {
 		return model.Student{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -109,15 +109,13 @@ func (r StudentRepositoryMock) Update(id string, upStudent model.Student) (model
 
 // Delete delete an existent student from DB.
 func (r StudentRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
-	if r.TestNotFoundError {
-		return &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.DeleteFailMessage,
-			Error:   "student not found",
-		}
+	_, apiError = r.Find(id)
+	if apiError != nil {
+		apiError.Message = errors.DeleteFailMessage
+		return
 	}
 
-	if r.TestError {
+	if r.TestDeleteError {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
