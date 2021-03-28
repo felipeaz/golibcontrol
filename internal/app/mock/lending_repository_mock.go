@@ -106,7 +106,7 @@ func (r LendingRepositoryMock) Update(id string, upLending model.Lending) (model
 		return model.Lending{}, apiError
 	}
 
-	if r.TestUpdateError {
+	if r.TestUpdateError && !r.TestBookNotFoundError && !r.TestStudentNotFoundError {
 		return model.Lending{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -125,7 +125,7 @@ func (r LendingRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 		return
 	}
 
-	if r.TestDeleteError {
+	if r.TestDeleteError && !r.TestNotFoundError {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,

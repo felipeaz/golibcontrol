@@ -276,69 +276,168 @@ func TestUpdateLending(t *testing.T) {
 }
 
 func TestUpdateLendingNotFoundError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestNotFoundError = true
+
+	m := LendingModule{Repository: r}
+	id := "25"
+	upLending := model.Lending{
+		ID:          25,
+		BookID:      5,
+		StudentID:   10,
+		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+	}
+
+	lending, apiError := m.Update(id, upLending)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Lending{}, lending)
+	assert.Equal(t, http.StatusNotFound, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "lending not found", apiError.Error)
 
 }
 
 func TestUpdateLendingStudentNotFoundError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestStudentNotFoundError = true
 
+	m := LendingModule{Repository: r}
+	id := "25"
+	upLending := model.Lending{
+		ID:          25,
+		BookID:      5,
+		StudentID:   10,
+		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+	}
+
+	lending, apiError := m.Update(id, upLending)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Lending{}, lending)
+	assert.Equal(t, http.StatusNotFound, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "student not found", apiError.Error)
 }
 
 func TestUpdateLendingStudentError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestStudentNotFoundError = true
+	r.TestError = true
 
+	m := LendingModule{Repository: r}
+	id := "25"
+	upLending := model.Lending{
+		ID:          25,
+		BookID:      5,
+		StudentID:   10,
+		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+	}
+
+	lending, apiError := m.Update(id, upLending)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Lending{}, lending)
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
 }
 
 func TestUpdateLendingBookNotFoundError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestBookNotFoundError = true
 
+	m := LendingModule{Repository: r}
+	id := "25"
+	upLending := model.Lending{
+		ID:          25,
+		BookID:      5,
+		StudentID:   10,
+		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+	}
+
+	lending, apiError := m.Update(id, upLending)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Lending{}, lending)
+	assert.Equal(t, http.StatusNotFound, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "book not found", apiError.Error)
 }
 
 func TestUpdateLendingBookError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestBookNotFoundError = true
+	r.TestError = true
 
+	m := LendingModule{Repository: r}
+	id := "25"
+	upLending := model.Lending{
+		ID:          25,
+		BookID:      5,
+		StudentID:   10,
+		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+	}
+
+	lending, apiError := m.Update(id, upLending)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Lending{}, lending)
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
 }
 
 func TestUpdateLendingError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestUpdateError = true
 
+	m := LendingModule{Repository: r}
+	id := "25"
+	upLending := model.Lending{
+		ID:          25,
+		BookID:      5,
+		StudentID:   10,
+		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+	}
+
+	lending, apiError := m.Update(id, upLending)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Lending{}, lending)
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
 }
 
 func TestDeleteLending(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
 
+	m := LendingModule{Repository: r}
+	id := "25"
+
+	apiError := m.Delete(id)
+	assert.Nil(t, apiError)
 }
 
 func TestDeleteLendingError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestDeleteError = true
 
+	m := LendingModule{Repository: r}
+	id := "25"
+
+	apiError := m.Delete(id)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
+	assert.Equal(t, errors.DeleteFailMessage, apiError.Message)
+	assert.Equal(t, "mocked error", apiError.Error)
 }
 
 func TestDeleteLendingNotFoundError(t *testing.T) {
+	r := mock.LendingRepositoryMock{}
+	r.TestNotFoundError = true
 
-}
+	m := LendingModule{Repository: r}
+	id := "25"
 
-func TestBeforeCreateAndUpdate(t *testing.T) {
-
-}
-
-func TestBeforeCreateAndUpdateStudentNotFoundError(t *testing.T) {
-
-}
-
-func TestBeforeCreateAndUpdateStudentError(t *testing.T) {
-
-}
-
-func TestBeforeCreateAndUpdateBookNotFoundError(t *testing.T) {
-
-}
-
-func TestBeforeCreateAndUpdateBookError(t *testing.T) {
-
-}
-
-func TestBeforeCreate(t *testing.T) {
-
-}
-
-func TestBeforeCreateBookAlreadyLentError(t *testing.T) {
-
-}
-
-func TestBeforeCreateStudentAlreadyLentError(t *testing.T) {
-
+	apiError := m.Delete(id)
+	assert.NotNil(t, apiError)
+	assert.Equal(t, http.StatusNotFound, apiError.Status)
+	assert.Equal(t, errors.DeleteFailMessage, apiError.Message)
+	assert.Equal(t, "lending not found", apiError.Error)
 }
