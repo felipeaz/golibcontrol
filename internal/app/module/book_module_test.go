@@ -199,7 +199,7 @@ func TestUpdateBookNotFound(t *testing.T) {
 	bookRepositoryMock.TestNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
-	book := model.Book{
+	upBook := model.Book{
 		RegisterNumber: "123",
 		Title:          "Mocked Book",
 		Author:         "Mocked Author",
@@ -207,10 +207,11 @@ func TestUpdateBookNotFound(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, book)
+	book, apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "book not found", apiError.Error)
@@ -222,7 +223,7 @@ func TestBeforeUpdateBookNotFound(t *testing.T) {
 	bookRepositoryMock.TestBeforeUpdateNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
-	book := model.Book{
+	upBook := model.Book{
 		RegisterNumber: "123",
 		Title:          "Mocked Book",
 		Author:         "Mocked Author",
@@ -230,10 +231,11 @@ func TestBeforeUpdateBookNotFound(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, book)
+	book, apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "book not found", apiError.Error)
@@ -245,7 +247,7 @@ func TestUpdateBookCategoryNotFound(t *testing.T) {
 	bookRepositoryMock.TestCategoryNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
-	book := model.Book{
+	upBook := model.Book{
 		RegisterNumber: "123",
 		Title:          "Mocked Book",
 		Author:         "Mocked Author",
@@ -254,10 +256,11 @@ func TestUpdateBookCategoryNotFound(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, book)
+	book, apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "category with ID: 5 not found", apiError.Error)
@@ -269,7 +272,7 @@ func TestUpdateBookWithError(t *testing.T) {
 	bookRepositoryMock.TestError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
-	book := model.Book{
+	upBook := model.Book{
 		RegisterNumber: "123",
 		Title:          "Mocked Book",
 		Author:         "Mocked Author",
@@ -278,10 +281,11 @@ func TestUpdateBookWithError(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, book)
+	book, apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
+	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)
