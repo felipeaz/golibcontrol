@@ -8,12 +8,12 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/mock"
+	"github.com/FelipeAz/golibcontrol/internal/app/mock/repository"
 )
 
 func TestGetBook(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 
 	// Exec
@@ -31,7 +31,7 @@ func TestGetBook(t *testing.T) {
 
 func TestGetBookError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 
@@ -48,7 +48,7 @@ func TestGetBookError(t *testing.T) {
 
 func TestFindBook(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 
 	// Exec
@@ -67,7 +67,7 @@ func TestFindBook(t *testing.T) {
 
 func TestFindBookError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestFindError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 
@@ -85,7 +85,7 @@ func TestFindBookError(t *testing.T) {
 
 func TestFindBookNotFoundError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 
@@ -103,7 +103,7 @@ func TestFindBookNotFoundError(t *testing.T) {
 
 func TestCreateBook(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 	book := model.Book{
 		RegisterNumber: "123",
@@ -123,7 +123,7 @@ func TestCreateBook(t *testing.T) {
 
 func TestCreateBookWithCategoryError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestCategoryNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	book := model.Book{
@@ -147,7 +147,7 @@ func TestCreateBookWithCategoryError(t *testing.T) {
 
 func TestCreateBookWithError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	book := model.Book{
@@ -171,7 +171,7 @@ func TestCreateBookWithError(t *testing.T) {
 
 func TestBookUpdate(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
 	upBook := model.Book{
@@ -195,7 +195,7 @@ func TestBookUpdate(t *testing.T) {
 
 func TestUpdateBookNotFound(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
@@ -219,7 +219,7 @@ func TestUpdateBookNotFound(t *testing.T) {
 
 func TestBeforeUpdateBookNotFound(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestBeforeUpdateNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
@@ -243,7 +243,7 @@ func TestBeforeUpdateBookNotFound(t *testing.T) {
 
 func TestUpdateBookCategoryNotFound(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestCategoryNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
@@ -268,7 +268,7 @@ func TestUpdateBookCategoryNotFound(t *testing.T) {
 
 func TestUpdateBookWithError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
@@ -293,7 +293,7 @@ func TestUpdateBookWithError(t *testing.T) {
 
 func TestDeleteBook(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
 
@@ -306,7 +306,7 @@ func TestDeleteBook(t *testing.T) {
 
 func TestDeleteBookNotFound(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestNotFoundError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"
@@ -323,7 +323,7 @@ func TestDeleteBookNotFound(t *testing.T) {
 
 func TestDeleteBookError(t *testing.T) {
 	// Init
-	var bookRepositoryMock = mock.BookRepositoryMock{}
+	var bookRepositoryMock = repository.BookRepositoryMock{}
 	bookRepositoryMock.TestError = true
 	m := BookModule{BookRepository: bookRepositoryMock}
 	id := "25"

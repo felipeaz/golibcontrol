@@ -8,12 +8,12 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/mock"
+	repository2 "github.com/FelipeAz/golibcontrol/internal/app/mock/repository"
 )
 
 func TestGetCategory(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	m := CategoryModule{Repository: repository}
 
 	// Exec
@@ -28,7 +28,7 @@ func TestGetCategory(t *testing.T) {
 
 func TestGetCategoryError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestError = true
 	m := CategoryModule{Repository: repository}
 
@@ -45,7 +45,7 @@ func TestGetCategoryError(t *testing.T) {
 
 func TestFindCategory(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	m := CategoryModule{Repository: repository}
 	id := "5"
 
@@ -61,7 +61,7 @@ func TestFindCategory(t *testing.T) {
 
 func TestFindCategoryError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
@@ -79,7 +79,7 @@ func TestFindCategoryError(t *testing.T) {
 
 func TestFindCategoryNotFoundError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestNotFoundError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
@@ -97,7 +97,7 @@ func TestFindCategoryNotFoundError(t *testing.T) {
 
 func TestCreateCategory(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	m := CategoryModule{Repository: repository}
 	category := model.Category{
 		Name: "Sci-Fi",
@@ -114,7 +114,7 @@ func TestCreateCategory(t *testing.T) {
 
 func TestCreateCategoryWithError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestError = true
 	m := CategoryModule{Repository: repository}
 	category := model.Category{
@@ -134,7 +134,7 @@ func TestCreateCategoryWithError(t *testing.T) {
 
 func TestCategoryUpdate(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	m := CategoryModule{Repository: repository}
 	id := "5"
 	upCategory := model.Category{
@@ -152,7 +152,7 @@ func TestCategoryUpdate(t *testing.T) {
 
 func TestUpdateCategoryNotFound(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestNotFoundError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
@@ -173,7 +173,7 @@ func TestUpdateCategoryNotFound(t *testing.T) {
 
 func TestUpdateCategoryWithError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
@@ -194,7 +194,7 @@ func TestUpdateCategoryWithError(t *testing.T) {
 
 func TestUpdateCategoryError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestUpdateError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
@@ -215,7 +215,7 @@ func TestUpdateCategoryError(t *testing.T) {
 
 func TestDeleteCategory(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	m := CategoryModule{Repository: repository}
 	id := "5"
 
@@ -228,7 +228,7 @@ func TestDeleteCategory(t *testing.T) {
 
 func TestDeleteCategoryNotFound(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestNotFoundError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
@@ -245,7 +245,7 @@ func TestDeleteCategoryNotFound(t *testing.T) {
 
 func TestDeleteCategoryWithError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"
@@ -262,7 +262,7 @@ func TestDeleteCategoryWithError(t *testing.T) {
 
 func TestDeleteCategoryError(t *testing.T) {
 	// Init
-	repository := mock.CategoryRepositoryMock{}
+	repository := repository2.CategoryRepositoryMock{}
 	repository.TestDeleteError = true
 	m := CategoryModule{Repository: repository}
 	id := "5"

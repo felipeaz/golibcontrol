@@ -1,4 +1,4 @@
-package mock
+package repository
 
 import (
 	"net/http"
@@ -93,7 +93,7 @@ func (r BookRepositoryMock) Update(id string, upBook model.Book) (model.Book, *e
 	}
 
 	err := r.BeforeUpdate(upBook.ID, upBook.CategoriesId)
-	if r.TestCategoryNotFoundError {
+	if r.TestCategoryNotFoundError || r.TestBeforeUpdateNotFoundError {
 		return model.Book{}, err
 	} else if r.TestError {
 		return model.Book{}, &errors.ApiError{

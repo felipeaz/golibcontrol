@@ -9,11 +9,11 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/mock"
+	"github.com/FelipeAz/golibcontrol/internal/app/mock/repository"
 )
 
 func TestGetLending(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 
 	m := LendingModule{Repository: r}
 
@@ -28,7 +28,7 @@ func TestGetLending(t *testing.T) {
 }
 
 func TestGetLendingError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestError = true
 
 	m := LendingModule{Repository: r}
@@ -43,7 +43,7 @@ func TestGetLendingError(t *testing.T) {
 }
 
 func TestFindLending(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 
 	m := LendingModule{Repository: r}
 	id := "25"
@@ -59,7 +59,7 @@ func TestFindLending(t *testing.T) {
 }
 
 func TestFindLendingError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestError = true
 
 	m := LendingModule{Repository: r}
@@ -75,7 +75,7 @@ func TestFindLendingError(t *testing.T) {
 }
 
 func TestFindLendingNotFoundError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestNotFoundError = true
 
 	m := LendingModule{Repository: r}
@@ -91,7 +91,7 @@ func TestFindLendingNotFoundError(t *testing.T) {
 }
 
 func TestCreateLending(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 
 	m := LendingModule{Repository: r}
 	lending := model.Lending{
@@ -107,7 +107,7 @@ func TestCreateLending(t *testing.T) {
 }
 
 func TestCreateLendingStudentNotFoundError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestStudentNotFoundError = true
 
 	m := LendingModule{Repository: r}
@@ -128,7 +128,7 @@ func TestCreateLendingStudentNotFoundError(t *testing.T) {
 }
 
 func TestCreateLendingStudentError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestStudentNotFoundError = true
 	r.TestError = true
 
@@ -150,7 +150,7 @@ func TestCreateLendingStudentError(t *testing.T) {
 }
 
 func TestCreateLendingBookNotFoundError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestBookNotFoundError = true
 
 	m := LendingModule{Repository: r}
@@ -171,7 +171,7 @@ func TestCreateLendingBookNotFoundError(t *testing.T) {
 }
 
 func TestCreateLendingBookError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestBookNotFoundError = true
 	r.TestError = true
 
@@ -193,7 +193,7 @@ func TestCreateLendingBookError(t *testing.T) {
 }
 
 func TestCreateLendingBookAlreadyLentError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestBookAlreadyLentError = true
 
 	m := LendingModule{Repository: r}
@@ -214,7 +214,7 @@ func TestCreateLendingBookAlreadyLentError(t *testing.T) {
 }
 
 func TestCreateLendingStudentAlreadyLentError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestStudentAlreadyLentError = true
 
 	m := LendingModule{Repository: r}
@@ -235,7 +235,7 @@ func TestCreateLendingStudentAlreadyLentError(t *testing.T) {
 }
 
 func TestCreateLendingError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestError = true
 
 	m := LendingModule{Repository: r}
@@ -256,7 +256,7 @@ func TestCreateLendingError(t *testing.T) {
 }
 
 func TestUpdateLending(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 
 	m := LendingModule{Repository: r}
 	id := "25"
@@ -276,7 +276,7 @@ func TestUpdateLending(t *testing.T) {
 }
 
 func TestUpdateLendingNotFoundError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestNotFoundError = true
 
 	m := LendingModule{Repository: r}
@@ -298,7 +298,7 @@ func TestUpdateLendingNotFoundError(t *testing.T) {
 }
 
 func TestUpdateLendingStudentNotFoundError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestStudentNotFoundError = true
 
 	m := LendingModule{Repository: r}
@@ -319,7 +319,7 @@ func TestUpdateLendingStudentNotFoundError(t *testing.T) {
 }
 
 func TestUpdateLendingStudentError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestStudentNotFoundError = true
 	r.TestError = true
 
@@ -341,7 +341,7 @@ func TestUpdateLendingStudentError(t *testing.T) {
 }
 
 func TestUpdateLendingBookNotFoundError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestBookNotFoundError = true
 
 	m := LendingModule{Repository: r}
@@ -362,7 +362,7 @@ func TestUpdateLendingBookNotFoundError(t *testing.T) {
 }
 
 func TestUpdateLendingBookError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestBookNotFoundError = true
 	r.TestError = true
 
@@ -384,7 +384,7 @@ func TestUpdateLendingBookError(t *testing.T) {
 }
 
 func TestUpdateLendingError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestUpdateError = true
 
 	m := LendingModule{Repository: r}
@@ -405,7 +405,7 @@ func TestUpdateLendingError(t *testing.T) {
 }
 
 func TestDeleteLending(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 
 	m := LendingModule{Repository: r}
 	id := "25"
@@ -415,7 +415,7 @@ func TestDeleteLending(t *testing.T) {
 }
 
 func TestDeleteLendingError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestDeleteError = true
 
 	m := LendingModule{Repository: r}
@@ -429,7 +429,7 @@ func TestDeleteLendingError(t *testing.T) {
 }
 
 func TestDeleteLendingNotFoundError(t *testing.T) {
-	r := mock.LendingRepositoryMock{}
+	r := repository.LendingRepositoryMock{}
 	r.TestNotFoundError = true
 
 	m := LendingModule{Repository: r}

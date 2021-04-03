@@ -9,11 +9,11 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/mock"
+	"github.com/FelipeAz/golibcontrol/internal/app/mock/repository"
 )
 
 func TestGetStudent(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 
 	m := StudentModule{Repository: r}
 
@@ -34,7 +34,7 @@ func TestGetStudent(t *testing.T) {
 }
 
 func TestGetStudentError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestError = true
 
 	m := StudentModule{Repository: r}
@@ -49,7 +49,7 @@ func TestGetStudentError(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 
 	m := StudentModule{Repository: r}
 	id := "25"
@@ -70,7 +70,7 @@ func TestFind(t *testing.T) {
 }
 
 func TestFindError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestError = true
 
 	m := StudentModule{Repository: r}
@@ -86,7 +86,7 @@ func TestFindError(t *testing.T) {
 }
 
 func TestFindNotFoundError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestNotFoundError = true
 
 	m := StudentModule{Repository: r}
@@ -102,7 +102,7 @@ func TestFindNotFoundError(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 
 	m := StudentModule{Repository: r}
 	student := model.Student{
@@ -125,7 +125,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestCreateError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestError = true
 
 	m := StudentModule{Repository: r}
@@ -151,7 +151,7 @@ func TestCreateError(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 
 	m := StudentModule{Repository: r}
 	id := "25"
@@ -175,7 +175,7 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestUpdateError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestUpdateError = true
 
 	m := StudentModule{Repository: r}
@@ -202,7 +202,7 @@ func TestUpdateError(t *testing.T) {
 }
 
 func TestUpdateNotFoundError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestNotFoundError = true
 
 	m := StudentModule{Repository: r}
@@ -229,7 +229,7 @@ func TestUpdateNotFoundError(t *testing.T) {
 }
 
 func TestDeleteStudent(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 
 	m := StudentModule{Repository: r}
 	id := "25"
@@ -240,7 +240,7 @@ func TestDeleteStudent(t *testing.T) {
 }
 
 func TestDeleteStudentError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestDeleteError = true
 
 	m := StudentModule{Repository: r}
@@ -255,7 +255,7 @@ func TestDeleteStudentError(t *testing.T) {
 }
 
 func TestDeleteStudentNotFoundError(t *testing.T) {
-	r := mock.StudentRepositoryMock{}
+	r := repository.StudentRepositoryMock{}
 	r.TestNotFoundError = true
 
 	m := StudentModule{Repository: r}
