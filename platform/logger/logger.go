@@ -33,8 +33,8 @@ func LogError(err error) {
 	defer f.Close()
 
 	errorLog := logs.Log{
-		Message: err.Error(),
 		Time:    time.Now(),
+		Message: err.Error(),
 	}
 
 	b, e := json.Marshal(errorLog)

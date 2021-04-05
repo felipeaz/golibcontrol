@@ -7,6 +7,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/platform/logger"
 )
 
 // CategoryRepository is responsible of getting/saving information from DB.
@@ -18,6 +19,7 @@ type CategoryRepository struct {
 func (r CategoryRepository) Get() (categories []model.Category, apiError *errors.ApiError) {
 	result := r.DB.Find(&categories)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
@@ -33,6 +35,7 @@ func (r CategoryRepository) Find(id string) (category model.Category, apiError *
 	result := r.DB.Model(model.Category{}).Where("id = ?", id).First(&category)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
+			logger.LogError(err)
 			return model.Category{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
@@ -54,6 +57,7 @@ func (r CategoryRepository) Find(id string) (category model.Category, apiError *
 func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiError) {
 	result := r.DB.Create(&category)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
@@ -74,6 +78,7 @@ func (r CategoryRepository) Update(id string, upCategory model.Category) (model.
 
 	result := r.DB.Model(&category).Updates(upCategory)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return model.Category{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -94,6 +99,7 @@ func (r CategoryRepository) Delete(id string) (apiError *errors.ApiError) {
 
 	err := r.DB.Delete(&category).Error
 	if err != nil {
+		logger.LogError(err)
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,

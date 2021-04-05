@@ -7,6 +7,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/platform/logger"
 )
 
 // LendingRepository is responsible of getting/saving information from DB.
@@ -20,6 +21,7 @@ type LendingRepository struct {
 func (r LendingRepository) Get() (lendings []model.Lending, apiError *errors.ApiError) {
 	result := r.DB.Find(&lendings)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
@@ -35,6 +37,7 @@ func (r LendingRepository) Find(id string) (lending model.Lending, apiError *err
 	result := r.DB.Model(model.Lending{}).Where("id = ?", id).First(&lending)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
+			logger.LogError(err)
 			return model.Lending{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
@@ -66,6 +69,7 @@ func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError
 
 	result := r.DB.Create(&lending)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
@@ -92,6 +96,7 @@ func (r LendingRepository) Update(id string, upLending model.Lending) (model.Len
 
 	result := r.DB.Model(&lending).Updates(upLending)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return model.Lending{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -112,6 +117,7 @@ func (r LendingRepository) Delete(id string) (apiError *errors.ApiError) {
 
 	err := r.DB.Delete(&lending).Error
 	if err != nil {
+		logger.LogError(err)
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
@@ -135,6 +141,7 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 			}
 		}
 
+		logger.LogError(err)
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -153,6 +160,7 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 			}
 		}
 
+		logger.LogError(err)
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,

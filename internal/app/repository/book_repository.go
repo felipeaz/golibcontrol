@@ -8,6 +8,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/logger"
 )
 
 // BookRepository is responsible of getting/saving information from DB.
@@ -20,6 +21,7 @@ type BookRepository struct {
 func (r BookRepository) Get() (books []model.Book, apiError *errors.ApiError) {
 	result := r.DB.Preload("BookCategory").Find(&books)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
@@ -35,6 +37,7 @@ func (r BookRepository) Find(id string) (book model.Book, apiError *errors.ApiEr
 	result := r.DB.Preload("BookCategory").Model(model.Book{}).Where("id = ?", id).First(&book)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
+			logger.LogError(err)
 			return model.Book{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
@@ -62,6 +65,7 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 
 	result := r.DB.Create(&book)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
@@ -89,6 +93,7 @@ func (r BookRepository) Update(id string, upBook model.Book) (model.Book, *error
 
 	result := r.DB.Model(&book).Updates(upBook)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return model.Book{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -110,6 +115,7 @@ func (r BookRepository) Delete(id string) (apiError *errors.ApiError) {
 	r.BeforeDelete(book.ID)
 	err := r.DB.Delete(&book).Error
 	if err != nil {
+		logger.LogError(err)
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,

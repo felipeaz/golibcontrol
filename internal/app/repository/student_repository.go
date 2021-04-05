@@ -7,6 +7,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/platform/logger"
 )
 
 // StudentRepository is responsible of getting/saving information from DB.
@@ -18,6 +19,7 @@ type StudentRepository struct {
 func (r StudentRepository) Get() (students []model.Student, apiError *errors.ApiError) {
 	result := r.DB.Find(&students)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
@@ -33,6 +35,7 @@ func (r StudentRepository) Find(id string) (student model.Student, apiError *err
 	result := r.DB.Model(model.Student{}).Where("id = ?", id).First(&student)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
+			logger.LogError(err)
 			return model.Student{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
@@ -54,6 +57,7 @@ func (r StudentRepository) Find(id string) (student model.Student, apiError *err
 func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError) {
 	result := r.DB.Create(&student)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
@@ -74,6 +78,7 @@ func (r StudentRepository) Update(id string, upStudent model.Student) (model.Stu
 
 	result := r.DB.Model(&student).Updates(upStudent)
 	if err := result.Error; err != nil {
+		logger.LogError(err)
 		return model.Student{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
@@ -94,6 +99,7 @@ func (r StudentRepository) Delete(id string) (apiError *errors.ApiError) {
 
 	err := r.DB.Delete(&student).Error
 	if err != nil {
+		logger.LogError(err)
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
