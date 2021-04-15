@@ -7,12 +7,12 @@ import (
 )
 
 // BookRoutes initialize Book routes.
-func BookRoutes(r *gin.Engine, bookHandler rest.BookHandler) {
-	rg := r.Group("/book")
+func BookRoutes(rg *gin.RouterGroup, bookHandler rest.BookHandler) {
+	r := rg.Group("/book")
 
-	rg.GET("/", bookHandler.Get)
-	rg.GET("/:id", bookHandler.Find)
-	rg.POST("/", bookHandler.Create)
-	rg.PUT("/:id", bookHandler.Update)
-	rg.DELETE("/:id", bookHandler.Delete)
+	r.GET("/", bookHandler.Get)
+	r.GET("/:id", bookHandler.Find)
+	r.POST("/", bookHandler.Create)
+	r.PUT("/:id", bookHandler.Update)
+	r.DELETE("/:id", bookHandler.Delete)
 }

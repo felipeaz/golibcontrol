@@ -7,12 +7,12 @@ import (
 )
 
 // CategoryRoutes initialize Category routes.
-func CategoryRoutes(r *gin.Engine, categoryHandler rest.CategoryHandler) {
-	rg := r.Group("/category")
+func CategoryRoutes(rg *gin.RouterGroup, categoryHandler rest.CategoryHandler) {
+	r := rg.Group("/category")
 
-	rg.GET("/", categoryHandler.Get)
-	rg.GET("/:id", categoryHandler.Find)
-	rg.POST("/", categoryHandler.Create)
-	rg.PUT("/:id", categoryHandler.Update)
-	rg.DELETE("/:id", categoryHandler.Delete)
+	r.GET("/", categoryHandler.Get)
+	r.GET("/:id", categoryHandler.Find)
+	r.POST("/", categoryHandler.Create)
+	r.PUT("/:id", categoryHandler.Update)
+	r.DELETE("/:id", categoryHandler.Delete)
 }

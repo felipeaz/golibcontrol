@@ -7,12 +7,12 @@ import (
 )
 
 // StudentRoutes initialize Category routes.
-func StudentRoutes(r *gin.Engine, studentHandler rest.StudentHandler) {
-	rg := r.Group("/student")
+func StudentRoutes(rg *gin.RouterGroup, studentHandler rest.StudentHandler) {
+	r := rg.Group("/student")
 
-	rg.GET("/", studentHandler.Get)
-	rg.GET("/:id", studentHandler.Find)
-	rg.POST("/", studentHandler.Create)
-	rg.PUT("/:id", studentHandler.Update)
-	rg.DELETE("/:id", studentHandler.Delete)
+	r.GET("/", studentHandler.Get)
+	r.GET("/:id", studentHandler.Find)
+	r.POST("/", studentHandler.Create)
+	r.PUT("/:id", studentHandler.Update)
+	r.DELETE("/:id", studentHandler.Delete)
 }

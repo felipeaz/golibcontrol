@@ -7,12 +7,12 @@ import (
 )
 
 // LendingRoutes initialize Category routes.
-func LendingRoutes(r *gin.Engine, lendingHandler rest.LendingHandler) {
-	rg := r.Group("/lending")
+func LendingRoutes(rg *gin.RouterGroup, lendingHandler rest.LendingHandler) {
+	r := rg.Group("/lending")
 
-	rg.GET("/", lendingHandler.Get)
-	rg.GET("/:id", lendingHandler.Find)
-	rg.POST("/", lendingHandler.Create)
-	rg.PUT("/:id", lendingHandler.Update)
-	rg.DELETE("/:id", lendingHandler.Delete)
+	r.GET("/", lendingHandler.Get)
+	r.GET("/:id", lendingHandler.Find)
+	r.POST("/", lendingHandler.Create)
+	r.PUT("/:id", lendingHandler.Update)
+	r.DELETE("/:id", lendingHandler.Delete)
 }

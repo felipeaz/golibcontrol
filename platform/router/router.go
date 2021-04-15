@@ -11,17 +11,20 @@ import (
 func buildRoutes(db *gorm.DB) error {
 	router := gin.Default()
 
+	apiRg := router.Group("/api")
+	vGroup := apiRg.Group("/v1")
+
 	bookHandler := rest.NewBookHandler(db)
-	build.BookRoutes(router, bookHandler)
+	build.BookRoutes(vGroup, bookHandler)
 
 	categoryHandler := rest.NewCategoryHandler(db)
-	build.CategoryRoutes(router, categoryHandler)
+	build.CategoryRoutes(vGroup, categoryHandler)
 
 	studentHandler := rest.NewStudentHandler(db)
-	build.StudentRoutes(router, studentHandler)
+	build.StudentRoutes(vGroup, studentHandler)
 
 	lendingHandler := rest.NewLendingHandler(db)
-	build.LendingRoutes(router, lendingHandler)
+	build.LendingRoutes(vGroup, lendingHandler)
 
 	return router.Run()
 }
