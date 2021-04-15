@@ -1,1 +1,1 @@
-go test -v ./internal/pkg/
+go test -v ./internal/pkg/ && go test -v ./internal/app/module/
