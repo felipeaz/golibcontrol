@@ -26,6 +26,9 @@ func buildRoutes(db *gorm.DB) error {
 	lendingHandler := rest.NewLendingHandler(db)
 	build.LendingRoutes(vGroup, lendingHandler)
 
+	accountHandler := rest.NewAccountHandler(db)
+	build.AccountRoutes(vGroup, accountHandler)
+
 	return router.Run()
 }
 

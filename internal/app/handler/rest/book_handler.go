@@ -20,7 +20,7 @@ type BookHandler struct {
 func NewBookHandler(DB *gorm.DB) BookHandler {
 	return BookHandler{
 		Module: module.BookModule{
-			BookRepository: repository.BookRepository{
+			Repository: repository.BookRepository{
 				BookCategoryRepository: repository.BookCategoryRepository{
 					DB: DB,
 				},

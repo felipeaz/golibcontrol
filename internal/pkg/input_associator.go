@@ -64,3 +64,31 @@ func AssociateLendingInput(c *gin.Context) (lending model.Lending, apiError *err
 
 	return
 }
+
+// AssociateAccountInput is responsible of associating the params to the account model.
+func AssociateAccountInput(c *gin.Context) (account model.Account, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&account)
+	if err != nil {
+		return model.Account{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
+// AssociateLoginInput is responsible of associating the params to the account model.
+func AssociateLoginInput(c *gin.Context) (login model.Credential, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&login)
+	if err != nil {
+		return model.Credential{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}

@@ -2,9 +2,10 @@ package mysql
 
 import (
 	"fmt"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"log"
 	"os"
+
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -56,5 +57,6 @@ func (db *DBHandler) autoMigrateTables() error {
 		&model.Category{},
 		&model.BookCategory{},
 		&model.Lending{},
+		&model.Account{},
 	)
 }

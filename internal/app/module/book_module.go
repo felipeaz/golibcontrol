@@ -8,35 +8,35 @@ import (
 
 // BookModule process the request recieved from handler.
 type BookModule struct {
-	BookRepository repository.BookRepositoryInterface
+	Repository repository.BookRepositoryInterface
 }
 
 // Get returns all books on DB.
 func (m BookModule) Get() (books []model.Book, apiError *errors.ApiError) {
-	books, apiError = m.BookRepository.Get()
+	books, apiError = m.Repository.Get()
 	return
 }
 
 // Find returns all books on DB.
 func (m BookModule) Find(id string) (book model.Book, apiError *errors.ApiError) {
-	book, apiError = m.BookRepository.Find(id)
+	book, apiError = m.Repository.Find(id)
 	return
 }
 
 // Create persist a book to the database.
 func (m BookModule) Create(book model.Book) (id uint, apiError *errors.ApiError) {
-	id, apiError = m.BookRepository.Create(book)
+	id, apiError = m.Repository.Create(book)
 	return
 }
 
 // Update update an existent book.
 func (m BookModule) Update(id string, upBook model.Book) (book model.Book, apiError *errors.ApiError) {
-	book, apiError = m.BookRepository.Update(id, upBook)
+	book, apiError = m.Repository.Update(id, upBook)
 	return
 }
 
 // Delete delete an existent book.
 func (m BookModule) Delete(id string) (apiError *errors.ApiError) {
-	apiError = m.BookRepository.Delete(id)
+	apiError = m.Repository.Delete(id)
 	return
 }
