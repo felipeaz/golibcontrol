@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/platform/logger"
 	"gorm.io/gorm"
@@ -110,21 +111,30 @@ func (r AccountRepository) Delete(id string) (apiError *errors.ApiError) {
 // Login authenticate user if credentials are right
 func (r AccountRepository) Login(credentials model.Credential) (account model.Account, apiError *errors.ApiError) {
 	result := r.DB.Model(model.Account{}).
-		Where("email = ? AND password = ?", credentials.Email, credentials.Password).First(&account)
+		Where("email = ?", credentials.Email).First(&account)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
 			logger.LogError(err)
 			return model.Account{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
-				Message: errors.LoginFailMessage,
+				Message: login.FailMessage,
 				Error:   err.Error(),
 			}
 		}
 
 		return model.Account{}, &errors.ApiError{
 			Status:  http.StatusNotFound,
-			Message: errors.LoginFailMessage,
-			Error:   err.Error(),
+			Message: login.FailMessage,
+			Error:   login.AccountNotFoundMessage,
+		}
+	}
+
+	// Validate Password
+	if account.Password != credentials.Password {
+		return model.Account{}, &errors.ApiError{
+			Status:  http.StatusNotFound,
+			Message: login.FailMessage,
+			Error:   login.InvalidPasswordMessage,
 		}
 	}
 

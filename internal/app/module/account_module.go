@@ -1,7 +1,10 @@
 package module
 
 import (
+	"fmt"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 	"github.com/FelipeAz/golibcontrol/platform/jwt"
@@ -12,16 +15,27 @@ type AccountModule struct {
 }
 
 // Login authenticate the user
-func (m AccountModule) Login(credentials model.Credential) (token string, apiError *errors.ApiError) {
+func (m AccountModule) Login(credentials model.Credential) (message login.LoginMessage) {
 	account, apiError := m.Repository.Login(credentials)
 	if apiError != nil {
-		return "", apiError
+		return login.LoginMessage{
+			Status:  apiError.Status,
+			Message: login.FailMessage,
+			Reason:  apiError.Error,
+		}
 	}
 
-	token, apiError = jwt.CreateToken(account.ID)
+	token, apiError := jwt.CreateToken(account.ID)
 	if apiError != nil {
-		return "", apiError
+		return login.LoginMessage{
+			Status:  apiError.Status,
+			Message: login.FailMessage,
+			Reason:  apiError.Error,
+		}
 	}
+
+	message.Token = token
+	message.Message = fmt.Sprintf(login.SuccessMessage, account.FirstName)
 
 	return
 }

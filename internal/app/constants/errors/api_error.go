@@ -1,13 +1,12 @@
 package errors
 
-// Default return messages
+// Default return login
 const (
 	// Rest Messages
 	FailMessage                 = "Failed to fetch data"
 	CreateFailMessage           = "Failed to create data"
 	UpdateFailMessage           = "Failed to update data"
 	DeleteFailMessage           = "Failed to delete data"
-	LoginFailMessage            = "Login Failed"
 	JWTTokenCreationFailMessage = "Login Failed"
 
 	// Input Association Messages

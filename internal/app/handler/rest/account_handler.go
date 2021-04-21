@@ -33,13 +33,8 @@ func (h AccountHandler) Login(c *gin.Context) {
 		return
 	}
 
-	token, apiError := h.Module.Login(credentials)
-	if apiError != nil {
-		c.JSON(apiError.Status, apiError)
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	loginMsg := h.Module.Login(credentials)
+	c.JSON(loginMsg.Status, loginMsg)
 }
 
 // Get returns all accounts.
