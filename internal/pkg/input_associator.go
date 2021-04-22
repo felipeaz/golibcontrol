@@ -14,7 +14,7 @@ func AssociateBookInput(c *gin.Context) (book model.Book, apiError *errors.ApiEr
 	err := c.ShouldBindJSON(&book)
 	if err != nil {
 		return model.Book{}, &errors.ApiError{
-			Status:  http.StatusBadRequest,
+			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -28,7 +28,7 @@ func AssociateCategoryInput(c *gin.Context) (category model.Category, apiError *
 	err := c.ShouldBindJSON(&category)
 	if err != nil {
 		return model.Category{}, &errors.ApiError{
-			Status:  http.StatusBadRequest,
+			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -42,7 +42,7 @@ func AssociateStudentInput(c *gin.Context) (student model.Student, apiError *err
 	err := c.ShouldBindJSON(&student)
 	if err != nil {
 		return model.Student{}, &errors.ApiError{
-			Status:  http.StatusBadRequest,
+			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -56,7 +56,7 @@ func AssociateLendingInput(c *gin.Context) (lending model.Lending, apiError *err
 	err := c.ShouldBindJSON(&lending)
 	if err != nil {
 		return model.Lending{}, &errors.ApiError{
-			Status:  http.StatusBadRequest,
+			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -70,7 +70,7 @@ func AssociateAccountInput(c *gin.Context) (account model.Account, apiError *err
 	err := c.ShouldBindJSON(&account)
 	if err != nil {
 		return model.Account{}, &errors.ApiError{
-			Status:  http.StatusBadRequest,
+			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -84,7 +84,7 @@ func AssociateLoginInput(c *gin.Context) (login model.Credential, apiError *erro
 	err := c.ShouldBindJSON(&login)
 	if err != nil {
 		return model.Credential{}, &errors.ApiError{
-			Status:  http.StatusBadRequest,
+			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}

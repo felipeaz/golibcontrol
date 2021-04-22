@@ -132,7 +132,7 @@ func (r AccountRepository) Login(credentials model.Credential) (account model.Ac
 	// Validate Password
 	if account.Password != credentials.Password {
 		return model.Account{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
+			Status:  http.StatusUnauthorized,
 			Message: login.FailMessage,
 			Error:   login.InvalidPasswordMessage,
 		}

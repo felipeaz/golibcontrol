@@ -7,7 +7,8 @@ const (
 	InvalidPasswordMessage = "Invalid Password"
 )
 
-type LoginMessage struct {
+// Message will be used as custom messages for login routes
+type Message struct {
 	Status  int    `json:"-"`
 	Message string `json:"message"`
 	Reason  string `json:"reason,omitempty"`

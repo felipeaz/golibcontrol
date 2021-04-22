@@ -15,10 +15,10 @@ type AccountModule struct {
 }
 
 // Login authenticate the user
-func (m AccountModule) Login(credentials model.Credential) (message login.LoginMessage) {
+func (m AccountModule) Login(credentials model.Credential) (message login.Message) {
 	account, apiError := m.Repository.Login(credentials)
 	if apiError != nil {
-		return login.LoginMessage{
+		return login.Message{
 			Status:  apiError.Status,
 			Message: login.FailMessage,
 			Reason:  apiError.Error,
@@ -27,7 +27,7 @@ func (m AccountModule) Login(credentials model.Credential) (message login.LoginM
 
 	token, apiError := jwt.CreateToken(account.ID)
 	if apiError != nil {
-		return login.LoginMessage{
+		return login.Message{
 			Status:  apiError.Status,
 			Message: login.FailMessage,
 			Reason:  apiError.Error,
