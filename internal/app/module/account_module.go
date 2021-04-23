@@ -8,10 +8,12 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 	"github.com/FelipeAz/golibcontrol/platform/jwt"
+	"github.com/FelipeAz/golibcontrol/platform/redis"
 )
 
 type AccountModule struct {
 	Repository repository.AccountRepository
+	Cache      *redis.Cache
 }
 
 // Login authenticate the user
@@ -26,6 +28,15 @@ func (m AccountModule) Login(credentials model.Account) (message login.Message) 
 	}
 
 	token, apiError := jwt.CreateToken(account.ID)
+	if apiError != nil {
+		return login.Message{
+			Status:  apiError.Status,
+			Message: login.FailMessage,
+			Reason:  apiError.Error,
+		}
+	}
+
+	apiError = m.Cache.StoreAuth(account.ID, token)
 	if apiError != nil {
 		return login.Message{
 			Status:  apiError.Status,

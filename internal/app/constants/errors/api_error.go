@@ -11,6 +11,9 @@ const (
 
 	// Input Association Messages
 	FailedFieldsAssociationMessage = "Failed while associating fields from request"
+
+	// Auth
+	AuthenticationFailMessage = "Failed to authenticate the user"
 )
 
 // ApiError will be used on API Errors

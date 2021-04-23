@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/FelipeAz/golibcontrol/platform/mysql"
+	"github.com/FelipeAz/golibcontrol/platform/redis"
 	"github.com/FelipeAz/golibcontrol/platform/router"
 )
 
@@ -16,5 +17,7 @@ func Start() (err error) {
 	}
 	defer mysql.CloseConnection(db)
 
-	return router.Run(db)
+	cache := redis.NewCache()
+
+	return router.Run(db, cache)
 }

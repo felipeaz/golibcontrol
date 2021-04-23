@@ -6,6 +6,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/redis"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -15,12 +16,13 @@ type AccountHandler struct {
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(db *gorm.DB) AccountHandler {
+func NewAccountHandler(db *gorm.DB, cache *redis.Cache) AccountHandler {
 	return AccountHandler{
 		Module: module.AccountModule{
 			Repository: repository.AccountRepository{
 				DB: db,
 			},
+			Cache: cache,
 		},
 	}
 }

@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/FelipeAz/golibcontrol/platform/redis"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
@@ -8,7 +9,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/platform/router/build"
 )
 
-func buildRoutes(db *gorm.DB) error {
+func buildRoutes(db *gorm.DB, cache *redis.Cache) error {
 	router := gin.Default()
 
 	apiRg := router.Group("/api")
@@ -26,13 +27,13 @@ func buildRoutes(db *gorm.DB) error {
 	lendingHandler := rest.NewLendingHandler(db)
 	build.LendingRoutes(vGroup, lendingHandler)
 
-	accountHandler := rest.NewAccountHandler(db)
+	accountHandler := rest.NewAccountHandler(db, cache)
 	build.AccountRoutes(vGroup, accountHandler)
 
 	return router.Run()
 }
 
 // Run Starts the server
-func Run(db *gorm.DB) error {
-	return buildRoutes(db)
+func Run(db *gorm.DB, cache *redis.Cache) error {
+	return buildRoutes(db, cache)
 }
