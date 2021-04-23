@@ -78,17 +78,3 @@ func AssociateAccountInput(c *gin.Context) (account model.Account, apiError *err
 
 	return
 }
-
-// AssociateLoginInput is responsible of associating the params to the account model.
-func AssociateLoginInput(c *gin.Context) (login model.Credential, apiError *errors.ApiError) {
-	err := c.ShouldBindJSON(&login)
-	if err != nil {
-		return model.Credential{}, &errors.ApiError{
-			Status:  http.StatusUnprocessableEntity,
-			Message: errors.FailedFieldsAssociationMessage,
-			Error:   err.Error(),
-		}
-	}
-
-	return
-}

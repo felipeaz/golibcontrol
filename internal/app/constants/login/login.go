@@ -3,7 +3,7 @@ package login
 const (
 	SuccessMessage         = "Login Successfully. Welcome, %s!"
 	FailMessage            = "Login Failed"
-	AccountNotFoundMessage = "Account not found. Sign In First to access the system"
+	AccountNotFoundMessage = "Account not found. Create an Account to access the system"
 	InvalidPasswordMessage = "Invalid Password"
 )
 

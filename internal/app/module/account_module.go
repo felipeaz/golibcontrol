@@ -15,7 +15,7 @@ type AccountModule struct {
 }
 
 // Login authenticate the user
-func (m AccountModule) Login(credentials model.Credential) (message login.Message) {
+func (m AccountModule) Login(credentials model.Account) (message login.Message) {
 	account, apiError := m.Repository.Login(credentials)
 	if apiError != nil {
 		return login.Message{
@@ -34,7 +34,7 @@ func (m AccountModule) Login(credentials model.Credential) (message login.Messag
 		}
 	}
 
-	message.Token = token
+	message.Token = token.AccessToken
 	message.Message = fmt.Sprintf(login.SuccessMessage, account.FirstName)
 
 	return

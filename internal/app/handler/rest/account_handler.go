@@ -14,7 +14,7 @@ type AccountHandler struct {
 	Module module.AccountModule
 }
 
-// NewAuthHandler returns an instance of authHandler
+// NewAccountHandler returns an instance of authHandler
 func NewAccountHandler(db *gorm.DB) AccountHandler {
 	return AccountHandler{
 		Module: module.AccountModule{
@@ -27,7 +27,7 @@ func NewAccountHandler(db *gorm.DB) AccountHandler {
 
 // Login authenticate the user
 func (h AccountHandler) Login(c *gin.Context) {
-	credentials, err := pkg.AssociateLoginInput(c)
+	credentials, err := pkg.AssociateAccountInput(c)
 	if err != nil {
 		c.JSON(err.Status, err)
 		return

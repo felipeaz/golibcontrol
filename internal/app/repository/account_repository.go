@@ -109,7 +109,7 @@ func (r AccountRepository) Delete(id string) (apiError *errors.ApiError) {
 }
 
 // Login authenticate user if credentials are right
-func (r AccountRepository) Login(credentials model.Credential) (account model.Account, apiError *errors.ApiError) {
+func (r AccountRepository) Login(credentials model.Account) (account model.Account, apiError *errors.ApiError) {
 	result := r.DB.Model(model.Account{}).
 		Where("email = ?", credentials.Email).First(&account)
 	if err := result.Error; err != nil {
