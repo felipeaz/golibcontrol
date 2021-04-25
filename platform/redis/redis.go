@@ -101,7 +101,8 @@ func (c *Cache) Flush(key string) ([]byte, error) {
 	return data, err
 }
 
-func (c *Cache) StoreAuth(userid uint, td model.TokenDetails) *errors.ApiError {
+// CreateAuth persists the access & refresh token on redis
+func (c *Cache) CreateAuth(userid uint, td model.TokenDetails) *errors.ApiError {
 	conn, err := c.connect()
 	if err != nil {
 		log.Println(err)

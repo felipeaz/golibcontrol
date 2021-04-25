@@ -36,7 +36,7 @@ func (m AccountModule) Login(credentials model.Account) (message login.Message) 
 		}
 	}
 
-	apiError = m.Cache.StoreAuth(account.ID, token)
+	apiError = m.Cache.CreateAuth(account.ID, token)
 	if apiError != nil {
 		return login.Message{
 			Status:  apiError.Status,
