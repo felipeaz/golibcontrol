@@ -153,3 +153,18 @@ func (a Auth) FetchAuth(authD *model.AccessDetails) (uint64, error) {
 	userID, _ := strconv.ParseUint(idString, 10, 64)
 	return userID, nil
 }
+
+// GetAuthUserID fetch the user on Redis and return the ID
+func (a Auth) GetAuthUserID(r *http.Request) (uint64, error) {
+	tokenAuth, err := a.ExtractTokenMetadata(r)
+	if err != nil {
+		return 0, err
+	}
+
+	userId, err := a.FetchAuth(tokenAuth)
+	if err != nil {
+		return 0, err
+	}
+
+	return userId, nil
+}

@@ -15,9 +15,12 @@ func AccountRoutes(rg *gin.RouterGroup, accountHandler rest.AccountHandler) {
 	r.PUT("/:id", accountHandler.Update)
 	r.DELETE("/:id", accountHandler.Delete)
 
-	r = rg.Group("/login")
-	r.GET("/", accountHandler.Login)
-
 	r = rg.Group("/signin")
 	r.POST("/", accountHandler.Create)
+
+	r = rg.Group("/login")
+	r.POST("/", accountHandler.Login)
+
+	r = rg.Group("/logout")
+	r.POST("/", accountHandler.Login)
 }
