@@ -33,7 +33,7 @@ func (c *Cache) connect() (redis.Conn, error) {
 }
 
 // Set inserts a value into the Cache
-func (c *Cache) Set(key string, value []byte) error {
+func (c *Cache) Set(key string, value interface{}) error {
 	conn, err := c.connect()
 	if err != nil {
 		log.Println(err)
@@ -84,11 +84,11 @@ func (c *Cache) Get(key string) ([]byte, error) {
 }
 
 // Flush removes a value from Cache
-func (c *Cache) Flush(key string) ([]byte, error) {
+func (c *Cache) Flush(key string) error {
 	conn, err := c.connect()
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return err
 	}
 	defer func() {
 		err := conn.Close()
@@ -97,12 +97,12 @@ func (c *Cache) Flush(key string) ([]byte, error) {
 		}
 	}()
 
-	data, err := redis.Bytes(conn.Do("DEL", key))
-	return data, err
+	_, err = conn.Do("DEL", key)
+	return err
 }
 
-// CreateAuth persists the access & refresh token on redis
-func (c *Cache) CreateAuth(userid uint, td model.TokenDetails) *errors.ApiError {
+// StoreAuth persists the access & refresh token on redis
+func (c *Cache) StoreAuth(userid uint, td model.TokenDetails) *errors.ApiError {
 	conn, err := c.connect()
 	if err != nil {
 		log.Println(err)
@@ -119,20 +119,18 @@ func (c *Cache) CreateAuth(userid uint, td model.TokenDetails) *errors.ApiError 
 		}
 	}()
 
-	_, errAccess := conn.Do("SET", td.AccessUuid, strconv.Itoa(int(userid)))
+	accessDetails := model.AccessDetails{
+		AccessUuid:  td.AccessUuid,
+		RefreshUuid: td.RefreshUuid,
+		UserId:      userid,
+	}
+
+	errAccess := c.Set(strconv.Itoa(int(userid)), accessDetails)
 	if errAccess != nil {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.AuthenticationFailMessage,
 			Error:   errAccess.Error(),
-		}
-	}
-	_, errRefresh := conn.Do("SET", td.RefreshUuid, strconv.Itoa(int(userid)))
-	if errRefresh != nil {
-		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.AuthenticationFailMessage,
-			Error:   errRefresh.Error(),
 		}
 	}
 

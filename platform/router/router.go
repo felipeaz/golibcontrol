@@ -19,8 +19,8 @@ func buildRoutes(db *gorm.DB, cache *redis.Cache) error {
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	accountHandler := rest.NewAccountHandler(db, cache)
-	build.AccountRoutes(vGroup, accountHandler)
+	accountHandler := rest.NewAccountHandler(jwtAuth, db, cache)
+	build.AccountRoutes(tokenAuthMiddleware, vGroup, accountHandler)
 
 	bookHandler := rest.NewBookHandler(db)
 	build.BookRoutes(tokenAuthMiddleware, vGroup, bookHandler)

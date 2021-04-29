@@ -2,6 +2,8 @@ package module
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
@@ -13,6 +15,7 @@ import (
 
 type AccountModule struct {
 	Repository repository.AccountRepository
+	Auth       *jwt.Auth
 	Cache      *redis.Cache
 }
 
@@ -27,7 +30,7 @@ func (m AccountModule) Login(credentials model.Account) (message login.Message) 
 		}
 	}
 
-	token, apiError := jwt.CreateToken(account.ID)
+	token, apiError := m.Auth.CreateToken(account.ID)
 	if apiError != nil {
 		return login.Message{
 			Status:  apiError.Status,
@@ -36,7 +39,7 @@ func (m AccountModule) Login(credentials model.Account) (message login.Message) 
 		}
 	}
 
-	apiError = m.Cache.CreateAuth(account.ID, token)
+	apiError = m.Cache.StoreAuth(account.ID, token)
 	if apiError != nil {
 		return login.Message{
 			Status:  apiError.Status,
@@ -49,6 +52,42 @@ func (m AccountModule) Login(credentials model.Account) (message login.Message) 
 	message.Message = fmt.Sprintf(login.SuccessMessage, account.FirstName)
 
 	return
+}
+
+// Logout authenticate the user
+func (m AccountModule) Logout(r *http.Request) (message login.Message) {
+	userAuth, err := m.Auth.GetAuthUser(r)
+	if err != nil {
+		return login.Message{
+			Status:  http.StatusBadRequest,
+			Message: login.LogoutFailMessage,
+			Reason:  err.Error(),
+		}
+	}
+
+	err = m.Auth.FetchAuth(&userAuth)
+	if err != nil {
+		return login.Message{
+			Status:  http.StatusBadRequest,
+			Message: login.UserNotLoggedIn,
+			Reason:  err.Error(),
+		}
+	}
+
+	userId := strconv.FormatUint(uint64(userAuth.UserId), 10)
+	err = m.Cache.Flush(userId)
+	if err != nil {
+		return login.Message{
+			Status:  http.StatusUnauthorized,
+			Message: login.LogoutFailMessage,
+			Reason:  err.Error(),
+		}
+	}
+
+	return login.Message{
+		Status:  http.StatusOK,
+		Message: login.LogoutSuccessMessage,
+	}
 }
 
 // Get returns all accounts.

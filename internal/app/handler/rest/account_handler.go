@@ -6,6 +6,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/jwt"
 	"github.com/FelipeAz/golibcontrol/platform/redis"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -16,13 +17,14 @@ type AccountHandler struct {
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(db *gorm.DB, cache *redis.Cache) AccountHandler {
+func NewAccountHandler(auth *jwt.Auth, db *gorm.DB, cache *redis.Cache) AccountHandler {
 	return AccountHandler{
 		Module: module.AccountModule{
 			Repository: repository.AccountRepository{
 				DB: db,
 			},
 			Cache: cache,
+			Auth:  auth,
 		},
 	}
 }
@@ -37,6 +39,12 @@ func (h AccountHandler) Login(c *gin.Context) {
 
 	loginMsg := h.Module.Login(credentials)
 	c.JSON(loginMsg.Status, loginMsg)
+}
+
+// Logout authenticate the user
+func (h AccountHandler) Logout(c *gin.Context) {
+	logoutMsg := h.Module.Logout(c.Request)
+	c.JSON(logoutMsg.Status, logoutMsg)
 }
 
 // Get returns all accounts.

@@ -27,7 +27,8 @@ func NewAuth(cache *redis.Cache) *Auth {
 }
 
 // CreateToken generates a JWT Token
-func CreateToken(userId uint) (model.TokenDetails, *errors.ApiError) {
+func (a Auth) CreateToken(userId uint) (model.TokenDetails, *errors.ApiError) {
+	userIdString := strconv.FormatUint(uint64(userId), 10)
 	td := model.TokenDetails{
 		AtExpires:   time.Now().Add(time.Minute * 15).Unix(),
 		AccessUuid:  uuid.NewV4().String(),
@@ -37,9 +38,11 @@ func CreateToken(userId uint) (model.TokenDetails, *errors.ApiError) {
 
 	// Payload
 	atClaims := jwt.MapClaims{
-		"authorized": true,
-		"user_id":    userId,
-		"exp":        td.AtExpires,
+		"authorized":   true,
+		"user_id":      userIdString,
+		"access_uuid":  td.AccessUuid,
+		"refresh_uuid": td.RefreshUuid,
+		"exp":          td.AtExpires,
 	}
 
 	// Secret key used on signature crypto
@@ -59,7 +62,7 @@ func CreateToken(userId uint) (model.TokenDetails, *errors.ApiError) {
 	// Create the refresh token
 	rtClaims := jwt.MapClaims{
 		"authorized": true,
-		"user_id":    userId,
+		"user_id":    userIdString,
 		"exp":        td.RtExpires,
 	}
 
@@ -93,27 +96,40 @@ func (a Auth) TokenValid(r *http.Request) error {
 }
 
 // ExtractTokenMetadata retrieves metadata from JWT Token
-func (a Auth) ExtractTokenMetadata(r *http.Request) (*model.AccessDetails, error) {
+func (a Auth) ExtractTokenMetadata(r *http.Request) (model.AccessDetails, error) {
 	token, err := a.VerifyToken(r)
 	if err != nil {
-		return nil, err
+		return model.AccessDetails{}, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		accessUuid, ok := claims["access_uuid"].(string)
 		if !ok {
-			return nil, err
+			return model.AccessDetails{}, err
 		}
-		userId, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
+		refreshUuid, ok := claims["refresh_uuid"].(string)
+		if !ok {
+			return model.AccessDetails{}, err
+		}
+
+		userId, ok := claims["user_id"].(string)
+		if !ok {
+			return model.AccessDetails{}, err
+		}
+
+		userIdUint64, err := strconv.ParseUint(userId, 10, 64)
 		if err != nil {
-			return nil, err
+			return model.AccessDetails{}, err
 		}
-		return &model.AccessDetails{
-			AccessUuid: accessUuid,
-			UserId:     userId,
+
+		return model.AccessDetails{
+			AccessUuid:  accessUuid,
+			RefreshUuid: refreshUuid,
+			UserId:      uint(userIdUint64),
 		}, nil
 	}
-	return nil, err
+
+	return model.AccessDetails{}, err
 }
 
 // VerifyToken validates the token signing method
@@ -143,28 +159,22 @@ func (a Auth) ExtractToken(r *http.Request) string {
 }
 
 // FetchAuth look for the token on redis
-func (a Auth) FetchAuth(authD *model.AccessDetails) (uint64, error) {
-	userid, err := a.Cache.Get(authD.AccessUuid)
+func (a Auth) FetchAuth(authD *model.AccessDetails) error {
+	userId := strconv.FormatUint(uint64(authD.UserId), 10)
+	_, err := a.Cache.Get(userId)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	idString := string(userid)
-	userID, _ := strconv.ParseUint(idString, 10, 64)
-	return userID, nil
+	return nil
 }
 
-// GetAuthUserID fetch the user on Redis and return the ID
-func (a Auth) GetAuthUserID(r *http.Request) (uint64, error) {
-	tokenAuth, err := a.ExtractTokenMetadata(r)
+// GetAuthUser fetch the user on Redis and return the ID
+func (a Auth) GetAuthUser(r *http.Request) (model.AccessDetails, error) {
+	userAuth, err := a.ExtractTokenMetadata(r)
 	if err != nil {
-		return 0, err
+		return model.AccessDetails{}, err
 	}
 
-	userId, err := a.FetchAuth(tokenAuth)
-	if err != nil {
-		return 0, err
-	}
-
-	return userId, nil
+	return userAuth, nil
 }
