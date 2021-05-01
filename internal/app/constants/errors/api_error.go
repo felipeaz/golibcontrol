@@ -18,7 +18,7 @@ const (
 
 // ApiError will be used on API Errors
 type ApiError struct {
-	Status  int    `json:"status"`
+	Status  int    `json:"status,omitempty"`
 	Message string `json:"message"`
 	Error   string `json:"error"`
 }

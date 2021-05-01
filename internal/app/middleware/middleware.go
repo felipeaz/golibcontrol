@@ -3,8 +3,13 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/platform/jwt"
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	AuthenticationRequiredMessage = "Authentication Required"
 )
 
 // TokenMiddleware contains JWTAuth
@@ -23,8 +28,19 @@ func NewTokenMiddleware(jwtAuth *jwt.Auth) *TokenMiddleware {
 func (tm TokenMiddleware) TokenAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := tm.JWTAuth.TokenValid(c.Request)
+		usrErr := tm.JWTAuth.UserLoggedIn(c.Request)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, err.Error())
+			c.JSON(http.StatusUnauthorized, errors.ApiError{
+				Message: AuthenticationRequiredMessage,
+				Error:   err.Error(),
+			})
+			c.Abort()
+			return
+		} else if usrErr != nil {
+			c.JSON(http.StatusUnauthorized, errors.ApiError{
+				Message: AuthenticationRequiredMessage,
+				Error:   usrErr.Error(),
+			})
 			c.Abort()
 			return
 		}

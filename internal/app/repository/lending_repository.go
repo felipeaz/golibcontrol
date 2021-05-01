@@ -2,6 +2,7 @@ package repository
 
 import (
 	"net/http"
+	"sync"
 
 	"gorm.io/gorm"
 
@@ -57,15 +58,30 @@ func (r LendingRepository) Find(id string) (lending model.Lending, apiError *err
 
 // Create persist a lending to the DB.
 func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError) {
-	if apiError := r.BeforeCreateAndUpdate(lending.StudentID, lending.BookID); apiError != nil {
-		apiError.Message = errors.CreateFailMessage
-		return 0, apiError
-	}
+	validationCH := make(chan *errors.ApiError)
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-	if apiError := r.BeforeCreate(lending.StudentID, lending.BookID); apiError != nil {
-		apiError.Message = errors.CreateFailMessage
-		return 0, apiError
+	go func(ch chan<- *errors.ApiError, wg *sync.WaitGroup) {
+		apiError := r.BeforeCreateAndUpdate(lending.StudentID, lending.BookID)
+		validationCH <- apiError
+		wg.Done()
+	}(validationCH, &wg)
+
+	go func(ch chan<- *errors.ApiError, wg *sync.WaitGroup) {
+		apiError := r.BeforeCreate(lending.StudentID, lending.BookID)
+		validationCH <- apiError
+		wg.Done()
+	}(validationCH, &wg)
+
+	for i := 0; i < 2; i++ {
+		err := <-validationCH
+		if err != nil {
+			err.Message = errors.CreateFailMessage
+			return 0, err
+		}
 	}
+	wg.Wait()
 
 	result := r.DB.Create(&lending)
 	if err := result.Error; err != nil {

@@ -92,6 +92,22 @@ func (a Auth) TokenValid(r *http.Request) error {
 	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
 		return err
 	}
+
+	return nil
+}
+
+// UserLoggedIn returns if an error if user is not logged in
+func (a Auth) UserLoggedIn(r *http.Request) error {
+	usr, err := a.GetAuthUser(r)
+	if err != nil {
+		return err
+	}
+
+	err = a.FetchAuth(&usr)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
