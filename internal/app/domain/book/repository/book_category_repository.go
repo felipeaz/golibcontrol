@@ -5,10 +5,11 @@ import (
 	"log"
 	"net/http"
 
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
 type BookCategoryRepository struct {
@@ -18,7 +19,7 @@ type BookCategoryRepository struct {
 // ValidateCategories validate if categories exists on DB
 func (r BookCategoryRepository) ValidateCategories(categoriesIds []uint) (categories []uint, apiError *errors.ApiError) {
 	for _, categoryId := range categoriesIds {
-		var category model.Category
+		var category categoryModel.Category
 		result := r.DB.First(&category, categoryId)
 		if err := result.Error; err != nil {
 			return nil, &errors.ApiError{
@@ -40,7 +41,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 	}
 
 	for _, categoryId := range categoriesIds {
-		bookCategory := model.BookCategory{
+		bookCategory := bookModel.BookCategory{
 			BookID:     bookId,
 			CategoryID: categoryId,
 		}
@@ -54,7 +55,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 
 // DeleteCategories removes a Book categories from DB
 func (r BookCategoryRepository) DeleteCategories(bookId uint) {
-	result := r.DB.Delete(model.BookCategory{}, "book_id = ?", bookId)
+	result := r.DB.Delete(bookModel.BookCategory{}, "book_id = ?", bookId)
 	if err := result.Error; err != nil {
 		log.Println(err)
 	}

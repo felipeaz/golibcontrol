@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/category/repository/mock"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
 func TestGetCategory(t *testing.T) {

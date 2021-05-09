@@ -2,7 +2,7 @@ package _interface
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 )
 
 type AccountRepositoryInterface interface {

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
 )
 
 type StudentRepositoryMock struct {

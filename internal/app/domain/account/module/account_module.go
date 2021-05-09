@@ -7,7 +7,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
 	"github.com/FelipeAz/golibcontrol/platform/jwt"
 	"github.com/FelipeAz/golibcontrol/platform/redis"

@@ -3,17 +3,21 @@ package pkg
 import (
 	"net/http"
 
+	accountModel "github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/lending/model"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
 	"github.com/gin-gonic/gin"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
 // AssociateBookInput is responsible of associate the params to the book model.
-func AssociateBookInput(c *gin.Context) (book model.Book, apiError *errors.ApiError) {
+func AssociateBookInput(c *gin.Context) (book bookModel.Book, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&book)
 	if err != nil {
-		return model.Book{}, &errors.ApiError{
+		return bookModel.Book{}, &errors.ApiError{
 			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
@@ -24,10 +28,10 @@ func AssociateBookInput(c *gin.Context) (book model.Book, apiError *errors.ApiEr
 }
 
 // AssociateCategoryInput is responsible of associating the params to the category model.
-func AssociateCategoryInput(c *gin.Context) (category model.Category, apiError *errors.ApiError) {
+func AssociateCategoryInput(c *gin.Context) (category categoryModel.Category, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&category)
 	if err != nil {
-		return model.Category{}, &errors.ApiError{
+		return categoryModel.Category{}, &errors.ApiError{
 			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
@@ -38,10 +42,10 @@ func AssociateCategoryInput(c *gin.Context) (category model.Category, apiError *
 }
 
 // AssociateStudentInput is responsible of associating the params to the student model.
-func AssociateStudentInput(c *gin.Context) (student model.Student, apiError *errors.ApiError) {
+func AssociateStudentInput(c *gin.Context) (student studentModel.Student, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&student)
 	if err != nil {
-		return model.Student{}, &errors.ApiError{
+		return studentModel.Student{}, &errors.ApiError{
 			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
@@ -52,10 +56,10 @@ func AssociateStudentInput(c *gin.Context) (student model.Student, apiError *err
 }
 
 // AssociateLendingInput is responsible of associating the params to the lending model.
-func AssociateLendingInput(c *gin.Context) (lending model.Lending, apiError *errors.ApiError) {
+func AssociateLendingInput(c *gin.Context) (lending lendingModel.Lending, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&lending)
 	if err != nil {
-		return model.Lending{}, &errors.ApiError{
+		return lendingModel.Lending{}, &errors.ApiError{
 			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
@@ -66,10 +70,10 @@ func AssociateLendingInput(c *gin.Context) (lending model.Lending, apiError *err
 }
 
 // AssociateAccountInput is responsible of associating the params to the account model.
-func AssociateAccountInput(c *gin.Context) (account model.Account, apiError *errors.ApiError) {
+func AssociateAccountInput(c *gin.Context) (account accountModel.Account, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&account)
 	if err != nil {
-		return model.Account{}, &errors.ApiError{
+		return accountModel.Account{}, &errors.ApiError{
 			Status:  http.StatusUnprocessableEntity,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

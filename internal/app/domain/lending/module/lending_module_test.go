@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/lending/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/lending/repository/mock"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
 func TestGetLending(t *testing.T) {

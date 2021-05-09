@@ -3,10 +3,10 @@ package repository
 import (
 	"net/http"
 
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/FelipeAz/golibcontrol/platform/logger"
 )

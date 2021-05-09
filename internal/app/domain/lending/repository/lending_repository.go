@@ -4,12 +4,14 @@ import (
 	"net/http"
 	"sync"
 
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
 	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/book/repository"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/lending/model"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
 	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/student/repository"
 	"gorm.io/gorm"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 	"github.com/FelipeAz/golibcontrol/platform/logger"
 )
 
@@ -21,7 +23,7 @@ type LendingRepository struct {
 }
 
 // Get returns all lendings.
-func (r LendingRepository) Get() (lendings []model.Lending, apiError *errors.ApiError) {
+func (r LendingRepository) Get() (lendings []lendingModel.Lending, apiError *errors.ApiError) {
 	result := r.DB.Find(&lendings)
 	if err := result.Error; err != nil {
 		logger.LogError(err)
@@ -36,19 +38,19 @@ func (r LendingRepository) Get() (lendings []model.Lending, apiError *errors.Api
 }
 
 // Find return one lending from DB by ID.
-func (r LendingRepository) Find(id string) (lending model.Lending, apiError *errors.ApiError) {
-	result := r.DB.Model(model.Lending{}).Where("id = ?", id).First(&lending)
+func (r LendingRepository) Find(id string) (lending lendingModel.Lending, apiError *errors.ApiError) {
+	result := r.DB.Model(lendingModel.Lending{}).Where("id = ?", id).First(&lending)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
 			logger.LogError(err)
-			return model.Lending{}, &errors.ApiError{
+			return lendingModel.Lending{}, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
 				Error:   err.Error(),
 			}
 		}
 
-		return model.Lending{}, &errors.ApiError{
+		return lendingModel.Lending{}, &errors.ApiError{
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
 			Error:   "lending not found",
@@ -59,7 +61,7 @@ func (r LendingRepository) Find(id string) (lending model.Lending, apiError *err
 }
 
 // Create persist a lending to the DB.
-func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError) {
+func (r LendingRepository) Create(lending lendingModel.Lending) (uint, *errors.ApiError) {
 	validationCH := make(chan *errors.ApiError)
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -99,23 +101,23 @@ func (r LendingRepository) Create(lending model.Lending) (uint, *errors.ApiError
 }
 
 // Update update an existent lending.
-func (r LendingRepository) Update(id string, upLending model.Lending) (model.Lending, *errors.ApiError) {
+func (r LendingRepository) Update(id string, upLending lendingModel.Lending) (lendingModel.Lending, *errors.ApiError) {
 	lending, apiError := r.Find(id)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return model.Lending{}, apiError
+		return lendingModel.Lending{}, apiError
 	}
 
 	apiError = r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return model.Lending{}, apiError
+		return lendingModel.Lending{}, apiError
 	}
 
 	result := r.DB.Model(&lending).Updates(upLending)
 	if err := result.Error; err != nil {
 		logger.LogError(err)
-		return model.Lending{}, &errors.ApiError{
+		return lendingModel.Lending{}, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -146,9 +148,9 @@ func (r LendingRepository) Delete(id string) (apiError *errors.ApiError) {
 	return
 }
 
-// beforeCreateAndUpdate validate if the student or book exists before create the lending.
+// BeforeCreateAndUpdate validate if the student or book exists before create the lending.
 func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors.ApiError {
-	var student model.Student
+	var student studentModel.Student
 	result := r.DB.First(&student, studentId)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -167,7 +169,7 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 		}
 	}
 
-	var book model.Book
+	var book bookModel.Book
 	result = r.DB.First(&book, bookId)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -189,9 +191,9 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 	return nil
 }
 
-// beforeCreate validate if the book is already lent.
+// BeforeCreate validate if the book is already lent.
 func (r LendingRepository) BeforeCreate(studentId, bookId uint) *errors.ApiError {
-	var lending model.Lending
+	var lending lendingModel.Lending
 	result := r.DB.Where("book_id = ?", bookId).First(&lending)
 	if result.RowsAffected > 0 {
 		return &errors.ApiError{
