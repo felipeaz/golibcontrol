@@ -7,10 +7,12 @@ import (
 	"strings"
 	"testing"
 
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/lending/model"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
 )
 
 func TestAssociateBookInput(t *testing.T) {
@@ -47,7 +49,7 @@ func TestAssociateBookInputWithError(t *testing.T) {
 	book, apiError := AssociateBookInput(c)
 
 	// Validation
-	assert.Equal(t, model.Book{}, book)
+	assert.Equal(t, bookModel.Book{}, book)
 	assert.Equal(t, http.StatusBadRequest, apiError.Status)
 }
 
@@ -83,7 +85,7 @@ func TestAssociateCategoryInputWithError(t *testing.T) {
 	category, apiError := AssociateCategoryInput(c)
 
 	// Validation
-	assert.Equal(t, model.Category{}, category)
+	assert.Equal(t, categoryModel.Category{}, category)
 	assert.Equal(t, http.StatusBadRequest, apiError.Status)
 }
 
@@ -141,7 +143,7 @@ func TestAssociateStudentInputWithError(t *testing.T) {
 	student, apiError := AssociateStudentInput(c)
 
 	// Validation
-	assert.Equal(t, model.Student{}, student)
+	assert.Equal(t, studentModel.Student{}, student)
 	assert.Equal(t, http.StatusBadRequest, apiError.Status)
 }
 
@@ -178,6 +180,6 @@ func TestAssociateLendingInputWithError(t *testing.T) {
 	lending, apiError := AssociateLendingInput(c)
 
 	// Validation
-	assert.Equal(t, model.Lending{}, lending)
+	assert.Equal(t, lendingModel.Lending{}, lending)
 	assert.Equal(t, http.StatusBadRequest, apiError.Status)
 }
