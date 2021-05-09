@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// DBHandler contains the connection with mysql that will be used on repository layer
+// DBHandler contains the connection with mysql that will be used on repositories layer
 type DBHandler struct {
 	conn *gorm.DB
 }

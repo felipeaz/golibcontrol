@@ -1,14 +1,13 @@
 package build
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/book/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/handler/rest"
 )
 
 // BookRoutes initialize Book routes.
-func BookRoutes(middleware *middleware.TokenMiddleware, rg *gin.RouterGroup, bookHandler rest.BookHandler) {
+func BookRoutes(middleware *middleware.TokenMiddleware, rg *gin.RouterGroup, bookHandler handler.BookHandler) {
 	r := rg.Group("/book")
 
 	r.GET("/", middleware.TokenAuth(), bookHandler.Get)
