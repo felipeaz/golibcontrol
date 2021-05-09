@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/model"
+	"github.com/FelipeAz/golibcontrol/platform/jwt/model"
 	"github.com/FelipeAz/golibcontrol/platform/redis"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
