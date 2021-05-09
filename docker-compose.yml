@@ -23,13 +23,12 @@ services:
     ports:
       - 6380:6379
   mysql:
-    image: mysql
+    image: mysql:8.0
     container_name: mysql
     environment:
       MYSQL_DATABASE: Library
-      MYSQL_USER: root
       MYSQL_ROOT_PASSWORD: abc123
-    ports: 
+    ports:
       - 3307:3306
   json-server:
     image: vimagick/json-server
