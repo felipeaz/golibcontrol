@@ -44,46 +44,50 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 ├── internal
 │   └── app
 │   │   └── constants
-│   │    │   └── model
-│   │    │   │   ├── book_category_model.go
-│   │    │   │   ├── book_model.go
-│   │    │   │   ├── category_model.go
-│   │    │   │   ├── lending_model.go
-│   │    │   │   └── student_model.go
-│   │    │   └── errors
-│   │    │       └── api_errors.go
-│   │    ├── handler
-│   │    │   └── rest
-│   │    │       ├── book_handler.go
-│   │    │       ├── category_handler.go
-│   │    │       ├── lending_handler.go
-│   │    │       └── student_handler.go
-│   │    ├── middleware
-│   │    │   └── 
-│   │    ├── module
-│   │    │   ├── book_module.go
-│   │    │   ├── category_module.go
-│   │    │   ├── lending_module.go
-│   │    │   └── student_module.go
-│   │    └── repository
-│   │       ├── book_repository.go
-│   │       ├── category_repository.go
-│   │       ├── lending_repository.go
-│   │       └── student_repository.go
+│   │    │   ├── errors
+│   │    │   │   └── api_error.go
+│   │    │   ├── login
+│   │    │   │   └── login.go
+│   │    │   └── logs
+│   │    │       └── logs.go
+│   │    ├── domain
+│   │    │   └── domain_item
+│   │    │       └── handler
+│   │    │       │   └── domain_item_handler.go
+│   │    │       └── model
+│   │    │       │   └── domain_item_model.go
+│   │    │       └── module
+│   │    │       │   └── domain_item_module.go
+│   │    │       └── repository
+│   │    │           └── interface
+│   │    │           │    └── domain_item_repository_interface.go
+│   │    │           └── mock
+│   │    │           │    └── domain_item_repository_mock.go
+│   │    │           └── domain_item_repository.go
+│   │    └── middleware
+│   │        └── middleware.go
 │   └── pkg
 │       ├── category_extractor.go
 │       ├── category_extractor_test.go
 │       ├── input_associator.go
 │       └── input_associator_test.go
 ├── platform
-│   └── mysql
-│   │   └── mysql.go    
+│   └── jwt
+│   │   └── model.go    
+│   │   │   ├── jwt_token_details.go 
+│   │   │   └── jwt_token_details.go 
+│   │   └── jwt.go    
+│   ├── logger
+│   │   └── logger.go
 │   ├── redis
-│   │
+│   │   └── redis.go
 │   └── router
 │       └── build
+│       │   ├── account_routes.go               
 │       │   ├── book_routes.go               
-│       │   └── category_routes.go
+│       │   ├── category_routes.go               
+│       │   ├── lending_routes.go               
+│       │   └── student_routes.go
 │       └──  router.go
 ├── scripts
 │   ├── install.sh
@@ -93,9 +97,11 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 │   └── tests.sh
 ├── vendor
 │   └── dependencies
+├── .env_example
 ├── docker-compose.yml
 ├── go.mod
 │   └── go.sum
+├── makefile
 └── README.md
 ```
 

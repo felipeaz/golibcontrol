@@ -28,7 +28,6 @@ func NewTokenMiddleware(jwtAuth *jwt.Auth) *TokenMiddleware {
 func (tm TokenMiddleware) TokenAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := tm.JWTAuth.TokenValid(c.Request)
-		usrErr := tm.JWTAuth.UserLoggedIn(c.Request)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, errors.ApiError{
 				Message: AuthenticationRequiredMessage,
@@ -36,7 +35,9 @@ func (tm TokenMiddleware) TokenAuth() gin.HandlerFunc {
 			})
 			c.Abort()
 			return
-		} else if usrErr != nil {
+		}
+		usrErr := tm.JWTAuth.UserLoggedIn(c.Request)
+		if usrErr != nil {
 			c.JSON(http.StatusUnauthorized, errors.ApiError{
 				Message: AuthenticationRequiredMessage,
 				Error:   usrErr.Error(),

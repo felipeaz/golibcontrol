@@ -8,7 +8,11 @@ import (
 	accountModel "github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
 	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
+	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/comment/model"
 	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/lending/model"
+	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/reply/model"
+	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/reserve/model"
+	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/review/model"
 	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
 
 	"gorm.io/driver/mysql"
@@ -62,5 +66,9 @@ func (db *DBHandler) autoMigrateTables() error {
 		&bookModel.BookCategory{},
 		&lendingModel.Lending{},
 		&accountModel.Account{},
+		&commentModel.Comment{},
+		&replyModel.Reply{},
+		&reviewModel.Review{},
+		&reserveModel.Reserve{},
 	)
 }

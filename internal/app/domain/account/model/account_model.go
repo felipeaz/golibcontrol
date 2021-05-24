@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// Account contains all Book's table properties.
+// Account contains all Account's table properties.
 type Account struct {
 	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement;not null"`
 	Email     string    `json:"email" binding:"required" gorm:"unique"`

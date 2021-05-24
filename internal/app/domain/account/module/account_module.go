@@ -8,13 +8,13 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
+	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository/interface"
 	"github.com/FelipeAz/golibcontrol/platform/jwt"
 	"github.com/FelipeAz/golibcontrol/platform/redis"
 )
 
 type AccountModule struct {
-	Repository repository.AccountRepository
+	Repository _interface.AccountRepositoryInterface
 	Auth       *jwt.Auth
 	Cache      *redis.Cache
 }

@@ -16,8 +16,8 @@ type BookCategoryRepository struct {
 	DB *gorm.DB
 }
 
-// ValidateCategories validate if categories exists on DB
-func (r BookCategoryRepository) ValidateCategories(categoriesIds []uint) (categories []uint, apiError *errors.ApiError) {
+// GetCategoriesByIds returns categories by ids if exists on DB or an error
+func (r BookCategoryRepository) GetCategoriesByIds(categoriesIds []uint) (categories []uint, apiError *errors.ApiError) {
 	for _, categoryId := range categoriesIds {
 		var category categoryModel.Category
 		result := r.DB.First(&category, categoryId)

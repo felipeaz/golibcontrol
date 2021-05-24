@@ -128,7 +128,7 @@ func (r BookRepository) Delete(id string) (apiError *errors.ApiError) {
 
 // BeforeCreate validate if the request categories exists
 func (r BookRepository) BeforeCreate(categoriesId string) ([]uint, *errors.ApiError) {
-	return r.BookCategoryRepository.ValidateCategories(pkg.ExtractCategoryId(categoriesId))
+	return r.BookCategoryRepository.GetCategoriesByIds(pkg.ExtractCategoryId(categoriesId))
 }
 
 // AfterCreate persists categories on BookCategory Table after the book persists.
