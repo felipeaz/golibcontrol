@@ -126,7 +126,7 @@ GORM make database commands easier to understand and work. This lib is used to t
 GIN simplifies the HTTP functions making easy to get the context, create routes (with and without groups) and sending response. 
 
 ### REDIS
-(redis is coming!)
+Redis is a cache tecnology which I choose to keep the user authentication stored. Doing this, I'm able to invalidate the JWT token even if it's time has not finished yet.
 
 ### MYSQL
 MYSQL is the database choosen for this application.
@@ -135,3 +135,4 @@ MYSQL is the database choosen for this application.
 The tests can be executed using the command `make tests`
 
 # API
+(Documentation soon)
