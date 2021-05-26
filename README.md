@@ -27,7 +27,7 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 
 ### Flow
  
-`User Request > Middleware (work in progress) > Handler > Module > Repository`
+`User Request > Middleware (JWT) > Handler > Module > Repository`
 
 ### Project Structure
 ```
