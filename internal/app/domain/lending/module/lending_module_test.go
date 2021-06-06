@@ -267,12 +267,8 @@ func TestUpdateLending(t *testing.T) {
 		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	lending, apiError := m.Update(id, upLending)
+	apiError := m.Update(id, upLending)
 	assert.Nil(t, apiError)
-	assert.Equal(t, 25, int(lending.ID))
-	assert.Equal(t, upLending.BookID, lending.BookID)
-	assert.Equal(t, upLending.StudentID, lending.StudentID)
-	assert.Equal(t, upLending.LendingDate, lending.LendingDate)
 }
 
 func TestUpdateLendingNotFoundError(t *testing.T) {
@@ -288,9 +284,8 @@ func TestUpdateLendingNotFoundError(t *testing.T) {
 		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	lending, apiError := m.Update(id, upLending)
+	apiError := m.Update(id, upLending)
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Lending{}, lending)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "lending not found", apiError.Error)
@@ -310,9 +305,8 @@ func TestUpdateLendingStudentNotFoundError(t *testing.T) {
 		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	lending, apiError := m.Update(id, upLending)
+	apiError := m.Update(id, upLending)
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Lending{}, lending)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "student not found", apiError.Error)
@@ -332,9 +326,8 @@ func TestUpdateLendingStudentError(t *testing.T) {
 		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	lending, apiError := m.Update(id, upLending)
+	apiError := m.Update(id, upLending)
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Lending{}, lending)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)
@@ -353,9 +346,8 @@ func TestUpdateLendingBookNotFoundError(t *testing.T) {
 		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	lending, apiError := m.Update(id, upLending)
+	apiError := m.Update(id, upLending)
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Lending{}, lending)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "book not found", apiError.Error)
@@ -375,9 +367,8 @@ func TestUpdateLendingBookError(t *testing.T) {
 		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	lending, apiError := m.Update(id, upLending)
+	apiError := m.Update(id, upLending)
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Lending{}, lending)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)
@@ -396,9 +387,8 @@ func TestUpdateLendingError(t *testing.T) {
 		LendingDate: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	lending, apiError := m.Update(id, upLending)
+	apiError := m.Update(id, upLending)
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Lending{}, lending)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)

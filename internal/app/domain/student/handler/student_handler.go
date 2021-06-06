@@ -5,10 +5,9 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/student/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/student/repository"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/mysql/service"
+	"github.com/gin-gonic/gin"
 )
 
 // StudentHandler handle the student router call.
@@ -17,11 +16,11 @@ type StudentHandler struct {
 }
 
 // NewStudentHandler Return an instance of this handler.
-func NewStudentHandler(db *gorm.DB) StudentHandler {
+func NewStudentHandler(dbService *service.MySQLService) StudentHandler {
 	return StudentHandler{
 		Module: module.StudentModule{
 			Repository: repository.StudentRepository{
-				DB: db,
+				DB: dbService,
 			},
 		},
 	}
@@ -74,13 +73,12 @@ func (h StudentHandler) Update(c *gin.Context) {
 		return
 	}
 
-	student, apiError := h.Module.Update(c.Param("id"), upStudent)
+	apiError := h.Module.Update(c.Param("id"), upStudent)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": student})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent student.
@@ -90,6 +88,5 @@ func (h StudentHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

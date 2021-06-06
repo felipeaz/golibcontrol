@@ -5,10 +5,9 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/category/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/category/repository"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/mysql/service"
+	"github.com/gin-gonic/gin"
 )
 
 // CategoryHandler handle the category router call.
@@ -17,11 +16,11 @@ type CategoryHandler struct {
 }
 
 // NewCategoryHandler returns an instance of category handler.
-func NewCategoryHandler(db *gorm.DB) CategoryHandler {
+func NewCategoryHandler(dbService *service.MySQLService) CategoryHandler {
 	return CategoryHandler{
 		Module: module.CategoryModule{
 			Repository: repository.CategoryRepository{
-				DB: db,
+				DB: dbService,
 			},
 		},
 	}
@@ -74,13 +73,12 @@ func (h CategoryHandler) Update(c *gin.Context) {
 		return
 	}
 
-	category, apiError := h.Module.Update(c.Param("id"), upCategory)
+	apiError := h.Module.Update(c.Param("id"), upCategory)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": category})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent category.
@@ -90,6 +88,5 @@ func (h CategoryHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

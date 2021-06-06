@@ -12,31 +12,26 @@ type LendingModule struct {
 }
 
 // Get returns all lendings.
-func (m LendingModule) Get() (lendings []model.Lending, apiError *errors.ApiError) {
-	lendings, apiError = m.Repository.Get()
-	return
+func (m LendingModule) Get() ([]model.Lending, *errors.ApiError) {
+	return m.Repository.Get()
 }
 
 // Find return one lending by ID.
-func (m LendingModule) Find(id string) (lending model.Lending, apiError *errors.ApiError) {
-	lending, apiError = m.Repository.Find(id)
-	return
+func (m LendingModule) Find(id string) (model.Lending, *errors.ApiError) {
+	return m.Repository.Find(id)
 }
 
 // Create persist a lending to the database.
-func (m LendingModule) Create(lending model.Lending) (id uint, apiError *errors.ApiError) {
-	id, apiError = m.Repository.Create(lending)
-	return
+func (m LendingModule) Create(lending model.Lending) (uint, *errors.ApiError) {
+	return m.Repository.Create(lending)
 }
 
 // Update update an existent lending.
-func (m LendingModule) Update(id string, upLending model.Lending) (lending model.Lending, apiError *errors.ApiError) {
-	lending, apiError = m.Repository.Update(id, upLending)
-	return
+func (m LendingModule) Update(id string, upLending model.Lending) *errors.ApiError {
+	return m.Repository.Update(id, upLending)
 }
 
 // Delete delete an existent lending.
-func (m LendingModule) Delete(id string) (apiError *errors.ApiError) {
-	apiError = m.Repository.Delete(id)
-	return
+func (m LendingModule) Delete(id string) *errors.ApiError {
+	return m.Repository.Delete(id)
 }

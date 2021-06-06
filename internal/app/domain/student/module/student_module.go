@@ -12,31 +12,26 @@ type StudentModule struct {
 }
 
 // Get returns all students.
-func (m StudentModule) Get() (students []model.Student, apiError *errors.ApiError) {
-	students, apiError = m.Repository.Get()
-	return
+func (m StudentModule) Get() ([]model.Student, *errors.ApiError) {
+	return m.Repository.Get()
 }
 
 // Find return one student by ID.
-func (m StudentModule) Find(id string) (student model.Student, apiError *errors.ApiError) {
-	student, apiError = m.Repository.Find(id)
-	return
+func (m StudentModule) Find(id string) (model.Student, *errors.ApiError) {
+	return m.Repository.Find(id)
 }
 
 // Create persist a student to the database.
-func (m StudentModule) Create(student model.Student) (id uint, apiError *errors.ApiError) {
-	id, apiError = m.Repository.Create(student)
-	return
+func (m StudentModule) Create(student model.Student) (uint, *errors.ApiError) {
+	return m.Repository.Create(student)
 }
 
 // Update update an existent student.
-func (m StudentModule) Update(id string, upStudent model.Student) (student model.Student, apiError *errors.ApiError) {
-	student, apiError = m.Repository.Update(id, upStudent)
-	return
+func (m StudentModule) Update(id string, upStudent model.Student) *errors.ApiError {
+	return m.Repository.Update(id, upStudent)
 }
 
 // Delete delete an existent student.
-func (m StudentModule) Delete(id string) (apiError *errors.ApiError) {
-	apiError = m.Repository.Delete(id)
-	return
+func (m StudentModule) Delete(id string) *errors.ApiError {
+	return m.Repository.Delete(id)
 }

@@ -5,10 +5,9 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/lending/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/lending/repository"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/mysql/service"
+	"github.com/gin-gonic/gin"
 )
 
 // LendingHandler handle the lending router call.
@@ -17,11 +16,11 @@ type LendingHandler struct {
 }
 
 // NewLendingHandler Return an instance of this handler.
-func NewLendingHandler(db *gorm.DB) LendingHandler {
+func NewLendingHandler(dbService *service.MySQLService) LendingHandler {
 	return LendingHandler{
 		Module: module.LendingModule{
 			Repository: repository.LendingRepository{
-				DB: db,
+				DB: dbService,
 			},
 		},
 	}
@@ -74,13 +73,12 @@ func (h LendingHandler) Update(c *gin.Context) {
 		return
 	}
 
-	lending, apiError := h.Module.Update(c.Param("id"), upLending)
+	apiError := h.Module.Update(c.Param("id"), upLending)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": lending})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent lending.
@@ -90,6 +88,5 @@ func (h LendingHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

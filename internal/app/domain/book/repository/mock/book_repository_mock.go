@@ -85,31 +85,25 @@ func (r BookRepositoryMock) Create(book model.Book) (uint, *errors.ApiError) {
 	return 25, nil
 }
 
-func (r BookRepositoryMock) Update(id string, upBook model.Book) (model.Book, *errors.ApiError) {
+func (r BookRepositoryMock) Update(id string, upBook model.Book) *errors.ApiError {
 	_, apiError := r.Find(id)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return model.Book{}, apiError
+		return apiError
 	}
 
 	err := r.BeforeUpdate(upBook.ID, upBook.CategoriesId)
 	if r.TestCategoryNotFoundError || r.TestBeforeUpdateNotFoundError {
-		return model.Book{}, err
+		return err
 	} else if r.TestError {
-		return model.Book{}, &errors.ApiError{
+		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   "mocked error",
 		}
 	}
 
-	return model.Book{
-		ID:             25,
-		RegisterNumber: upBook.RegisterNumber,
-		Title:          upBook.Title,
-		Author:         upBook.Author,
-		Available:      upBook.Available,
-	}, err
+	return err
 }
 
 func (r BookRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
