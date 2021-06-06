@@ -18,7 +18,7 @@ func AssociateBookInput(c *gin.Context) (book bookModel.Book, apiError *errors.A
 	err := c.ShouldBindJSON(&book)
 	if err != nil {
 		return bookModel.Book{}, &errors.ApiError{
-			Status:  http.StatusUnprocessableEntity,
+			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -32,7 +32,7 @@ func AssociateCategoryInput(c *gin.Context) (category categoryModel.Category, ap
 	err := c.ShouldBindJSON(&category)
 	if err != nil {
 		return categoryModel.Category{}, &errors.ApiError{
-			Status:  http.StatusUnprocessableEntity,
+			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -46,7 +46,7 @@ func AssociateStudentInput(c *gin.Context) (student studentModel.Student, apiErr
 	err := c.ShouldBindJSON(&student)
 	if err != nil {
 		return studentModel.Student{}, &errors.ApiError{
-			Status:  http.StatusUnprocessableEntity,
+			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -60,7 +60,7 @@ func AssociateLendingInput(c *gin.Context) (lending lendingModel.Lending, apiErr
 	err := c.ShouldBindJSON(&lending)
 	if err != nil {
 		return lendingModel.Lending{}, &errors.ApiError{
-			Status:  http.StatusUnprocessableEntity,
+			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
@@ -74,7 +74,7 @@ func AssociateAccountInput(c *gin.Context) (account accountModel.Account, apiErr
 	err := c.ShouldBindJSON(&account)
 	if err != nil {
 		return accountModel.Account{}, &errors.ApiError{
-			Status:  http.StatusUnprocessableEntity,
+			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
 		}
