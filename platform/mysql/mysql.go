@@ -3,6 +3,7 @@ package mysql
 import (
 	"fmt"
 	"log"
+	"os"
 
 	accountModel "github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
@@ -26,9 +27,9 @@ type DBHandler struct {
 // Connect opens a connection to the MYSQL server and prapare tables.
 func Connect() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		"root", "abc123",
-		"localhost", "3306",
-		"Library")
+		os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"),
+		os.Getenv("DB_DATABASE"))
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
