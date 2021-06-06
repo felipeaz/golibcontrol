@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/FelipeAz/golibcontrol/infra/jwt"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/platform/jwt"
 	"github.com/gin-gonic/gin"
 )
 

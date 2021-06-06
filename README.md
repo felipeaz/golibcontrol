@@ -1,6 +1,16 @@
 # golibcontrol
 golibcontrol is a Library Control API where you can control which books are available for lending or which student has lent a book.
 
+This application is compound by four services:
+
+`Account Service` Service that contains all accounts and which is responsible of user authentication.
+
+`Management Service` Service that adds content to the digital library. The content can be Students, Books and Books Lending. 
+
+`Platform Service` Service that contains all platform functionalities - Comments, Replies, Reviews and Reservations.
+
+`Profile Service` Service that contains all personal information of students and statistics about their recent actions on the platform.
+
 # Installation
 The first installation of this application you must run the command `make install`, but if you have already installed it, you can start this application with `make run` (with terminal attached) or `make rund` (with terminal dettached)
 
@@ -50,20 +60,23 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 │   │    │   │   └── login.go
 │   │    │   └── logs
 │   │    │       └── logs.go
+│   │    ├── database
+│   │    │   └── database_interface
 │   │    ├── domain
-│   │    │   └── domain_item
-│   │    │       └── handler
-│   │    │       │   └── domain_item_handler.go
-│   │    │       └── model
-│   │    │       │   └── domain_item_model.go
-│   │    │       └── module
-│   │    │       │   └── domain_item_module.go
-│   │    │       └── repository
-│   │    │           └── interface
-│   │    │           │    └── domain_item_repository_interface.go
-│   │    │           └── mock
-│   │    │           │    └── domain_item_repository_mock.go
-│   │    │           └── domain_item_repository.go
+│   │    │   └── domain_service
+│   │    │       └── domain_item
+│   │    │           └── handler
+│   │    │           │   └── domain_item_handler.go
+│   │    │           └── model
+│   │    │           │   └── domain_item_model.go
+│   │    │           └── module
+│   │    │           │   └── domain_item_module.go
+│   │    │           └── repository
+│   │    │               └── interface
+│   │    │               │    └── domain_item_repository_interface.go
+│   │    │               └── mock
+│   │    │               │    └── domain_item_repository_mock.go
+│   │    │               └── domain_item_repository.go
 │   │    └── middleware
 │   │        └── middleware.go
 │   └── pkg
@@ -79,6 +92,10 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 │   │   └── jwt.go    
 │   ├── logger
 │   │   └── logger.go
+│   ├── mysql
+│   │   └── service    
+│   │   │   └── mysql_service.go 
+│   │   └── mysql.go    
 │   ├── redis
 │   │   └── redis.go
 │   └── router

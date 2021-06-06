@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
-	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
-	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/lending/model"
-	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
