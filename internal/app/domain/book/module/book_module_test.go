@@ -182,15 +182,10 @@ func TestBookUpdate(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, upBook)
+	apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.Nil(t, apiError)
-	assert.NotEqual(t, model.Book{}, book)
-	assert.Equal(t, 25, int(book.ID))
-	assert.Equal(t, upBook.Title, book.Title)
-	assert.Equal(t, upBook.Author, book.Author)
-	assert.Equal(t, upBook.Available, book.Available)
 }
 
 func TestUpdateBookNotFound(t *testing.T) {
@@ -207,11 +202,10 @@ func TestUpdateBookNotFound(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, upBook)
+	apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "book not found", apiError.Error)
@@ -231,11 +225,10 @@ func TestBeforeUpdateBookNotFound(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, upBook)
+	apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "book not found", apiError.Error)
@@ -256,11 +249,10 @@ func TestUpdateBookCategoryNotFound(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, upBook)
+	apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "category with ID: 5 not found", apiError.Error)
@@ -281,11 +273,10 @@ func TestUpdateBookWithError(t *testing.T) {
 	}
 
 	// Exec
-	book, apiError := m.Update(id, upBook)
+	apiError := m.Update(id, upBook)
 
 	// Validation
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Book{}, book)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)

@@ -142,12 +142,10 @@ func TestCategoryUpdate(t *testing.T) {
 	}
 
 	// Exec
-	category, apiError := m.Update(id, upCategory)
+	apiError := m.Update(id, upCategory)
 
 	// Validation
 	assert.Nil(t, apiError)
-	assert.NotEqual(t, model.Category{}, category)
-	assert.Equal(t, upCategory.Name, category.Name)
 }
 
 func TestUpdateCategoryNotFound(t *testing.T) {
@@ -161,11 +159,10 @@ func TestUpdateCategoryNotFound(t *testing.T) {
 	}
 
 	// Exec
-	category, apiError := m.Update(id, upCategory)
+	apiError := m.Update(id, upCategory)
 
 	// Validation
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Category{}, category)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "category not found", apiError.Error)
@@ -182,11 +179,10 @@ func TestUpdateCategoryWithError(t *testing.T) {
 	}
 
 	// Exec
-	category, apiError := m.Update(id, upCategory)
+	apiError := m.Update(id, upCategory)
 
 	// Validation
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Category{}, category)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)
@@ -203,11 +199,10 @@ func TestUpdateCategoryError(t *testing.T) {
 	}
 
 	// Exec
-	category, apiError := m.Update(id, upCategory)
+	apiError := m.Update(id, upCategory)
 
 	// Validation
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Category{}, category)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)

@@ -167,11 +167,9 @@ func TestUpdate(t *testing.T) {
 		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	student, apiError := m.Update(id, upStudent)
+	apiError := m.Update(id, upStudent)
 
 	assert.Nil(t, apiError)
-	assert.NotEqual(t, model.Student{}, student)
-	assert.Equal(t, upStudent, student)
 }
 
 func TestUpdateError(t *testing.T) {
@@ -192,10 +190,9 @@ func TestUpdateError(t *testing.T) {
 		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	student, apiError := m.Update(id, upStudent)
+	apiError := m.Update(id, upStudent)
 
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Student{}, student)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)
@@ -219,10 +216,9 @@ func TestUpdateNotFoundError(t *testing.T) {
 		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	student, apiError := m.Update(id, upStudent)
+	apiError := m.Update(id, upStudent)
 
 	assert.NotNil(t, apiError)
-	assert.Equal(t, model.Student{}, student)
 	assert.Equal(t, http.StatusNotFound, apiError.Status)
 	assert.Equal(t, errors.UpdateFailMessage, apiError.Message)
 	assert.Equal(t, "student not found", apiError.Error)

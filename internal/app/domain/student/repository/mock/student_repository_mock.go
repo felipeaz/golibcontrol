@@ -89,22 +89,22 @@ func (r StudentRepositoryMock) Create(student model.Student) (uint, *errors.ApiE
 }
 
 // Update update an existent student.
-func (r StudentRepositoryMock) Update(id string, upStudent model.Student) (model.Student, *errors.ApiError) {
+func (r StudentRepositoryMock) Update(id string, upStudent model.Student) *errors.ApiError {
 	_, apiError := r.Find(id)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return model.Student{}, apiError
+		return apiError
 	}
 
 	if r.TestUpdateError {
-		return model.Student{}, &errors.ApiError{
+		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   "mocked error",
 		}
 	}
 
-	return upStudent, nil
+	return nil
 }
 
 // Delete delete an existent student from DB.

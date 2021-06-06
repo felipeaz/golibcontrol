@@ -93,28 +93,28 @@ func (r LendingRepositoryMock) Create(lending model.Lending) (uint, *errors.ApiE
 }
 
 // Update update an existent lending.
-func (r LendingRepositoryMock) Update(id string, upLending model.Lending) (model.Lending, *errors.ApiError) {
+func (r LendingRepositoryMock) Update(id string, upLending model.Lending) *errors.ApiError {
 	_, apiError := r.Find(id)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return model.Lending{}, apiError
+		return apiError
 	}
 
 	apiError = r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return model.Lending{}, apiError
+		return apiError
 	}
 
 	if r.TestUpdateError && !r.TestBookNotFoundError && !r.TestStudentNotFoundError {
-		return model.Lending{}, &errors.ApiError{
+		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   "mocked error",
 		}
 	}
 
-	return upLending, nil
+	return nil
 }
 
 // Delete delete an existent lending from DB.
