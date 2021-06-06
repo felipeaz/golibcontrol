@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
@@ -24,7 +25,7 @@ type LendingRepository struct {
 
 // Get returns all lendings.
 func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
-	result, apiError := r.DB.Get(&lendingModel.Lending{})
+	result, apiError := r.DB.Get(&[]lendingModel.Lending{})
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -37,7 +38,7 @@ func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
 
 // Find return one lending from DB by ID.
 func (r LendingRepository) Find(id string) (lendingModel.Lending, *errors.ApiError) {
-	result, apiError := r.DB.Find(lendingModel.Lending{}, id)
+	result, apiError := r.DB.Find(&lendingModel.Lending{}, id)
 	if apiError != nil {
 		return lendingModel.Lending{}, apiError
 	}
@@ -114,29 +115,18 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 
 // BeforeCreate validate if the book is already lent.
 func (r LendingRepository) BeforeCreate(studentId, bookId uint) *errors.ApiError {
-	result, apiError := r.DB.FindWhere(lendingModel.Lending{}, "book_id", strconv.Itoa(int(bookId)))
-	if apiError != nil {
+	result, apiError := r.DB.FindWhereWithQuery(
+		&lendingModel.Lending{},
+		fmt.Sprintf("book_id = %s OR student_id = %s", strconv.Itoa(int(bookId)), strconv.Itoa(int(studentId))))
+	if apiError != nil && apiError.Error != errors.ItemNotFoundError {
 		return apiError
 	}
-	if result != nil {
+	if result != nil && apiError == nil {
 		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
-			Error:   "book is already lent",
+			Error:   errors.LendingNotAvailableError,
 		}
 	}
-
-	result, apiError = r.DB.FindWhere(studentModel.Student{}, "student_id", strconv.Itoa(int(studentId)))
-	if apiError != nil {
-		return apiError
-	}
-	if result != nil {
-		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailMessage,
-			Error:   "student has already lent a book",
-		}
-	}
-
 	return nil
 }

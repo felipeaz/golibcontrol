@@ -14,7 +14,7 @@ type CategoryRepository struct {
 
 // Get returns all categories.
 func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
-	result, apiError := r.DB.Get(&model.Category{})
+	result, apiError := r.DB.Get(&[]model.Category{})
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -27,15 +27,17 @@ func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
 
 // Find return one category from DB by ID.
 func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
-	result, apiError := r.DB.Find(model.Category{}, id)
-	if apiError != nil {
-		return model.Category{}, nil
-	}
-	categoryObj, apiError := converter.ConvertToCategoryObj(result)
+	result, apiError := r.DB.Find(&model.Category{}, id)
 	if apiError != nil {
 		return model.Category{}, apiError
 	}
-	return categoryObj, nil
+
+	category, apiError := converter.ConvertToCategoryObj(result)
+	if apiError != nil {
+		return model.Category{}, apiError
+	}
+
+	return category, nil
 }
 
 // Create persist a category to the DB.

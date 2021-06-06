@@ -14,7 +14,7 @@ type StudentRepository struct {
 
 // Get returns all students.
 func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
-	result, apiError := r.DB.Get(&model.Student{})
+	result, apiError := r.DB.Get(&[]model.Student{})
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -27,7 +27,7 @@ func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
 
 // Find return one student from DB by ID.
 func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
-	result, apiError := r.DB.Find(model.Student{}, id)
+	result, apiError := r.DB.Find(&model.Student{}, id)
 	if apiError != nil {
 		return model.Student{}, apiError
 	}

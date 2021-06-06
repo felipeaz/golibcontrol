@@ -41,7 +41,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 		}
 		apiError := r.DB.Create(&bookCategory)
 		if apiError != nil {
-			log.Println("failed to create book category:", apiError.Error)
+			log.Println(errors.FailedToCreateBookCategoryMessage, apiError.Error)
 		}
 	}
 }

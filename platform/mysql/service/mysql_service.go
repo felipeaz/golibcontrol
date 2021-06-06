@@ -54,16 +54,16 @@ func (s MySQLService) GetWithPreload(domainObj interface{}, preload string) (int
 func (s MySQLService) Find(domainObj interface{}, id string) (interface{}, *errors.ApiError) {
 	result := s.DB.Model(domainObj).Where("id = ?", id).Find(domainObj)
 	if result.RowsAffected == 0 {
-		return domainObj, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
-			Error:   "item not found",
+			Error:   errors.ItemNotFoundError,
 		}
 	}
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
 			logger.LogError(err)
-			return domainObj, &errors.ApiError{
+			return nil, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
 				Error:   err.Error(),
@@ -76,16 +76,16 @@ func (s MySQLService) Find(domainObj interface{}, id string) (interface{}, *erro
 func (s MySQLService) FindWithPreload(domainObj interface{}, id string, preload string) (interface{}, *errors.ApiError) {
 	result := s.DB.Preload(preload).Model(domainObj).Where("id = ?", id).Find(domainObj)
 	if result.RowsAffected == 0 {
-		return domainObj, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
-			Error:   "item not found",
+			Error:   errors.ItemNotFoundError,
 		}
 	}
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
 			logger.LogError(err)
-			return domainObj, &errors.ApiError{
+			return nil, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
 				Error:   err.Error(),
@@ -98,16 +98,38 @@ func (s MySQLService) FindWithPreload(domainObj interface{}, id string, preload 
 func (s MySQLService) FindWhere(domainObj interface{}, fieldName string, fieldValue string) (interface{}, *errors.ApiError) {
 	result := s.DB.Model(domainObj).Where(fieldName+" = ? ", fieldValue).Find(domainObj)
 	if result.RowsAffected == 0 {
-		return domainObj, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
-			Error:   "item not found",
+			Error:   errors.ItemNotFoundError,
 		}
 	}
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
 			logger.LogError(err)
-			return domainObj, &errors.ApiError{
+			return nil, &errors.ApiError{
+				Status:  http.StatusInternalServerError,
+				Message: errors.FailMessage,
+				Error:   err.Error(),
+			}
+		}
+	}
+	return domainObj, nil
+}
+
+func (s MySQLService) FindWhereWithQuery(domainObj interface{}, query string) (interface{}, *errors.ApiError) {
+	result := s.DB.Model(domainObj).Where(query).Find(domainObj)
+	if result.RowsAffected == 0 {
+		return nil, &errors.ApiError{
+			Status:  http.StatusNotFound,
+			Message: errors.FailMessage,
+			Error:   errors.ItemNotFoundError,
+		}
+	}
+	if err := result.Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			logger.LogError(err)
+			return nil, &errors.ApiError{
 				Status:  http.StatusInternalServerError,
 				Message: errors.FailMessage,
 				Error:   err.Error(),

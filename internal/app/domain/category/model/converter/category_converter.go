@@ -20,7 +20,7 @@ func ConvertToCategoryObj(obj interface{}) (model.Category, *errors.ApiError) {
 
 func ConvertToSliceCategoryObj(obj interface{}) ([]model.Category, *errors.ApiError) {
 	categoryObj, ok := obj.(*[]model.Category)
-	if !ok || categoryObj == nil {
+	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedToConvertObj,

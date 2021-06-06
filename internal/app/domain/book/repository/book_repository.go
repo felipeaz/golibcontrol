@@ -46,6 +46,9 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 	categoriesIds, apiError := r.BeforeCreate(book.CategoriesId)
 	if apiError != nil {
 		apiError.Message = errors.CreateFailMessage
+		if apiError.Error == errors.ItemNotFoundError {
+			apiError.Error = errors.CategoryNotFoundError
+		}
 		return 0, apiError
 	}
 
@@ -99,6 +102,7 @@ func (r BookRepository) BeforeUpdate(bookId uint, categoriesId string) *errors.A
 	if apiError != nil {
 		return apiError
 	}
+	r.BookCategoryRepository.DeleteCategories(bookId)
 	r.BookCategoryRepository.CreateCategories(bookId, categoriesIdSlice)
 	return nil
 }
