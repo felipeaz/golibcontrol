@@ -84,28 +84,18 @@ func (r LendingRepository) Create(lending lendingModel.Lending) (uint, *errors.A
 }
 
 // Update update an existent lending.
-func (r LendingRepository) Update(id string, upLending lendingModel.Lending) (lendingModel.Lending, *errors.ApiError) {
+func (r LendingRepository) Update(id string, upLending lendingModel.Lending) *errors.ApiError {
 	apiError := r.BeforeCreateAndUpdate(upLending.StudentID, upLending.BookID)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return lendingModel.Lending{}, apiError
+		return apiError
 	}
-
-	result, apiError := r.DB.Update(&upLending, id)
-	if apiError != nil {
-		return lendingModel.Lending{}, apiError
-	}
-	lending, apiError := converter.ConvertToLendingObj(result)
-	if apiError != nil {
-		return lendingModel.Lending{}, apiError
-	}
-	return lending, nil
+	return r.DB.Update(&upLending, id)
 }
 
 // Delete delete an existent lending from DB.
 func (r LendingRepository) Delete(id string) *errors.ApiError {
-	apiError := r.DB.Delete(&lendingModel.Lending{}, id)
-	return apiError
+	return r.DB.Delete(&lendingModel.Lending{}, id)
 }
 
 // BeforeCreateAndUpdate validate if the student or book exists before create the lending.

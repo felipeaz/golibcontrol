@@ -76,13 +76,12 @@ func (h BookHandler) Update(c *gin.Context) {
 		return
 	}
 
-	book, apiError := h.Module.Update(c.Param("id"), upBook)
+	apiError := h.Module.Update(c.Param("id"), upBook)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": book})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent book by id.
@@ -92,6 +91,5 @@ func (h BookHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

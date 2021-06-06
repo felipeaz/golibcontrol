@@ -73,13 +73,12 @@ func (h CategoryHandler) Update(c *gin.Context) {
 		return
 	}
 
-	category, apiError := h.Module.Update(c.Param("id"), upCategory)
+	apiError := h.Module.Update(c.Param("id"), upCategory)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": category})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent category.
@@ -89,6 +88,5 @@ func (h CategoryHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

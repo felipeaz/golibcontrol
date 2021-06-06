@@ -73,13 +73,12 @@ func (h StudentHandler) Update(c *gin.Context) {
 		return
 	}
 
-	student, apiError := h.Module.Update(c.Param("id"), upStudent)
+	apiError := h.Module.Update(c.Param("id"), upStudent)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": student})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent student.
@@ -89,6 +88,5 @@ func (h StudentHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

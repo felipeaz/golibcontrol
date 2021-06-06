@@ -48,20 +48,11 @@ func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiEr
 }
 
 // Update update an existent category.
-func (r CategoryRepository) Update(id string, upCategory model.Category) (model.Category, *errors.ApiError) {
-	result, apiError := r.DB.Update(upCategory, id)
-	if apiError != nil {
-		return model.Category{}, apiError
-	}
-	categoryObj, apiError := converter.ConvertToCategoryObj(result)
-	if apiError != nil {
-		return model.Category{}, apiError
-	}
-	return categoryObj, nil
+func (r CategoryRepository) Update(id string, upCategory model.Category) *errors.ApiError {
+	return r.DB.Update(&upCategory, id)
 }
 
 // Delete delete an existent category from DB.
 func (r CategoryRepository) Delete(id string) *errors.ApiError {
-	apiError := r.DB.Delete(&model.Category{}, id)
-	return apiError
+	return r.DB.Delete(&model.Category{}, id)
 }

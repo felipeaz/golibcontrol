@@ -94,13 +94,13 @@ func (h AccountHandler) Update(c *gin.Context) {
 		return
 	}
 
-	account, apiError := h.Module.Update(c.Param("id"), upAccount)
+	apiError := h.Module.Update(c.Param("id"), upAccount)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": account})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent account by id.
@@ -110,6 +110,5 @@ func (h AccountHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

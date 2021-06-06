@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
 	"github.com/FelipeAz/golibcontrol/platform/logger"
 	"github.com/FelipeAz/golibcontrol/platform/mysql"
 	"gorm.io/gorm"
@@ -131,23 +130,17 @@ func (s MySQLService) Create(domainObj interface{}) *errors.ApiError {
 	return nil
 }
 
-func (s MySQLService) Update(domainObj interface{}, id string) (interface{}, *errors.ApiError) {
-	obj, apiError := s.Find(domainObj, id)
-	if apiError != nil {
-		apiError.Message = errors.UpdateFailMessage
-		return model.Category{}, apiError
-	}
-
-	result := s.DB.Model(obj).Updates(domainObj)
+func (s MySQLService) Update(domainObj interface{}, id string) *errors.ApiError {
+	result := s.DB.Model(domainObj).Where("id = ?", id).Updates(domainObj)
 	if err := result.Error; err != nil {
 		logger.LogError(err)
-		return model.Category{}, &errors.ApiError{
+		return &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return obj, nil
+	return nil
 }
 
 func (s MySQLService) Delete(domainObj interface{}, id string) *errors.ApiError {

@@ -51,16 +51,8 @@ func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError
 }
 
 // Update update an existent student.
-func (r StudentRepository) Update(id string, upStudent model.Student) (model.Student, *errors.ApiError) {
-	result, apiError := r.DB.Update(&upStudent, id)
-	if apiError != nil {
-		return model.Student{}, apiError
-	}
-	student, apiError := converter.ConvertToStudentObj(result)
-	if apiError != nil {
-		return model.Student{}, apiError
-	}
-	return student, nil
+func (r StudentRepository) Update(id string, upStudent model.Student) *errors.ApiError {
+	return r.DB.Update(&upStudent, id)
 }
 
 // Delete delete an existent student from DB.

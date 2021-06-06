@@ -73,13 +73,12 @@ func (h LendingHandler) Update(c *gin.Context) {
 		return
 	}
 
-	lending, apiError := h.Module.Update(c.Param("id"), upLending)
+	apiError := h.Module.Update(c.Param("id"), upLending)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": lending})
+	c.Status(http.StatusNoContent)
 }
 
 // Delete delete an existent lending.
@@ -89,6 +88,5 @@ func (h LendingHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.Status(http.StatusNoContent)
 }

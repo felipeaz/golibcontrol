@@ -105,31 +105,26 @@ func (m AccountModule) Logout(r *http.Request) (message login.Message) {
 }
 
 // Get returns all accounts.
-func (m AccountModule) Get() (accounts []model.Account, apiError *errors.ApiError) {
-	accounts, apiError = m.Repository.Get()
-	return
+func (m AccountModule) Get() ([]model.Account, *errors.ApiError) {
+	return m.Repository.Get()
 }
 
 // Find return one account by ID.
-func (m AccountModule) Find(id string) (account model.Account, apiError *errors.ApiError) {
-	account, apiError = m.Repository.Find(id)
-	return
+func (m AccountModule) Find(id string) (model.Account, *errors.ApiError) {
+	return m.Repository.Find(id)
 }
 
 // Create creates an account
-func (m AccountModule) Create(account model.Account) (id uint, apiError *errors.ApiError) {
-	id, apiError = m.Repository.Create(account)
-	return
+func (m AccountModule) Create(account model.Account) (uint, *errors.ApiError) {
+	return m.Repository.Create(account)
 }
 
 // Update update an existent account.
-func (m AccountModule) Update(id string, upAccount model.Account) (account model.Account, apiError *errors.ApiError) {
-	account, apiError = m.Repository.Update(id, upAccount)
-	return
+func (m AccountModule) Update(id string, upAccount model.Account) *errors.ApiError {
+	return m.Repository.Update(id, upAccount)
 }
 
 // Delete delete an existent account by id.
-func (m AccountModule) Delete(id string) (apiError *errors.ApiError) {
-	apiError = m.Repository.Delete(id)
-	return
+func (m AccountModule) Delete(id string) *errors.ApiError {
+	return m.Repository.Delete(id)
 }

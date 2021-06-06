@@ -11,6 +11,6 @@ type GORMServiceInterface interface {
 	FindWithPreload(domainObj interface{}, id string, preload string) (interface{}, *errors.ApiError)
 	FindWhere(domainObj interface{}, id string, preload string) (interface{}, *errors.ApiError)
 	Create(domainObj interface{}) *errors.ApiError
-	Update(domainObj interface{}, id string) (interface{}, *errors.ApiError)
+	Update(domainObj interface{}, id string) *errors.ApiError
 	Delete(domainObj interface{}, id string) *errors.ApiError
 }

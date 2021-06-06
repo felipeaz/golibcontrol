@@ -59,28 +59,18 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 }
 
 // Update update an existent book.
-func (r BookRepository) Update(id string, upBook model.Book) (model.Book, *errors.ApiError) {
-	parsedId, err := pkg.ParseStringToId(id)
-	if err != nil {
-		return model.Book{}, err
+func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
+	parsedId, apiError := pkg.ParseStringToId(id)
+	if apiError != nil {
+		return apiError
 	}
 
-	apiError := r.BeforeUpdate(parsedId, upBook.CategoriesId)
+	apiError = r.BeforeUpdate(parsedId, upBook.CategoriesId)
 	if apiError != nil {
 		apiError.Message = errors.UpdateFailMessage
-		return model.Book{}, apiError
+		return apiError
 	}
-
-	result, apiError := r.DB.Update(&upBook, id)
-	if apiError != nil {
-		return model.Book{}, apiError
-	}
-
-	book, apiError := converter.ConvertToBookObj(result)
-	if apiError != nil {
-		return model.Book{}, apiError
-	}
-	return book, nil
+	return r.DB.Update(&upBook, id)
 }
 
 // Delete delete an existent book from DB.
@@ -90,8 +80,7 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 		return err
 	}
 	r.BeforeDelete(parsedId)
-	apiError := r.DB.Delete(&model.Book{}, id)
-	return apiError
+	return r.DB.Delete(&model.Book{}, id)
 }
 
 // BeforeCreate validate if the request categories exists

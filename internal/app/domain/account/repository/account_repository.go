@@ -60,23 +60,11 @@ func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError
 }
 
 // Update update an existent account.
-func (r AccountRepository) Update(id string, upAccount model.Account) (model.Account, *errors.ApiError) {
-	result, apiError := r.DB.Update(upAccount, id)
-	if apiError != nil {
-		return model.Account{}, apiError
-	}
-	account, apiError := converter.ConvertToAccountObj(result)
-	if apiError != nil {
-		return model.Account{}, apiError
-	}
-	return account, nil
+func (r AccountRepository) Update(id string, upAccount model.Account) *errors.ApiError {
+	return r.DB.Update(&upAccount, id)
 }
 
 // Delete delete an existent account by id.
 func (r AccountRepository) Delete(id string) *errors.ApiError {
-	apiError := r.DB.Delete(&model.Account{}, id)
-	if apiError != nil {
-		return apiError
-	}
-	return nil
+	return r.DB.Delete(&model.Account{}, id)
 }

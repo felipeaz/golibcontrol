@@ -9,7 +9,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/platform/router"
 )
 
-// Start initialize the webservice
+// Start initialize the webservice,
 func Start() (err error) {
 	dbService, err := service.NewMySQLService()
 	if err != nil {
