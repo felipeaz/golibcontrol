@@ -20,16 +20,30 @@ type AccountModule struct {
 }
 
 // Login authenticate the user
-func (m AccountModule) Login(credentials model.Account) (message login.Message) {
-	account, apiError := m.Repository.Login(credentials)
+func (m AccountModule) Login(credentials model.Account) login.Message {
+	account, apiError := m.Repository.FindWhere("email", credentials.Email)
 	if apiError != nil {
 		return login.Message{
 			Status:  apiError.Status,
 			Message: login.FailMessage,
-			Reason:  apiError.Error,
+			Reason:  login.AccountNotFoundMessage,
 		}
 	}
 
+	if account.Password != credentials.Password {
+		return login.Message{
+			Status:  http.StatusUnauthorized,
+			Message: login.FailMessage,
+			Reason:  login.InvalidPasswordMessage,
+		}
+	}
+
+	message := m.StoreAuthUser(account)
+	return message
+}
+
+// StoreAuthUser stores the authentication token on cache
+func (m AccountModule) StoreAuthUser(account model.Account) login.Message {
 	token, apiError := m.Auth.CreateToken(account.ID)
 	if apiError != nil {
 		return login.Message{
@@ -48,10 +62,10 @@ func (m AccountModule) Login(credentials model.Account) (message login.Message) 
 		}
 	}
 
+	var message login.Message
 	message.Token = token.AccessToken
 	message.Message = fmt.Sprintf(login.SuccessMessage, account.FirstName)
-
-	return
+	return message
 }
 
 // Logout authenticate the user

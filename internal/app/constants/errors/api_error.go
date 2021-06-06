@@ -11,6 +11,7 @@ const (
 
 	// Input Association Messages
 	FailedFieldsAssociationMessage = "Failed while associating fields from request"
+	FailedToConvertObj             = "Failed on object conversion"
 
 	// Auth
 	AuthenticationFailMessage = "Failed to authenticate the user"

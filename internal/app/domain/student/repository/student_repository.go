@@ -1,68 +1,50 @@
 package repository
 
 import (
-	"net/http"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
-	"gorm.io/gorm"
-
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/platform/logger"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/student/model/converter"
 )
 
 // StudentRepository is responsible of getting/saving information from DB.
 type StudentRepository struct {
-	DB *gorm.DB
+	DB database.GORMServiceInterface
 }
 
 // Get returns all students.
-func (r StudentRepository) Get() (students []model.Student, apiError *errors.ApiError) {
-	result := r.DB.Find(&students)
-	if err := result.Error; err != nil {
-		logger.LogError(err)
-		return nil, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.FailMessage,
-			Error:   err.Error(),
-		}
+func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
+	result, apiError := r.DB.Get(&model.Student{})
+	if apiError != nil {
+		return nil, apiError
 	}
-
-	return
+	students, apiError := converter.ConvertToSliceStudentObj(result)
+	if apiError != nil {
+		return nil, apiError
+	}
+	return students, apiError
 }
 
 // Find return one student from DB by ID.
-func (r StudentRepository) Find(id string) (student model.Student, apiError *errors.ApiError) {
-	result := r.DB.Model(model.Student{}).Where("id = ?", id).First(&student)
-	if err := result.Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			logger.LogError(err)
-			return model.Student{}, &errors.ApiError{
-				Status:  http.StatusInternalServerError,
-				Message: errors.FailMessage,
-				Error:   err.Error(),
-			}
-		}
-
-		return model.Student{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.FailMessage,
-			Error:   "student not found",
-		}
+func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
+	result, apiError := r.DB.Find(model.Student{}, id)
+	if apiError != nil {
+		return model.Student{}, apiError
 	}
 
-	return
+	student, apiError := converter.ConvertToStudentObj(result)
+	if apiError != nil {
+		return model.Student{}, apiError
+	}
+
+	return student, nil
 }
 
 // Create persist a student to the DB.
 func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError) {
-	result := r.DB.Create(&student)
-	if err := result.Error; err != nil {
-		logger.LogError(err)
-		return 0, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailMessage,
-			Error:   err.Error(),
-		}
+	apiError := r.DB.Create(&student)
+	if apiError != nil {
+		return 0, apiError
 	}
 
 	return student.ID, nil
@@ -70,42 +52,19 @@ func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError
 
 // Update update an existent student.
 func (r StudentRepository) Update(id string, upStudent model.Student) (model.Student, *errors.ApiError) {
-	student, apiError := r.Find(id)
+	result, apiError := r.DB.Update(&upStudent, id)
 	if apiError != nil {
-		apiError.Message = errors.UpdateFailMessage
 		return model.Student{}, apiError
 	}
-
-	result := r.DB.Model(&student).Updates(upStudent)
-	if err := result.Error; err != nil {
-		logger.LogError(err)
-		return model.Student{}, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailMessage,
-			Error:   err.Error(),
-		}
+	student, apiError := converter.ConvertToStudentObj(result)
+	if apiError != nil {
+		return model.Student{}, apiError
 	}
-
 	return student, nil
 }
 
 // Delete delete an existent student from DB.
-func (r StudentRepository) Delete(id string) (apiError *errors.ApiError) {
-	student, apiError := r.Find(id)
-	if apiError != nil {
-		apiError.Message = errors.DeleteFailMessage
-		return
-	}
-
-	err := r.DB.Delete(&student).Error
-	if err != nil {
-		logger.LogError(err)
-		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.DeleteFailMessage,
-			Error:   err.Error(),
-		}
-	}
-
-	return
+func (r StudentRepository) Delete(id string) *errors.ApiError {
+	apiError := r.DB.Delete(&model.Student{}, id)
+	return apiError
 }

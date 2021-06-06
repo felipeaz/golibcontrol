@@ -7,9 +7,9 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/FelipeAz/golibcontrol/platform/jwt"
+	"github.com/FelipeAz/golibcontrol/platform/mysql/service"
 	"github.com/FelipeAz/golibcontrol/platform/redis"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type AccountHandler struct {
@@ -17,11 +17,11 @@ type AccountHandler struct {
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(auth *jwt.Auth, db *gorm.DB, cache *redis.Cache) AccountHandler {
+func NewAccountHandler(auth *jwt.Auth, dbService *service.MySQLService, cache *redis.Cache) AccountHandler {
 	return AccountHandler{
 		Module: module.AccountModule{
 			Repository: repository.AccountRepository{
-				DB: db,
+				DB: dbService,
 			},
 			Cache: cache,
 			Auth:  auth,

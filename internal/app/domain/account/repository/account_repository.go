@@ -1,142 +1,82 @@
 package repository
 
 import (
-	"net/http"
-
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
-	"github.com/FelipeAz/golibcontrol/platform/logger"
-	"gorm.io/gorm"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model/converter"
 )
 
 type AccountRepository struct {
-	DB *gorm.DB
+	DB database.GORMServiceInterface
 }
 
 // Get returns all accounts.
-func (r AccountRepository) Get() (accounts []model.Account, apiError *errors.ApiError) {
-	result := r.DB.Find(&accounts)
-	if err := result.Error; err != nil {
-		logger.LogError(err)
-		return nil, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.FailMessage,
-			Error:   err.Error(),
-		}
+func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
+	result, apiError := r.DB.Get(&[]model.Account{})
+	if apiError != nil {
+		return nil, apiError
 	}
-
-	return
+	accounts, apiError := converter.ConvertToSliceAccountObj(result)
+	if apiError != nil {
+		return nil, apiError
+	}
+	return accounts, nil
 }
 
 // Find return one account by ID.
-func (r AccountRepository) Find(id string) (account model.Account, apiError *errors.ApiError) {
-	result := r.DB.Model(model.Account{}).Where("id = ?", id).First(&account)
-	if err := result.Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			logger.LogError(err)
-			return model.Account{}, &errors.ApiError{
-				Status:  http.StatusNotFound,
-				Message: errors.FailMessage,
-				Error:   err.Error(),
-			}
-		}
-
-		return model.Account{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: errors.FailMessage,
-			Error:   "account not found",
-		}
+func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
+	result, apiError := r.DB.Find(&model.Account{}, id)
+	if apiError != nil {
+		return model.Account{}, apiError
 	}
-	return
+	account, apiError := converter.ConvertToAccountObj(result)
+	if apiError != nil {
+		return model.Account{}, apiError
+	}
+	return account, nil
+}
+
+// FindWhere return one account by ID.
+func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Account, *errors.ApiError) {
+	result, apiError := r.DB.FindWhere(&model.Account{}, fieldName, fieldValue)
+	if apiError != nil {
+		return model.Account{}, apiError
+	}
+	account, apiError := converter.ConvertToAccountObj(result)
+	if apiError != nil {
+		return model.Account{}, apiError
+	}
+	return account, nil
 }
 
 // Create creates an account
-func (r AccountRepository) Create(account model.Account) (id uint, apiError *errors.ApiError) {
-	result := r.DB.Create(&account)
-	if err := result.Error; err != nil {
-		logger.LogError(err)
-		return 0, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.CreateFailMessage,
-			Error:   err.Error(),
-		}
+func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError) {
+	apiError := r.DB.Create(&account)
+	if apiError != nil {
+		return 0, apiError
 	}
-
 	return account.ID, nil
 }
 
 // Update update an existent account.
-func (r AccountRepository) Update(id string, upAccount model.Account) (account model.Account, apiError *errors.ApiError) {
-	account, apiError = r.Find(id)
+func (r AccountRepository) Update(id string, upAccount model.Account) (model.Account, *errors.ApiError) {
+	result, apiError := r.DB.Update(upAccount, id)
 	if apiError != nil {
-		apiError.Message = errors.UpdateFailMessage
-		return
+		return model.Account{}, apiError
 	}
-
-	result := r.DB.Model(&account).Updates(&upAccount)
-	if err := result.Error; err != nil {
-		logger.LogError(err)
-		return model.Account{}, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.UpdateFailMessage,
-			Error:   err.Error(),
-		}
+	account, apiError := converter.ConvertToAccountObj(result)
+	if apiError != nil {
+		return model.Account{}, apiError
 	}
-
-	return
+	return account, nil
 }
 
 // Delete delete an existent account by id.
-func (r AccountRepository) Delete(id string) (apiError *errors.ApiError) {
-	account, apiError := r.Find(id)
+func (r AccountRepository) Delete(id string) *errors.ApiError {
+	apiError := r.DB.Delete(&model.Account{}, id)
 	if apiError != nil {
-		apiError.Message = errors.DeleteFailMessage
-		return
+		return apiError
 	}
-
-	err := r.DB.Delete(&account).Error
-	if err != nil {
-		logger.LogError(err)
-		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.DeleteFailMessage,
-			Error:   err.Error(),
-		}
-	}
-
-	return
-}
-
-// Login authenticate user if credentials are right
-func (r AccountRepository) Login(credentials model.Account) (account model.Account, apiError *errors.ApiError) {
-	result := r.DB.Model(model.Account{}).
-		Where("email = ?", credentials.Email).First(&account)
-	if err := result.Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			logger.LogError(err)
-			return model.Account{}, &errors.ApiError{
-				Status:  http.StatusInternalServerError,
-				Message: login.FailMessage,
-				Error:   err.Error(),
-			}
-		}
-
-		return model.Account{}, &errors.ApiError{
-			Status:  http.StatusNotFound,
-			Message: login.FailMessage,
-			Error:   login.AccountNotFoundMessage,
-		}
-	}
-
-	// Validate Password
-	if account.Password != credentials.Password {
-		return model.Account{}, &errors.ApiError{
-			Status:  http.StatusUnauthorized,
-			Message: login.FailMessage,
-			Error:   login.InvalidPasswordMessage,
-		}
-	}
-
-	return
+	return nil
 }

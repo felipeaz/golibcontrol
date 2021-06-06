@@ -5,10 +5,9 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/book/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/book/repository"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/mysql/service"
+	"github.com/gin-gonic/gin"
 )
 
 // BookHandler handle the book router calls.
@@ -17,14 +16,14 @@ type BookHandler struct {
 }
 
 // NewBookHandler returns an instance of this handler.
-func NewBookHandler(DB *gorm.DB) BookHandler {
+func NewBookHandler(dbService *service.MySQLService) BookHandler {
 	return BookHandler{
 		Module: module.BookModule{
 			Repository: repository.BookRepository{
+				DB: dbService,
 				BookCategoryRepository: repository.BookCategoryRepository{
-					DB: DB,
+					DB: dbService,
 				},
-				DB: DB,
 			},
 		},
 	}

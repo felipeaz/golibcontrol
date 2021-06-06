@@ -5,10 +5,9 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/category/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/category/repository"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/platform/mysql/service"
+	"github.com/gin-gonic/gin"
 )
 
 // CategoryHandler handle the category router call.
@@ -17,11 +16,11 @@ type CategoryHandler struct {
 }
 
 // NewCategoryHandler returns an instance of category handler.
-func NewCategoryHandler(db *gorm.DB) CategoryHandler {
+func NewCategoryHandler(dbService *service.MySQLService) CategoryHandler {
 	return CategoryHandler{
 		Module: module.CategoryModule{
 			Repository: repository.CategoryRepository{
-				DB: db,
+				DB: dbService,
 			},
 		},
 	}
