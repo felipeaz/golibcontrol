@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d819b49-2eaa-4ad5-8d21-cdd98d21fac2" name="Default Changelist" comment="Defined PUT method as idempotent">
+    <list default="true" id="4d819b49-2eaa-4ad5-8d21-cdd98d21fac2" name="Default Changelist" comment="Changed mysql connection values">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/book/module/book_module_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/book/module/book_module_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/book/repository/mock/book_repository_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/book/repository/mock/book_repository_mock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/category/module/category_module_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/category/module/category_module_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/category/repository/mock/category_repository_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/category/repository/mock/category_repository_mock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/lending/module/lending_module_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/lending/module/lending_module_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/lending/repository/mock/lending_repository_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/lending/repository/mock/lending_repository_mock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/student/module/student_module_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/student/module/student_module_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/domain/student/repository/mock/student_repository_mock.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/student/repository/mock/student_repository_mock.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/docker/account/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/build/docker/images/go/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/docker/management/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
-    <list id="a7d1ba58-1f6f-4bb6-b2b8-f8948e355c2a" name="COMMIT" comment="Abstraction of SQL commands" />
+    <list id="a7d1ba58-1f6f-4bb6-b2b8-f8948e355c2a" name="COMMIT" comment="Splited the monolith into management &amp; account microservices" />
+    <list id="3608a2f0-ae44-408f-9feb-aa4d6d7e7c15" name="NO COMMIT" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +58,7 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/internal/app/domain/lending/model" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/build/docker/images/go" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -70,10 +66,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/internal/app/domain/lending/model" />
-      <recent name="$PROJECT_DIR$/internal/app/domain/student/model" />
-      <recent name="$PROJECT_DIR$/internal/app/domain/category/model" />
-      <recent name="$PROJECT_DIR$/internal/app/domain/book/model" />
+      <recent name="$PROJECT_DIR$/build/docker/images/go" />
+      <recent name="$PROJECT_DIR$/build/docker/account" />
+      <recent name="$PROJECT_DIR$/infra/mysql/account/database" />
+      <recent name="$PROJECT_DIR$/infra/router/account/router" />
+      <recent name="$PROJECT_DIR$/build/server/profile" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/build/docker/management" />
+      <recent name="$PROJECT_DIR$/infra/router/account/router/build" />
+      <recent name="$PROJECT_DIR$/infra/router/platform/router" />
+      <recent name="$PROJECT_DIR$/infra/router/management/router" />
+      <recent name="$PROJECT_DIR$/build/server/management/server" />
     </key>
   </component>
   <component name="RunManager">
@@ -118,7 +122,8 @@
     <MESSAGE value="PROVISORY - Fixed Model relation" />
     <MESSAGE value="Abstraction of SQL commands" />
     <MESSAGE value="Defined PUT method as idempotent" />
-    <option name="LAST_COMMIT_MESSAGE" value="Defined PUT method as idempotent" />
+    <MESSAGE value="Splited the monolith into management &amp; account microservices" />
+    <option name="LAST_COMMIT_MESSAGE" value="Splited the monolith into management &amp; account microservices" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
