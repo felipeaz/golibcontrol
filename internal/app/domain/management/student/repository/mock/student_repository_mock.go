@@ -27,15 +27,14 @@ func (r StudentRepositoryMock) Get() (students []model.Student, apiError *errors
 
 	students = []model.Student{
 		model.Student{
-			ID:             25,
-			RegisterNumber: "2500651",
-			Name:           "Felipe de Azevedo Silva",
-			Email:          "felipe9_azevedo@hotmail.com",
-			Phone:          "(00)00000-0000",
-			Grade:          "7th",
-			Birthday:       "31/12/1997",
-			CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
-			UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+			ID:        "2500651",
+			Name:      "Felipe de Azevedo Silva",
+			Email:     "felipe9_azevedo@hotmail.com",
+			Phone:     "(00)00000-0000",
+			Grade:     "7th",
+			Birthday:  "31/12/1997",
+			CreatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+			UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 		},
 	}
 
@@ -61,31 +60,30 @@ func (r StudentRepositoryMock) Find(id string) (student model.Student, apiError 
 	}
 
 	student = model.Student{
-		ID:             25,
-		RegisterNumber: "2500651",
-		Name:           "Felipe de Azevedo Silva",
-		Email:          "felipe9_azevedo@hotmail.com",
-		Phone:          "(00)00000-0000",
-		Grade:          "7th",
-		Birthday:       "31/12/1997",
-		CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
-		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		ID:        "2500651",
+		Name:      "Felipe de Azevedo Silva",
+		Email:     "felipe9_azevedo@hotmail.com",
+		Phone:     "(00)00000-0000",
+		Grade:     "7th",
+		Birthday:  "31/12/1997",
+		CreatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
 	return student, nil
 }
 
 // Create persist a student to the DB.
-func (r StudentRepositoryMock) Create(student model.Student) (uint, *errors.ApiError) {
+func (r StudentRepositoryMock) Create(student model.Student) (string, *errors.ApiError) {
 	if r.TestError {
-		return 0, &errors.ApiError{
+		return "", &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   "mocked error",
 		}
 	}
 
-	return 25, nil
+	return "2500651", nil
 }
 
 // Update update an existent student.

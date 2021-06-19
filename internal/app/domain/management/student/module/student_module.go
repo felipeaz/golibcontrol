@@ -22,7 +22,7 @@ func (m StudentModule) Find(id string) (model.Student, *errors.ApiError) {
 }
 
 // Create persist a student to the database.
-func (m StudentModule) Create(student model.Student) (uint, *errors.ApiError) {
+func (m StudentModule) Create(student model.Student) (string, *errors.ApiError) {
 	return m.Repository.Create(student)
 }
 

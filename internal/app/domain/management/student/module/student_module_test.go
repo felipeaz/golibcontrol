@@ -22,8 +22,7 @@ func TestGetStudent(t *testing.T) {
 
 	assert.Nil(t, apiError)
 	assert.NotNil(t, students)
-	assert.Equal(t, 25, int(student.ID))
-	assert.Equal(t, "2500651", student.RegisterNumber)
+	assert.Equal(t, "2500651", student.ID)
 	assert.Equal(t, "Felipe de Azevedo Silva", student.Name)
 	assert.Equal(t, "felipe9_azevedo@hotmail.com", student.Email)
 	assert.Equal(t, "(00)00000-0000", student.Phone)
@@ -58,8 +57,7 @@ func TestFind(t *testing.T) {
 
 	assert.Nil(t, apiError)
 	assert.NotEqual(t, model.Student{}, student)
-	assert.Equal(t, 25, int(student.ID))
-	assert.Equal(t, "2500651", student.RegisterNumber)
+	assert.Equal(t, "2500651", student.ID)
 	assert.Equal(t, "Felipe de Azevedo Silva", student.Name)
 	assert.Equal(t, "felipe9_azevedo@hotmail.com", student.Email)
 	assert.Equal(t, "(00)00000-0000", student.Phone)
@@ -106,22 +104,21 @@ func TestCreate(t *testing.T) {
 
 	m := StudentModule{Repository: r}
 	student := model.Student{
-		ID:             25,
-		RegisterNumber: "2500651",
-		Name:           "Felipe de Azevedo Silva",
-		Email:          "felipe9_azevedo@hotmail.com",
-		Phone:          "(00)00000-0000",
-		Grade:          "7th",
-		Birthday:       "31/12/1997",
-		CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
-		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		ID:        "2500651",
+		Name:      "Felipe de Azevedo Silva",
+		Email:     "felipe9_azevedo@hotmail.com",
+		Phone:     "(00)00000-0000",
+		Grade:     "7th",
+		Birthday:  "31/12/1997",
+		CreatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
 	id, apiError := m.Create(student)
 
 	assert.Nil(t, apiError)
-	assert.NotEqual(t, 0, int(id))
-	assert.Equal(t, 25, int(id))
+	assert.NotEqual(t, "", id)
+	assert.Equal(t, "2500651", id)
 }
 
 func TestCreateError(t *testing.T) {
@@ -130,21 +127,20 @@ func TestCreateError(t *testing.T) {
 
 	m := StudentModule{Repository: r}
 	student := model.Student{
-		ID:             25,
-		RegisterNumber: "2500651",
-		Name:           "Felipe de Azevedo Silva",
-		Email:          "felipe9_azevedo@hotmail.com",
-		Phone:          "(00)00000-0000",
-		Grade:          "7th",
-		Birthday:       "31/12/1997",
-		CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
-		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		ID:        "2500651",
+		Name:      "Felipe de Azevedo Silva",
+		Email:     "felipe9_azevedo@hotmail.com",
+		Phone:     "(00)00000-0000",
+		Grade:     "7th",
+		Birthday:  "31/12/1997",
+		CreatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
 	id, apiError := m.Create(student)
 
 	assert.NotNil(t, apiError)
-	assert.Equal(t, 0, int(id))
+	assert.Equal(t, "", id)
 	assert.Equal(t, http.StatusInternalServerError, apiError.Status)
 	assert.Equal(t, errors.CreateFailMessage, apiError.Message)
 	assert.Equal(t, "mocked error", apiError.Error)
@@ -156,15 +152,14 @@ func TestUpdate(t *testing.T) {
 	m := StudentModule{Repository: r}
 	id := "25"
 	upStudent := model.Student{
-		ID:             25,
-		RegisterNumber: "2500651",
-		Name:           "Felipe de Azevedo Silva",
-		Email:          "felipe9_azevedo@hotmail.com",
-		Phone:          "(00)00000-0000",
-		Grade:          "7th",
-		Birthday:       "31/12/1997",
-		CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
-		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		ID:        "2500651",
+		Name:      "Felipe de Azevedo Silva",
+		Email:     "felipe9_azevedo@hotmail.com",
+		Phone:     "(00)00000-0000",
+		Grade:     "7th",
+		Birthday:  "31/12/1997",
+		CreatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
 	apiError := m.Update(id, upStudent)
@@ -179,15 +174,14 @@ func TestUpdateError(t *testing.T) {
 	m := StudentModule{Repository: r}
 	id := "25"
 	upStudent := model.Student{
-		ID:             25,
-		RegisterNumber: "2500651",
-		Name:           "Felipe de Azevedo Silva",
-		Email:          "felipe9_azevedo@hotmail.com",
-		Phone:          "(00)00000-0000",
-		Grade:          "7th",
-		Birthday:       "31/12/1997",
-		CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
-		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		ID:        "2500651",
+		Name:      "Felipe de Azevedo Silva",
+		Email:     "felipe9_azevedo@hotmail.com",
+		Phone:     "(00)00000-0000",
+		Grade:     "7th",
+		Birthday:  "31/12/1997",
+		CreatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
 	apiError := m.Update(id, upStudent)
@@ -205,15 +199,14 @@ func TestUpdateNotFoundError(t *testing.T) {
 	m := StudentModule{Repository: r}
 	id := "25"
 	upStudent := model.Student{
-		ID:             25,
-		RegisterNumber: "2500651",
-		Name:           "Felipe de Azevedo Silva",
-		Email:          "felipe9_azevedo@hotmail.com",
-		Phone:          "(00)00000-0000",
-		Grade:          "7th",
-		Birthday:       "31/12/1997",
-		CreatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
-		UpdatedAt:      time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		ID:        "2500651",
+		Name:      "Felipe de Azevedo Silva",
+		Email:     "felipe9_azevedo@hotmail.com",
+		Phone:     "(00)00000-0000",
+		Grade:     "7th",
+		Birthday:  "31/12/1997",
+		CreatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
+		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
 	apiError := m.Update(id, upStudent)

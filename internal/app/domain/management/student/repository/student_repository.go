@@ -41,10 +41,10 @@ func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
 }
 
 // Create persist a student to the DB.
-func (r StudentRepository) Create(student model.Student) (uint, *errors.ApiError) {
+func (r StudentRepository) Create(student model.Student) (string, *errors.ApiError) {
 	apiError := r.DB.Create(&student)
 	if apiError != nil {
-		return 0, apiError
+		return "", apiError
 	}
 
 	return student.ID, nil

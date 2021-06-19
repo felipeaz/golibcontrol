@@ -13,6 +13,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Run Starts the server
+func Run(dbService *service.MySQLService, cache *redis.Cache) error {
+	return buildRoutes(dbService, cache)
+}
+
 func buildRoutes(dbService *service.MySQLService, cache *redis.Cache) error {
 	router := gin.Default()
 	jwtAuth := jwt.NewAuth(cache)
@@ -34,9 +39,4 @@ func buildRoutes(dbService *service.MySQLService, cache *redis.Cache) error {
 	build.LendingRoutes(tokenAuthMiddleware, vGroup, lHandler)
 
 	return router.Run(":8081")
-}
-
-// Run Starts the server
-func Run(dbService *service.MySQLService, cache *redis.Cache) error {
-	return buildRoutes(dbService, cache)
 }
