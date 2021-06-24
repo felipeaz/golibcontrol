@@ -1,10 +1,10 @@
 package router
 
 import (
+	"github.com/FelipeAz/golibcontrol/build/server/management/router/build"
 	"github.com/FelipeAz/golibcontrol/infra/jwt"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/infra/redis"
-	"github.com/FelipeAz/golibcontrol/infra/router/management/router/build"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/handler"
 	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/handler"
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/handler"

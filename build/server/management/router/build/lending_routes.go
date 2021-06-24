@@ -9,7 +9,6 @@ import (
 // LendingRoutes initialize Category routes.
 func LendingRoutes(middleware *middleware.TokenMiddleware, rg *gin.RouterGroup, lendingHandler handler.LendingHandler) {
 	r := rg.Group("/lending")
-
 	r.GET("/", middleware.TokenAuth(), lendingHandler.Get)
 	r.GET("/:id", middleware.TokenAuth(), lendingHandler.Find)
 	r.POST("/", middleware.TokenAuth(), lendingHandler.Create)

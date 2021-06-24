@@ -9,7 +9,6 @@ import (
 // StudentRoutes initialize Category routes.
 func StudentRoutes(middleware *middleware.TokenMiddleware, rg *gin.RouterGroup, studentHandler handler.StudentHandler) {
 	r := rg.Group("/student")
-
 	r.GET("/", middleware.TokenAuth(), studentHandler.Get)
 	r.GET("/:id", middleware.TokenAuth(), studentHandler.Find)
 	r.POST("/", middleware.TokenAuth(), studentHandler.Create)

@@ -3,7 +3,7 @@ package pkg
 import (
 	"net/http"
 
-	userModel "github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
 	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model"
 	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
@@ -70,10 +70,10 @@ func AssociateLendingInput(c *gin.Context) (lending lendingModel.Lending, apiErr
 }
 
 // AssociateAccountInput is responsible of associating the params to the user model.
-func AssociateAccountInput(c *gin.Context) (account userModel.Account, apiError *errors.ApiError) {
+func AssociateAccountInput(c *gin.Context) (account model.Account, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&account)
 	if err != nil {
-		return userModel.Account{}, &errors.ApiError{
+		return model.Account{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

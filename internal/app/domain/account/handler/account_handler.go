@@ -6,8 +6,8 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/jwt"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/infra/redis"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/module"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
 )

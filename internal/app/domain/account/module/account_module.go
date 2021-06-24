@@ -9,8 +9,8 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
+	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository/interface"
 )
 
 type AccountModule struct {

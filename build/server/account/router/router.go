@@ -1,11 +1,11 @@
 package router
 
 import (
+	"github.com/FelipeAz/golibcontrol/build/server/account/router/build"
 	"github.com/FelipeAz/golibcontrol/infra/jwt"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/infra/redis"
-	"github.com/FelipeAz/golibcontrol/infra/router/account/router/build"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
 )

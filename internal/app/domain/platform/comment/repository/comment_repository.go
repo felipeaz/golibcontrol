@@ -1,12 +1,12 @@
 package repository
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
-	"gorm.io/gorm"
 )
 
 type CommentRepository struct {
-	DB *gorm.DB
+	DB database.GORMServiceInterface
 }
 
 func (r CommentRepository) GetComments(bookId string) ([]model.Comment, error) {

@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"log"
+
+	"github.com/FelipeAz/golibcontrol/build/server/platform/server"
 )
 
 func main() {
-	fmt.Println("Platform service has been started")
+	err := server.Start()
+	if err != nil {
+		log.Println(err.Error())
+	}
 }

@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/user/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model/converter"
 )
 
 type AccountRepository struct {
