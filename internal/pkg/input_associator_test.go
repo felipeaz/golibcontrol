@@ -112,7 +112,7 @@ func TestAssociateStudentInput(t *testing.T) {
 
 	// Validation
 	assert.Nil(t, apiError)
-	assert.Equal(t, "123123", student.RegisterNumber)
+	assert.Equal(t, "123123", student.ID)
 	assert.Equal(t, "Felipe", student.Name)
 	assert.Equal(t, "felipe@hotmail.com", student.Email)
 	assert.Equal(t, "(00)00000-0000", student.Phone)

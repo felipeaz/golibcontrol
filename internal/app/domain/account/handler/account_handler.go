@@ -31,9 +31,9 @@ func NewAccountHandler(auth *jwt.Auth, dbService *service.MySQLService, cache *r
 
 // Login authenticate the user
 func (h AccountHandler) Login(c *gin.Context) {
-	credentials, err := pkg.AssociateAccountInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	credentials, apiError := pkg.AssociateAccountInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -71,9 +71,9 @@ func (h AccountHandler) Find(c *gin.Context) {
 
 // Create creates an user
 func (h AccountHandler) Create(c *gin.Context) {
-	account, err := pkg.AssociateAccountInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	account, apiError := pkg.AssociateAccountInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -88,13 +88,13 @@ func (h AccountHandler) Create(c *gin.Context) {
 
 // Update update an existent user.
 func (h AccountHandler) Update(c *gin.Context) {
-	upAccount, err := pkg.AssociateAccountInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	upAccount, apiError := pkg.AssociateAccountInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	apiError := h.Module.Update(c.Param("id"), upAccount)
+	apiError = h.Module.Update(c.Param("id"), upAccount)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
@@ -110,5 +110,6 @@ func (h AccountHandler) Delete(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
+
 	c.Status(http.StatusNoContent)
 }

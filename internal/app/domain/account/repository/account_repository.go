@@ -37,7 +37,7 @@ func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
 	return account, nil
 }
 
-// FindWhere return one user by ID.
+// FindWhere user by field and value.
 func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Account, *errors.ApiError) {
 	result, apiError := r.DB.FindWhere(&model.Account{}, fieldName, fieldValue)
 	if apiError != nil {

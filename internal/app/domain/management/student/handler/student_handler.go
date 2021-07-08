@@ -50,9 +50,9 @@ func (h StudentHandler) Find(c *gin.Context) {
 
 // Create persist a student to the database.
 func (h StudentHandler) Create(c *gin.Context) {
-	student, err := pkg.AssociateStudentInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	student, apiError := pkg.AssociateStudentInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -67,13 +67,13 @@ func (h StudentHandler) Create(c *gin.Context) {
 
 // Update update an existent student.
 func (h StudentHandler) Update(c *gin.Context) {
-	upStudent, err := pkg.AssociateStudentInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	upStudent, apiError := pkg.AssociateStudentInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	apiError := h.Module.Update(c.Param("id"), upStudent)
+	apiError = h.Module.Update(c.Param("id"), upStudent)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

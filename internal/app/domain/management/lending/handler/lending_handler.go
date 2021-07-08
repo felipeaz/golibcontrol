@@ -50,9 +50,9 @@ func (h LendingHandler) Find(c *gin.Context) {
 
 // Create persist a lending to the database.
 func (h LendingHandler) Create(c *gin.Context) {
-	lending, err := pkg.AssociateLendingInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	lending, apiError := pkg.AssociateLendingInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -67,13 +67,13 @@ func (h LendingHandler) Create(c *gin.Context) {
 
 // Update update an existent lending.
 func (h LendingHandler) Update(c *gin.Context) {
-	upLending, err := pkg.AssociateLendingInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	upLending, apiError := pkg.AssociateLendingInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	apiError := h.Module.Update(c.Param("id"), upLending)
+	apiError = h.Module.Update(c.Param("id"), upLending)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

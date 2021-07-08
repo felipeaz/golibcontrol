@@ -50,9 +50,9 @@ func (h CategoryHandler) Find(c *gin.Context) {
 
 // Create persist a category to the database.
 func (h CategoryHandler) Create(c *gin.Context) {
-	category, err := pkg.AssociateCategoryInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	category, apiError := pkg.AssociateCategoryInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -67,13 +67,13 @@ func (h CategoryHandler) Create(c *gin.Context) {
 
 // Update update an existent category.
 func (h CategoryHandler) Update(c *gin.Context) {
-	upCategory, err := pkg.AssociateCategoryInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	upCategory, apiError := pkg.AssociateCategoryInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	apiError := h.Module.Update(c.Param("id"), upCategory)
+	apiError = h.Module.Update(c.Param("id"), upCategory)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

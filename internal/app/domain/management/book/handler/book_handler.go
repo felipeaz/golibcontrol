@@ -53,9 +53,9 @@ func (h BookHandler) Find(c *gin.Context) {
 
 // Create creates a book.
 func (h BookHandler) Create(c *gin.Context) {
-	book, err := pkg.AssociateBookInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	book, apiError := pkg.AssociateBookInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -70,13 +70,13 @@ func (h BookHandler) Create(c *gin.Context) {
 
 // Update update an existent book.
 func (h BookHandler) Update(c *gin.Context) {
-	upBook, err := pkg.AssociateBookInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	upBook, apiError := pkg.AssociateBookInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	apiError := h.Module.Update(c.Param("id"), upBook)
+	apiError = h.Module.Update(c.Param("id"), upBook)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

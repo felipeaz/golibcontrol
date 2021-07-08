@@ -66,7 +66,7 @@ func (s MySQLService) Find(domainObj interface{}, id string) (interface{}, *erro
 	return domainObj, nil
 }
 
-func (s MySQLService) FindWithPreload(domainObj interface{}, id string, preload string) (interface{}, *errors.ApiError) {
+func (s MySQLService) FindWithPreload(domainObj interface{}, id, preload string) (interface{}, *errors.ApiError) {
 	result := s.DB.Preload(preload).Model(domainObj).Where("id = ?", id).Find(domainObj)
 	if result.RowsAffected == 0 {
 		return nil, &errors.ApiError{
@@ -88,7 +88,7 @@ func (s MySQLService) FindWithPreload(domainObj interface{}, id string, preload 
 	return domainObj, nil
 }
 
-func (s MySQLService) FindWhere(domainObj interface{}, fieldName string, fieldValue string) (interface{}, *errors.ApiError) {
+func (s MySQLService) FindWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, *errors.ApiError) {
 	result := s.DB.Model(domainObj).Where(fieldName+" = ? ", fieldValue).Find(domainObj)
 	if result.RowsAffected == 0 {
 		return nil, &errors.ApiError{
