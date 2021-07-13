@@ -6,7 +6,6 @@ import (
 	"os"
 
 	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
-	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reply/model"
 	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model"
 	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/model"
 	"gorm.io/driver/mysql"
@@ -55,7 +54,6 @@ func CloseConnection(db *gorm.DB) {
 func (db *DBHandler) autoMigrateTables() error {
 	return db.conn.Migrator().AutoMigrate(
 		&commentModel.Comment{},
-		&replyModel.Reply{},
 		&reserveModel.Reserve{},
 		&reviewModel.Review{},
 	)
