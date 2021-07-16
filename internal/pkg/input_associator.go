@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	accountModel "github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
-	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/book/model"
-	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/category/model"
-	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/lending/model"
-	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/student/model"
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
+	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
 	"github.com/gin-gonic/gin"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -69,11 +70,25 @@ func AssociateLendingInput(c *gin.Context) (lending lendingModel.Lending, apiErr
 	return
 }
 
-// AssociateAccountInput is responsible of associating the params to the account model.
+// AssociateAccountInput is responsible of associating the params to the user model.
 func AssociateAccountInput(c *gin.Context) (account accountModel.Account, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&account)
 	if err != nil {
 		return accountModel.Account{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
+// AssociateCommentInput is responsible of associating the params to the user model.
+func AssociateCommentInput(c *gin.Context) (comment commentModel.Comment, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&comment)
+	if err != nil {
+		return commentModel.Comment{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

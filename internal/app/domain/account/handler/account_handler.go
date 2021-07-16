@@ -3,12 +3,12 @@ package handler
 import (
 	"net/http"
 
+	"github.com/FelipeAz/golibcontrol/infra/jwt"
+	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
-	"github.com/FelipeAz/golibcontrol/platform/jwt"
-	"github.com/FelipeAz/golibcontrol/platform/mysql/service"
-	"github.com/FelipeAz/golibcontrol/platform/redis"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,9 +31,9 @@ func NewAccountHandler(auth *jwt.Auth, dbService *service.MySQLService, cache *r
 
 // Login authenticate the user
 func (h AccountHandler) Login(c *gin.Context) {
-	credentials, err := pkg.AssociateAccountInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	credentials, apiError := pkg.AssociateAccountInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -58,7 +58,7 @@ func (h AccountHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": accounts})
 }
 
-// Find return one account by ID.
+// Find return one user by ID.
 func (h AccountHandler) Find(c *gin.Context) {
 	account, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
@@ -69,11 +69,11 @@ func (h AccountHandler) Find(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": account})
 }
 
-// Create creates an account
+// Create creates an user
 func (h AccountHandler) Create(c *gin.Context) {
-	account, err := pkg.AssociateAccountInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	account, apiError := pkg.AssociateAccountInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
@@ -86,15 +86,15 @@ func (h AccountHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
-// Update update an existent account.
+// Update update an existent user.
 func (h AccountHandler) Update(c *gin.Context) {
-	upAccount, err := pkg.AssociateAccountInput(c)
-	if err != nil {
-		c.JSON(err.Status, err)
+	upAccount, apiError := pkg.AssociateAccountInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	apiError := h.Module.Update(c.Param("id"), upAccount)
+	apiError = h.Module.Update(c.Param("id"), upAccount)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
@@ -103,12 +103,13 @@ func (h AccountHandler) Update(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
-// Delete delete an existent account by id.
+// Delete delete an existent user by id.
 func (h AccountHandler) Delete(c *gin.Context) {
 	apiError := h.Module.Delete(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
+
 	c.Status(http.StatusNoContent)
 }

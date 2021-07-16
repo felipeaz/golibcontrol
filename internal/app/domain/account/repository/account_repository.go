@@ -24,7 +24,7 @@ func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
 	return accounts, nil
 }
 
-// Find return one account by ID.
+// Find return one user by ID.
 func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
 	result, apiError := r.DB.Find(&model.Account{}, id)
 	if apiError != nil {
@@ -37,7 +37,7 @@ func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
 	return account, nil
 }
 
-// FindWhere return one account by ID.
+// FindWhere user by field and value.
 func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Account, *errors.ApiError) {
 	result, apiError := r.DB.FindWhere(&model.Account{}, fieldName, fieldValue)
 	if apiError != nil {
@@ -50,7 +50,7 @@ func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Accoun
 	return account, nil
 }
 
-// Create creates an account
+// Create creates an user
 func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError) {
 	apiError := r.DB.Create(&account)
 	if apiError != nil {
@@ -59,12 +59,12 @@ func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError
 	return account.ID, nil
 }
 
-// Update update an existent account.
+// Update update an existent user.
 func (r AccountRepository) Update(id string, upAccount model.Account) *errors.ApiError {
 	return r.DB.Update(&upAccount, id)
 }
 
-// Delete delete an existent account by id.
+// Delete delete an existent user by id.
 func (r AccountRepository) Delete(id string) *errors.ApiError {
 	return r.DB.Delete(&model.Account{}, id)
 }

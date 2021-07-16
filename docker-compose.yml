@@ -1,39 +1,91 @@
 version: '3.4'
 services:
-  golang:
+  management-service:
      build:
-       context: "."
-       dockerfile: "build/docker/Dockerfile"
-     container_name: golang
+       context: "./"
+       dockerfile: "build/docker/images/go/Dockerfile"
+     container_name: management-service
      env_file:
        - .env
      links:
        - redis
      depends_on:
-       - "mysql"
+       - "management-service-db-host"
        - "redis"
      restart: unless-stopped
+     working_dir: "/go/src/github.com/FelipeAz/golibcontrol/cmd/management/"
+     expose:
+       - 8081
+     command: bash -c "CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . && ./main"
      ports:
-       - 8080:8080
+       - 8081:8081
+  management-service-db-host:
+    image: mysql:8.0
+    container_name: management-service-database
+    environment:
+      MYSQL_DATABASE: LibraryManagement
+      MYSQL_ROOT_PASSWORD: abc123
+      MYSQL_TCP_PORT: 3307
+    ports:
+      - 3307:3306
+  account-service:
+    build:
+      context: "./"
+      dockerfile: "build/docker/images/go/Dockerfile"
+    container_name: account-service
+    env_file:
+      - .env
+    links:
+      - redis
+    depends_on:
+      - "account-service-db-host"
+      - "redis"
+    restart: unless-stopped
+    working_dir: "/go/src/github.com/FelipeAz/golibcontrol/cmd/account/"
+    expose:
+      - 8082
+    command: bash -c "CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . && ./main"
+    ports:
+      - 8082:8082
+  account-service-db-host:
+    image: mysql:8.0
+    container_name: account-service-database
+    environment:
+      MYSQL_DATABASE: LibraryAccount
+      MYSQL_ROOT_PASSWORD: abc123
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - 3308:3307
+  platform-service:
+    build:
+      context: "./"
+      dockerfile: "build/docker/images/go/Dockerfile"
+    container_name: platform-service
+    env_file:
+      - .env
+    links:
+      - redis
+    depends_on:
+      - "platform-service-db-host"
+      - "redis"
+    restart: unless-stopped
+    working_dir: "/go/src/github.com/FelipeAz/golibcontrol/cmd/platform/"
+    expose:
+      - 8083
+    command: bash -c "CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . && ./main"
+    ports:
+      - 8083:8083
+  platform-service-db-host:
+    image: mysql:8.0
+    container_name: platform-service-database
+    environment:
+      MYSQL_DATABASE: LibraryPlatform
+      MYSQL_ROOT_PASSWORD: abc123
+      MYSQL_TCP_PORT: 3309
+    ports:
+      - 3309:3306
   redis:
     image: redis:alpine
     container_name: redis
-    depends_on:
-      - mysql      
     ports:
       - 6380:6379
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    environment:
-      MYSQL_DATABASE: Library
-      MYSQL_ROOT_PASSWORD: abc123
-    ports:
-      - 3307:3306
-  json-server:
-    image: vimagick/json-server
-    command: -H 0.0.0.0 -p 3000 -w /build/docker/json-server/db.json
-    ports:
-      - 3000:3000
-    volumes:
-      - ./build/docker/json-server:/build/docker/json-server

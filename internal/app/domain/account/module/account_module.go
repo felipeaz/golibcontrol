@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/FelipeAz/golibcontrol/infra/jwt"
+	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository/interface"
-	"github.com/FelipeAz/golibcontrol/platform/jwt"
-	"github.com/FelipeAz/golibcontrol/platform/redis"
 )
 
 type AccountModule struct {
@@ -109,22 +109,22 @@ func (m AccountModule) Get() ([]model.Account, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
-// Find return one account by ID.
+// Find return one user by ID.
 func (m AccountModule) Find(id string) (model.Account, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-// Create creates an account
+// Create creates an user
 func (m AccountModule) Create(account model.Account) (uint, *errors.ApiError) {
 	return m.Repository.Create(account)
 }
 
-// Update update an existent account.
+// Update update an existent user.
 func (m AccountModule) Update(id string, upAccount model.Account) *errors.ApiError {
 	return m.Repository.Update(id, upAccount)
 }
 
-// Delete delete an existent account by id.
+// Delete delete an existent user by id.
 func (m AccountModule) Delete(id string) *errors.ApiError {
 	return m.Repository.Delete(id)
 }
