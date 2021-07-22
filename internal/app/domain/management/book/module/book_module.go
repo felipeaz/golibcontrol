@@ -11,6 +11,12 @@ type BookModule struct {
 	Repository _interface.BookRepositoryInterface
 }
 
+func NewBookModule(repo _interface.BookRepositoryInterface) BookModule {
+	return BookModule{
+		Repository: repo,
+	}
+}
+
 // Get returns all books on DB.
 func (m BookModule) Get() ([]model.Book, *errors.ApiError) {
 	return m.Repository.Get()

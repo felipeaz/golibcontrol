@@ -11,6 +11,12 @@ type LendingModule struct {
 	Repository _interface.LendingRepositoryInterface
 }
 
+func NewLendingModule(repo _interface.LendingRepositoryInterface) LendingModule {
+	return LendingModule{
+		Repository: repo,
+	}
+}
+
 // Get returns all lendings.
 func (m LendingModule) Get() ([]model.Lending, *errors.ApiError) {
 	return m.Repository.Get()

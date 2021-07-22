@@ -7,25 +7,20 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
+	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 type AccountHandler struct {
-	Module module.AccountModule
+	Module _interface.AccountModuleInterface
 }
 
 // NewAccountHandler returns an instance of authHandler
 func NewAccountHandler(auth *jwt.Auth, dbService *service.MySQLService, cache *redis.Cache) AccountHandler {
 	return AccountHandler{
-		Module: module.AccountModule{
-			Repository: repository.AccountRepository{
-				DB: dbService,
-			},
-			Cache: cache,
-			Auth:  auth,
-		},
+		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth, cache),
 	}
 }
 

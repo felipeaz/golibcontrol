@@ -5,6 +5,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module"
+	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
@@ -12,20 +13,16 @@ import (
 
 // BookHandler handle the book router calls.
 type BookHandler struct {
-	Module module.BookModule
+	Module _interface.BookModuleInterface
 }
 
 // NewBookHandler returns an instance of this handler.
 func NewBookHandler(dbService *service.MySQLService) BookHandler {
 	return BookHandler{
-		Module: module.BookModule{
-			Repository: repository.BookRepository{
-				DB: dbService,
-				BookCategoryRepository: repository.BookCategoryRepository{
-					DB: dbService,
-				},
-			},
-		},
+		Module: module.NewBookModule(
+			repository.NewBookRepository(dbService,
+				repository.NewBookCategoryRepository(dbService)),
+		),
 	}
 }
 

@@ -10,13 +10,21 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository/interface"
 )
 
 type AccountModule struct {
 	Repository _interface.AccountRepositoryInterface
 	Auth       *jwt.Auth
 	Cache      *redis.Cache
+}
+
+func NewAccountModule(repo _interface.AccountRepositoryInterface, auth *jwt.Auth, cache *redis.Cache) AccountModule {
+	return AccountModule{
+		Repository: repo,
+		Auth:       auth,
+		Cache:      cache,
+	}
 }
 
 // Login authenticate the user

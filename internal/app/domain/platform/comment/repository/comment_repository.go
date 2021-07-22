@@ -11,6 +11,12 @@ type CommentRepository struct {
 	DB database.GORMServiceInterface
 }
 
+func NewCommentRepository(db database.GORMServiceInterface) CommentRepository {
+	return CommentRepository{
+		DB: db,
+	}
+}
+
 func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError) {
 	result, apiError := r.DB.FindWhere(&[]model.Comment{}, "book_id", bookId)
 	if apiError != nil {

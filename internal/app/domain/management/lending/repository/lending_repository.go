@@ -9,18 +9,26 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
-	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
+	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository/interface"
 	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model/converter"
 	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
-	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository"
+	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository/interface"
 )
 
 // LendingRepository is responsible of getting/saving information from DB.
 type LendingRepository struct {
 	DB                database.GORMServiceInterface
-	StudentRepository studentRepository.StudentRepository
-	BookRepository    bookRepository.BookRepository
+	StudentRepository studentRepository.StudentRepositoryInterface
+	BookRepository    bookRepository.BookRepositoryInterface
+}
+
+func NewLendingRepository(db database.GORMServiceInterface, stRepo studentRepository.StudentRepositoryInterface, bRepo bookRepository.BookRepositoryInterface) LendingRepository {
+	return LendingRepository{
+		DB:                db,
+		StudentRepository: stRepo,
+		BookRepository:    bRepo,
+	}
 }
 
 // Get returns all lendings.

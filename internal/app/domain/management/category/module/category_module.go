@@ -11,6 +11,12 @@ type CategoryModule struct {
 	Repository _interface.CategoryRepositoryInterface
 }
 
+func NewCategoryModule(repo _interface.CategoryRepositoryInterface) CategoryModule {
+	return CategoryModule{
+		Repository: repo,
+	}
+}
+
 // Get returns all categories.
 func (m CategoryModule) Get() ([]model.Category, *errors.ApiError) {
 	return m.Repository.Get()

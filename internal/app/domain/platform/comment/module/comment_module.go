@@ -1,8 +1,6 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/infra/jwt"
-	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/repository/interface"
@@ -10,8 +8,12 @@ import (
 
 type CommentModule struct {
 	Repository _interface.CommentRepositoryInterface
-	Auth       *jwt.Auth
-	Cache      *redis.Cache
+}
+
+func NewCommentModule(repo _interface.CommentRepositoryInterface) CommentModule {
+	return CommentModule{
+		Repository: repo,
+	}
 }
 
 func (m CommentModule) Get(bookId string) ([]model.Comment, *errors.ApiError) {

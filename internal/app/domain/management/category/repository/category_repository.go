@@ -12,6 +12,12 @@ type CategoryRepository struct {
 	DB database.GORMServiceInterface
 }
 
+func NewCategoryRepository(db database.GORMServiceInterface) CategoryRepository {
+	return CategoryRepository{
+		DB: db,
+	}
+}
+
 // Get returns all categories.
 func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
 	result, apiError := r.DB.Get(&[]model.Category{})

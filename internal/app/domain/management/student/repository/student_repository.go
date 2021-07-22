@@ -12,6 +12,12 @@ type StudentRepository struct {
 	DB database.GORMServiceInterface
 }
 
+func NewStudentRepository(db database.GORMServiceInterface) StudentRepository {
+	return StudentRepository{
+		DB: db,
+	}
+}
+
 // Get returns all students.
 func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
 	result, apiError := r.DB.Get(&[]model.Student{})

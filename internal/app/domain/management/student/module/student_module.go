@@ -11,6 +11,12 @@ type StudentModule struct {
 	Repository _interface.StudentRepositoryInterface
 }
 
+func NewStudentModule(repo _interface.StudentRepositoryInterface) StudentModule {
+	return StudentModule{
+		Repository: repo,
+	}
+}
+
 // Get returns all students.
 func (m StudentModule) Get() ([]model.Student, *errors.ApiError) {
 	return m.Repository.Get()

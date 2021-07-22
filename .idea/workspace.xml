@@ -4,11 +4,40 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d819b49-2eaa-4ad5-8d21-cdd98d21fac2" name="Default Changelist" comment="Changed mysql connection values">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/docker/account/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/build/docker/images/go/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/docker/management/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+    <list default="true" id="4d819b49-2eaa-4ad5-8d21-cdd98d21fac2" name="Default Changelist" comment="Added Comment feature">
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/account/module/interface/account_module_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/management/book/module/interface/book_module_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/management/category/module/interface/category_module_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/management/lending/module/interface/lending_module_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/management/student/module/interface/student_module_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/platform/comment/module/interface/comment_module_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/platform/reserve/handler/reserve_handler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/platform/reserve/model/converter/reserve_converter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/platform/reserve/module/interface/reserve_module_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/platform/reserve/module/reserve_module.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/platform/reserve/repository/interface/reserve_repository_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/domain/platform/reserve/repository/reserve_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/account/handler/account_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/account/handler/account_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/account/model/account_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/account/model/account_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/account/module/account_module.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/account/module/account_module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/account/repository/account_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/account/repository/account_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/book/handler/book_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/book/handler/book_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/book/module/book_module.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/book/module/book_module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/book/repository/book_category_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/book/repository/book_category_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/book/repository/book_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/book/repository/book_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/category/handler/category_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/category/handler/category_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/category/module/category_module.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/category/module/category_module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/category/repository/category_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/category/repository/category_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/lending/handler/lending_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/lending/handler/lending_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/lending/module/lending_module.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/lending/module/lending_module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/lending/repository/lending_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/lending/repository/lending_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/student/handler/student_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/student/handler/student_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/student/module/student_module.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/student/module/student_module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/management/student/repository/student_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/management/student/repository/student_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/platform/comment/handler/comment_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/platform/comment/handler/comment_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/platform/comment/module/comment_module.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/platform/comment/module/comment_module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/domain/platform/comment/repository/comment_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/domain/platform/comment/repository/comment_repository.go" afterDir="false" />
     </list>
     <list id="a7d1ba58-1f6f-4bb6-b2b8-f8948e355c2a" name="COMMIT" comment="Splited the monolith into management &amp; account microservices" />
     <list id="3608a2f0-ae44-408f-9feb-aa4d6d7e7c15" name="NO COMMIT" comment="" />
@@ -58,7 +87,7 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/build/docker/images/go" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/internal/app/domain/interfaces/module" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />

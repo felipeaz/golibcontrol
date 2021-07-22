@@ -5,6 +5,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/module"
+	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
@@ -12,17 +13,13 @@ import (
 
 // CategoryHandler handle the category router call.
 type CategoryHandler struct {
-	Module module.CategoryModule
+	Module _interface.CategoryModuleInterface
 }
 
 // NewCategoryHandler returns an instance of category handler.
 func NewCategoryHandler(dbService *service.MySQLService) CategoryHandler {
 	return CategoryHandler{
-		Module: module.CategoryModule{
-			Repository: repository.CategoryRepository{
-				DB: dbService,
-			},
-		},
+		Module: module.NewCategoryModule(repository.NewCategoryRepository(dbService)),
 	}
 }
 

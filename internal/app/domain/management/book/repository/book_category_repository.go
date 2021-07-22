@@ -6,12 +6,18 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
+	bookCategoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
 	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model"
 )
 
 type BookCategoryRepository struct {
 	DB database.GORMServiceInterface
+}
+
+func NewBookCategoryRepository(db database.GORMServiceInterface) BookCategoryRepository {
+	return BookCategoryRepository{
+		DB: db,
+	}
 }
 
 // GetCategoriesByIds returns categories by ids if exists on DB or an error
@@ -35,7 +41,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 		return
 	}
 	for _, categoryId := range categoriesIds {
-		bookCategory := bookModel.BookCategory{
+		bookCategory := bookCategoryModel.BookCategory{
 			BookID:     bookId,
 			CategoryID: categoryId,
 		}
@@ -48,7 +54,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 
 // DeleteCategories removes a Book categories from DB
 func (r BookCategoryRepository) DeleteCategories(bookId uint) {
-	apiErr := r.DB.Delete(bookModel.BookCategory{}, strconv.Itoa(int(bookId)))
+	apiErr := r.DB.Delete(bookCategoryModel.BookCategory{}, strconv.Itoa(int(bookId)))
 	if apiErr != nil {
 		log.Println(apiErr)
 	}

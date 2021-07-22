@@ -16,11 +16,7 @@ type CommentHandler struct {
 
 func NewCommentHandler(dbService *service.MySQLService) CommentHandler {
 	return CommentHandler{
-		Module: module.CommentModule{
-			Repository: repository.CommentRepository{
-				DB: dbService,
-			},
-		},
+		Module: module.NewCommentModule(repository.NewCommentRepository(dbService)),
 	}
 }
 

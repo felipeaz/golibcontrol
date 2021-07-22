@@ -4,25 +4,29 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/module"
+	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/repository"
+	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 // LendingHandler handle the lending router call.
 type LendingHandler struct {
-	Module module.LendingModule
+	Module _interface.LendingModuleInterface
 }
 
 // NewLendingHandler Return an instance of this handler.
 func NewLendingHandler(dbService *service.MySQLService) LendingHandler {
 	return LendingHandler{
-		Module: module.LendingModule{
-			Repository: repository.LendingRepository{
-				DB: dbService,
-			},
-		},
+		Module: module.NewLendingModule(repository.NewLendingRepository(
+			dbService,
+			studentRepository.NewStudentRepository(dbService),
+			bookRepository.NewBookRepository(dbService, bookRepository.NewBookCategoryRepository(dbService)),
+		),
+		),
 	}
 }
 

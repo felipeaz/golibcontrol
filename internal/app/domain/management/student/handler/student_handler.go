@@ -5,6 +5,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/module"
+	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository"
 	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
@@ -12,17 +13,13 @@ import (
 
 // StudentHandler handle the student router call.
 type StudentHandler struct {
-	Module module.StudentModule
+	Module _interface.StudentModuleInterface
 }
 
 // NewStudentHandler Return an instance of this handler.
 func NewStudentHandler(dbService *service.MySQLService) StudentHandler {
 	return StudentHandler{
-		Module: module.StudentModule{
-			Repository: repository.StudentRepository{
-				DB: dbService,
-			},
-		},
+		Module: module.NewStudentModule(repository.NewStudentRepository(dbService)),
 	}
 }
 

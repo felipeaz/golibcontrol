@@ -15,6 +15,13 @@ type BookRepository struct {
 	BookCategoryRepository _interface.BookCategoryRepositoryInterface
 }
 
+func NewBookRepository(db database.GORMServiceInterface, repo _interface.BookCategoryRepositoryInterface) BookRepository {
+	return BookRepository{
+		DB:                     db,
+		BookCategoryRepository: repo,
+	}
+}
+
 // Get returns all books from DB.
 func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
 	result, apiError := r.DB.GetWithPreload(&[]model.Book{}, "BookCategory")

@@ -11,6 +11,12 @@ type AccountRepository struct {
 	DB database.GORMServiceInterface
 }
 
+func NewAccountRepository(dbService database.GORMServiceInterface) AccountRepository {
+	return AccountRepository{
+		DB: dbService,
+	}
+}
+
 // Get returns all accounts.
 func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
 	result, apiError := r.DB.Get(&[]model.Account{})
