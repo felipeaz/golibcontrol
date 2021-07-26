@@ -17,8 +17,8 @@ func NewReserveRepository(db database.GORMServiceInterface) ReserveRepository {
 	}
 }
 
-func (r ReserveRepository) Get() ([]model.Reserve, *errors.ApiError) {
-	result, apiError := r.DB.Get(&[]model.Reserve{})
+func (r ReserveRepository) Get(bookId string) ([]model.Reserve, *errors.ApiError) {
+	result, apiError := r.DB.FindWhere(&[]model.Reserve{}, "book_id", bookId)
 	if apiError != nil {
 		return nil, apiError
 	}

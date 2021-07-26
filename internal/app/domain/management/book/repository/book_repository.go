@@ -6,7 +6,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model/converter"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository/interface"
-	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 )
 
 // BookRepository is responsible of getting/saving information from DB.

@@ -8,8 +8,8 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/module/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
-	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
 )
 

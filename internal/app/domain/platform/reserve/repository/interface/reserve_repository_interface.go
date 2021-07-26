@@ -6,7 +6,7 @@ import (
 )
 
 type ReserveRepositoryInterface interface {
-	Get() ([]model.Reserve, *errors.ApiError)
+	Get(bookId string) ([]model.Reserve, *errors.ApiError)
 	Find(id string) (model.Reserve, *errors.ApiError)
 	Create(reserve model.Reserve) (uint, *errors.ApiError)
 	Update(id string, upReserve model.Reserve) *errors.ApiError

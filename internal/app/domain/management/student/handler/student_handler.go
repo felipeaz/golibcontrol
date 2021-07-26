@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository"
-	"github.com/FelipeAz/golibcontrol/internal/pkg"
 	"github.com/gin-gonic/gin"
 )
 

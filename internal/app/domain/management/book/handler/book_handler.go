@@ -7,7 +7,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
-	"github.com/FelipeAz/golibcontrol/internal/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
 )
 
