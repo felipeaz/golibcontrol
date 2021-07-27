@@ -3,7 +3,6 @@ package database
 import (
 	"fmt"
 	"log"
-	"os"
 
 	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
 	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model"
@@ -18,11 +17,9 @@ type DBHandler struct {
 }
 
 // Connect opens a connection to the MYSQL server and prapare tables.
-func Connect() (*gorm.DB, error) {
+func Connect(user, password, host, port, database string) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("PLATFORM_DB_USER"), os.Getenv("PLATFORM_DB_PASSWORD"),
-		os.Getenv("PLATFORM_DB_HOST"), os.Getenv("PLATFORM_DB_PORT"),
-		os.Getenv("PLATFORM_DB_DATABASE"))
+		user, password, host, port, database)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

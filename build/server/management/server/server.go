@@ -10,8 +10,9 @@ import (
 )
 
 // Start initialize the webservice,
-func Start() (err error) {
-	db, err := database.Connect()
+func Start(user, password, host, port, databaseName string) (err error) {
+	db, err := database.Connect(user, password, host, port, databaseName)
+
 	if err != nil {
 		log.Fatal(err.Error())
 		return

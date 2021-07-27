@@ -5,7 +5,9 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/jwt"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/infra/redis"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/handler"
+	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/handler"
+	reserveHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/handler"
+	reviewHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/handler"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
@@ -24,8 +26,14 @@ func buildRoutes(dbService *service.MySQLService, cache *redis.Cache) error {
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	cHandler := handler.NewCommentHandler(dbService)
+	cHandler := commentHandler.NewCommentHandler(dbService)
 	build.CommentRoutes(tokenAuthMiddleware, vGroup, cHandler)
+
+	resHandler := reserveHandler.NewReserveHandler(dbService)
+	build.ReserveRoutes(tokenAuthMiddleware, vGroup, resHandler)
+
+	revHandler := reviewHandler.NewReviewHandler(dbService)
+	build.ReviewRoutes(tokenAuthMiddleware, vGroup, revHandler)
 
 	return router.Run(":8083")
 }

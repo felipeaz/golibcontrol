@@ -3,7 +3,6 @@ package database
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 	"gorm.io/driver/mysql"
@@ -16,11 +15,9 @@ type DBHandler struct {
 }
 
 // Connect opens a connection to the MYSQL server and prapare tables.
-func Connect() (*gorm.DB, error) {
+func Connect(user, password, host, port, database string) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("ACCOUNT_DB_USER"), os.Getenv("ACCOUNT_DB_PASSWORD"),
-		os.Getenv("ACCOUNT_DB_HOST"), os.Getenv("ACCOUNT_DB_PORT"),
-		os.Getenv("ACCOUNT_DB_DATABASE"))
+		user, password, host, port, database)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
