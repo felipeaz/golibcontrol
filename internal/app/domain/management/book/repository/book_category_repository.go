@@ -24,7 +24,7 @@ func NewBookCategoryRepository(db database.GORMServiceInterface) BookCategoryRep
 func (r BookCategoryRepository) GetCategoriesByIds(categoriesIds []uint) (categories []uint, apiError *errors.ApiError) {
 	for _, categoryId := range categoriesIds {
 		var category categoryModel.Category
-		_, err := r.DB.Find(&category, strconv.Itoa(int(categoryId)))
+		_, err := r.DB.Fetch(&category, strconv.Itoa(int(categoryId)))
 		if err != nil {
 			return nil, err
 		}
@@ -45,7 +45,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 			BookID:     bookId,
 			CategoryID: categoryId,
 		}
-		apiError := r.DB.Create(&bookCategory)
+		apiError := r.DB.Persist(&bookCategory)
 		if apiError != nil {
 			log.Println(errors.FailedToCreateBookCategoryMessage, apiError.Error)
 		}
@@ -54,7 +54,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 
 // DeleteCategories removes a Book categories from DB
 func (r BookCategoryRepository) DeleteCategories(bookId uint) {
-	apiErr := r.DB.Delete(bookCategoryModel.BookCategory{}, strconv.Itoa(int(bookId)))
+	apiErr := r.DB.Remove(bookCategoryModel.BookCategory{}, strconv.Itoa(int(bookId)))
 	if apiErr != nil {
 		log.Println(apiErr)
 	}

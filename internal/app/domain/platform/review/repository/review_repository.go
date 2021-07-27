@@ -18,7 +18,7 @@ func NewReviewRepository(db database.GORMServiceInterface) ReviewRepository {
 }
 
 func (r ReviewRepository) Get(bookId string) ([]model.Review, *errors.ApiError) {
-	result, apiError := r.DB.FindWhere(&[]model.Review{}, "book_id", bookId)
+	result, apiError := r.DB.FetchAllWhere(&[]model.Review{}, "book_id", bookId)
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -30,7 +30,7 @@ func (r ReviewRepository) Get(bookId string) ([]model.Review, *errors.ApiError) 
 }
 
 func (r ReviewRepository) Find(id string) (model.Review, *errors.ApiError) {
-	result, apiError := r.DB.Find(&model.Review{}, id)
+	result, apiError := r.DB.Fetch(&model.Review{}, id)
 	if apiError != nil {
 		return model.Review{}, apiError
 	}
@@ -42,7 +42,7 @@ func (r ReviewRepository) Find(id string) (model.Review, *errors.ApiError) {
 }
 
 func (r ReviewRepository) Create(review model.Review) (uint, *errors.ApiError) {
-	apiError := r.DB.Create(&review)
+	apiError := r.DB.Persist(&review)
 	if apiError != nil {
 		return 0, apiError
 	}
@@ -50,9 +50,9 @@ func (r ReviewRepository) Create(review model.Review) (uint, *errors.ApiError) {
 }
 
 func (r ReviewRepository) Update(id string, upReview model.Review) *errors.ApiError {
-	return r.DB.Update(&upReview, id)
+	return r.DB.Refresh(&upReview, id)
 }
 
 func (r ReviewRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Delete(&model.Review{}, id)
+	return r.DB.Remove(&model.Review{}, id)
 }

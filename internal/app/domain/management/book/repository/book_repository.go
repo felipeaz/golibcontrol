@@ -24,7 +24,7 @@ func NewBookRepository(db database.GORMServiceInterface, repo _interface.BookCat
 
 // Get returns all books from DB.
 func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
-	result, apiError := r.DB.GetWithPreload(&[]model.Book{}, "BookCategory")
+	result, apiError := r.DB.FetchAllWithPreload(&[]model.Book{}, "BookCategory")
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -37,7 +37,7 @@ func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
 
 // Find return one book from DB by ID.
 func (r BookRepository) Find(id string) (model.Book, *errors.ApiError) {
-	result, apiError := r.DB.FindWithPreload(&model.Book{}, id, "BookCategory")
+	result, apiError := r.DB.FetchWithPreload(&model.Book{}, id, "BookCategory")
 	if apiError != nil {
 		return model.Book{}, apiError
 	}
@@ -59,7 +59,7 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 		return 0, apiError
 	}
 
-	apiError = r.DB.Create(&book)
+	apiError = r.DB.Persist(&book)
 	if apiError != nil {
 		return 0, apiError
 	}
@@ -80,7 +80,7 @@ func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
 		apiError.Message = errors.UpdateFailMessage
 		return apiError
 	}
-	return r.DB.Update(&upBook, id)
+	return r.DB.Refresh(&upBook, id)
 }
 
 // Delete delete an existent book from DB.
@@ -90,7 +90,7 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 		return err
 	}
 	r.BeforeDelete(parsedId)
-	return r.DB.Delete(&model.Book{}, id)
+	return r.DB.Remove(&model.Book{}, id)
 }
 
 // BeforeCreate validate if the request categories exists

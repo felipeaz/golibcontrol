@@ -20,7 +20,7 @@ func NewCategoryRepository(db database.GORMServiceInterface) CategoryRepository 
 
 // Get returns all categories.
 func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
-	result, apiError := r.DB.Get(&[]model.Category{})
+	result, apiError := r.DB.FetchAll(&[]model.Category{})
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -33,7 +33,7 @@ func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
 
 // Find return one category from DB by ID.
 func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
-	result, apiError := r.DB.Find(&model.Category{}, id)
+	result, apiError := r.DB.Fetch(&model.Category{}, id)
 	if apiError != nil {
 		return model.Category{}, apiError
 	}
@@ -48,7 +48,7 @@ func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
 
 // Create persist a category to the DB.
 func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiError) {
-	apiError := r.DB.Create(&category)
+	apiError := r.DB.Persist(&category)
 	if apiError != nil {
 		return 0, apiError
 	}
@@ -57,10 +57,10 @@ func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiEr
 
 // Update update an existent category.
 func (r CategoryRepository) Update(id string, upCategory model.Category) *errors.ApiError {
-	return r.DB.Update(&upCategory, id)
+	return r.DB.Refresh(&upCategory, id)
 }
 
 // Delete delete an existent category from DB.
 func (r CategoryRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Delete(&model.Category{}, id)
+	return r.DB.Remove(&model.Category{}, id)
 }

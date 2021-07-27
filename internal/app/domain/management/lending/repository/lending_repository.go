@@ -33,7 +33,7 @@ func NewLendingRepository(db database.GORMServiceInterface, stRepo studentReposi
 
 // Get returns all lendings.
 func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
-	result, apiError := r.DB.Get(&[]lendingModel.Lending{})
+	result, apiError := r.DB.FetchAll(&[]lendingModel.Lending{})
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -46,7 +46,7 @@ func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
 
 // Find return one lending from DB by ID.
 func (r LendingRepository) Find(id string) (lendingModel.Lending, *errors.ApiError) {
-	result, apiError := r.DB.Find(&lendingModel.Lending{}, id)
+	result, apiError := r.DB.Fetch(&lendingModel.Lending{}, id)
 	if apiError != nil {
 		return lendingModel.Lending{}, apiError
 	}
@@ -84,7 +84,7 @@ func (r LendingRepository) Create(lending lendingModel.Lending) (uint, *errors.A
 	}
 	wg.Wait()
 
-	apiError := r.DB.Create(&lending)
+	apiError := r.DB.Persist(&lending)
 	if apiError != nil {
 		return 0, apiError
 	}
@@ -99,22 +99,22 @@ func (r LendingRepository) Update(id string, upLending lendingModel.Lending) *er
 		apiError.Message = errors.UpdateFailMessage
 		return apiError
 	}
-	return r.DB.Update(&upLending, id)
+	return r.DB.Refresh(&upLending, id)
 }
 
 // Delete delete an existent lending from DB.
 func (r LendingRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Delete(&lendingModel.Lending{}, id)
+	return r.DB.Remove(&lendingModel.Lending{}, id)
 }
 
 // BeforeCreateAndUpdate validate if the student or book exists before create the lending.
 func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors.ApiError {
-	_, apiError := r.DB.Find(&studentModel.Student{}, strconv.Itoa(int(studentId)))
+	_, apiError := r.DB.Fetch(&studentModel.Student{}, strconv.Itoa(int(studentId)))
 	if apiError != nil {
 		return apiError
 	}
 
-	_, apiError = r.DB.Find(&bookModel.Book{}, strconv.Itoa(int(bookId)))
+	_, apiError = r.DB.Fetch(&bookModel.Book{}, strconv.Itoa(int(bookId)))
 	if apiError != nil {
 		return apiError
 	}
@@ -123,7 +123,7 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 
 // BeforeCreate validate if the book is already lent.
 func (r LendingRepository) BeforeCreate(studentId, bookId uint) *errors.ApiError {
-	result, apiError := r.DB.FindWhereWithQuery(
+	result, apiError := r.DB.FetchAllWhereWithQuery(
 		&lendingModel.Lending{},
 		fmt.Sprintf("book_id = %s OR student_id = %s", strconv.Itoa(int(bookId)), strconv.Itoa(int(studentId))))
 	if apiError != nil && apiError.Error != errors.ItemNotFoundError {

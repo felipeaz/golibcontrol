@@ -18,7 +18,7 @@ func NewReserveRepository(db database.GORMServiceInterface) ReserveRepository {
 }
 
 func (r ReserveRepository) Get(bookId string) ([]model.Reserve, *errors.ApiError) {
-	result, apiError := r.DB.FindWhere(&[]model.Reserve{}, "book_id", bookId)
+	result, apiError := r.DB.FetchAllWhere(&[]model.Reserve{}, "book_id", bookId)
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -30,7 +30,7 @@ func (r ReserveRepository) Get(bookId string) ([]model.Reserve, *errors.ApiError
 }
 
 func (r ReserveRepository) Find(id string) (model.Reserve, *errors.ApiError) {
-	result, apiError := r.DB.Find(&model.Reserve{}, id)
+	result, apiError := r.DB.Fetch(&model.Reserve{}, id)
 	if apiError != nil {
 		return model.Reserve{}, apiError
 	}
@@ -42,7 +42,7 @@ func (r ReserveRepository) Find(id string) (model.Reserve, *errors.ApiError) {
 }
 
 func (r ReserveRepository) Create(reserve model.Reserve) (uint, *errors.ApiError) {
-	apiError := r.DB.Create(&reserve)
+	apiError := r.DB.Persist(&reserve)
 	if apiError != nil {
 		return 0, apiError
 	}
@@ -50,9 +50,9 @@ func (r ReserveRepository) Create(reserve model.Reserve) (uint, *errors.ApiError
 }
 
 func (r ReserveRepository) Update(id string, upReserve model.Reserve) *errors.ApiError {
-	return r.DB.Update(&upReserve, id)
+	return r.DB.Refresh(&upReserve, id)
 }
 
 func (r ReserveRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Delete(&model.Reserve{}, id)
+	return r.DB.Remove(&model.Reserve{}, id)
 }

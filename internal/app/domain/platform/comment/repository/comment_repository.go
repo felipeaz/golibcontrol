@@ -18,7 +18,7 @@ func NewCommentRepository(db database.GORMServiceInterface) CommentRepository {
 }
 
 func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError) {
-	result, apiError := r.DB.FindWhere(&[]model.Comment{}, "book_id", bookId)
+	result, apiError := r.DB.FetchAllWhere(&[]model.Comment{}, "book_id", bookId)
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -30,7 +30,7 @@ func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError
 }
 
 func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
-	result, apiError := r.DB.Find(&model.Comment{}, id)
+	result, apiError := r.DB.Fetch(&model.Comment{}, id)
 	if apiError != nil {
 		return model.Comment{}, apiError
 	}
@@ -42,7 +42,7 @@ func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
 }
 
 func (r CommentRepository) Create(comment model.Comment) (uint, *errors.ApiError) {
-	apiError := r.DB.Create(&comment)
+	apiError := r.DB.Persist(&comment)
 	if apiError != nil {
 		return 0, apiError
 	}
@@ -50,9 +50,9 @@ func (r CommentRepository) Create(comment model.Comment) (uint, *errors.ApiError
 }
 
 func (r CommentRepository) Update(id string, upComment model.Comment) *errors.ApiError {
-	return r.DB.Update(&upComment, id)
+	return r.DB.Refresh(&upComment, id)
 }
 
 func (r CommentRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Delete(&model.Comment{}, id)
+	return r.DB.Remove(&model.Comment{}, id)
 }

@@ -20,7 +20,7 @@ func NewStudentRepository(db database.GORMServiceInterface) StudentRepository {
 
 // Get returns all students.
 func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
-	result, apiError := r.DB.Get(&[]model.Student{})
+	result, apiError := r.DB.FetchAll(&[]model.Student{})
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -33,7 +33,7 @@ func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
 
 // Find return one student from DB by ID.
 func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
-	result, apiError := r.DB.Find(&model.Student{}, id)
+	result, apiError := r.DB.Fetch(&model.Student{}, id)
 	if apiError != nil {
 		return model.Student{}, apiError
 	}
@@ -48,7 +48,7 @@ func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
 
 // Create persist a student to the DB.
 func (r StudentRepository) Create(student model.Student) (string, *errors.ApiError) {
-	apiError := r.DB.Create(&student)
+	apiError := r.DB.Persist(&student)
 	if apiError != nil {
 		return "", apiError
 	}
@@ -58,11 +58,11 @@ func (r StudentRepository) Create(student model.Student) (string, *errors.ApiErr
 
 // Update update an existent student.
 func (r StudentRepository) Update(id string, upStudent model.Student) *errors.ApiError {
-	return r.DB.Update(&upStudent, id)
+	return r.DB.Refresh(&upStudent, id)
 }
 
 // Delete delete an existent student from DB.
 func (r StudentRepository) Delete(id string) *errors.ApiError {
-	apiError := r.DB.Delete(&model.Student{}, id)
+	apiError := r.DB.Remove(&model.Student{}, id)
 	return apiError
 }

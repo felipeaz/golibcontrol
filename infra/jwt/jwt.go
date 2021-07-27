@@ -59,7 +59,7 @@ func (a Auth) CreateToken(userId uint) (model.TokenDetails, *errors.ApiError) {
 		}
 	}
 
-	// Create the refresh token
+	// Persist the refresh token
 	rtClaims := jwt.MapClaims{
 		"authorized": true,
 		"user_id":    userIdString,

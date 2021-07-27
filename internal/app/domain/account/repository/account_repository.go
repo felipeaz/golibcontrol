@@ -19,7 +19,7 @@ func NewAccountRepository(dbService database.GORMServiceInterface) AccountReposi
 
 // Get returns all accounts.
 func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
-	result, apiError := r.DB.Get(&[]model.Account{})
+	result, apiError := r.DB.FetchAll(&[]model.Account{})
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -32,7 +32,7 @@ func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
 
 // Find return one user by ID.
 func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
-	result, apiError := r.DB.Find(&model.Account{}, id)
+	result, apiError := r.DB.Fetch(&model.Account{}, id)
 	if apiError != nil {
 		return model.Account{}, apiError
 	}
@@ -45,7 +45,7 @@ func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
 
 // FindWhere user by field and value.
 func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Account, *errors.ApiError) {
-	result, apiError := r.DB.FindWhere(&model.Account{}, fieldName, fieldValue)
+	result, apiError := r.DB.FetchAllWhere(&model.Account{}, fieldName, fieldValue)
 	if apiError != nil {
 		return model.Account{}, apiError
 	}
@@ -58,7 +58,7 @@ func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Accoun
 
 // Create creates an user
 func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError) {
-	apiError := r.DB.Create(&account)
+	apiError := r.DB.Persist(&account)
 	if apiError != nil {
 		return 0, apiError
 	}
@@ -67,10 +67,10 @@ func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError
 
 // Update update an existent user.
 func (r AccountRepository) Update(id string, upAccount model.Account) *errors.ApiError {
-	return r.DB.Update(&upAccount, id)
+	return r.DB.Refresh(&upAccount, id)
 }
 
 // Delete delete an existent user by id.
 func (r AccountRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Delete(&model.Account{}, id)
+	return r.DB.Remove(&model.Account{}, id)
 }
