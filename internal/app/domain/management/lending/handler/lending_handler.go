@@ -24,8 +24,7 @@ func NewLendingHandler(dbService *service.MySQLService) LendingHandler {
 		Module: module.NewLendingModule(repository.NewLendingRepository(
 			dbService,
 			studentRepository.NewStudentRepository(dbService),
-			bookRepository.NewBookRepository(dbService, bookRepository.NewBookCategoryRepository(dbService)),
-		),
+			bookRepository.NewBookRepository(dbService, bookRepository.NewBookCategoryRepository(dbService))),
 		),
 	}
 }

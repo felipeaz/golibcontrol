@@ -7,6 +7,7 @@ type Student struct {
 	ID        string    `json:"id" binding:"required" gorm:"primaryKey;unique;not null"`
 	Name      string    `json:"name" binding:"required"`
 	Email     string    `json:"email" binding:"required"`
+	Password  string    `json:"password" binding:"required"`
 	Phone     string    `json:"phone" binding:"required"`
 	Grade     string    `json:"grade" binding:"required"`
 	Birthday  string    `json:"birthday" binding:"required"`
