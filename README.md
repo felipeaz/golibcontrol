@@ -11,6 +11,8 @@ This application is compound by four services:
 
 `Profile Service` Service that contains all personal information of students and statistics about their recent actions on the platform.
 
+To integrate the services, the application uses Kong and Konga as API Gateway.
+
 # Installation
 The first installation of this application you must run the command `make install`, but if you have already installed it, you can start this application with `make run` (with terminal attached) or `make rund` (with terminal dettached)
 
@@ -44,13 +46,21 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 ./golibcontrol/
 ├── build
 │   └── docker    
-│   │   └── json-server.go
-│   │   │   └── db.json
-│   │   └── Dockerfile
+│   │   └── images
+│   │   │   └── go
+│   │   │       └── Dockerfile
 │   └── server    
-│       └── server.go
+│       └── domain_item
+│           └── router
+│           │   └── build
+│           │   │   └── domain_routes
+│           │   └── router.go
+│           └── router
+│               └── server
+│                   └── server.go
 ├── cmd
-│   └── main.go
+│   └── domain_item
+│       └── main.go
 ├── internal
 │   └── app
 │   │   └── constants
@@ -146,7 +156,16 @@ GIN simplifies the HTTP functions making easy to get the context, create routes 
 Redis is a cache tecnology which I choose to keep the user authentication stored. Doing this, I'm able to invalidate the JWT token even if it's time has not finished yet.
 
 ### MYSQL
-MYSQL is the database choosen for this application.
+MYSQL is the application database.
+
+### KONG
+KONG is an API Gateway which will be responsible to centralize the application services into a single host.
+
+### KONGA
+KONGA used on Api Gateway Configuration.
+
+### POSTGRESQL
+POSTGRESQL is the Api Gateway Database
 
 # Tests
 The tests can be executed using the command `make tests`
