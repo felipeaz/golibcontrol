@@ -6,7 +6,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/build/server/management/router"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/management/database"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
-	"github.com/FelipeAz/golibcontrol/infra/redis"
 )
 
 // Start initialize the webservice,
@@ -20,6 +19,5 @@ func Start(user, password, host, port, databaseName string) (err error) {
 	defer database.CloseConnection(db)
 
 	dbService, err := service.NewMySQLService(db)
-	cache := redis.NewCache()
-	return router.Run(dbService, cache)
+	return router.Run(dbService)
 }
