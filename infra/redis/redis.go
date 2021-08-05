@@ -3,12 +3,8 @@ package redis
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"strconv"
 
-	"github.com/FelipeAz/golibcontrol/infra/jwt/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -99,40 +95,4 @@ func (c *Cache) Flush(key string) error {
 
 	_, err = conn.Do("DEL", key)
 	return err
-}
-
-// StoreAuth persists the access & refresh token on redis
-func (c *Cache) StoreAuth(userid uint, td model.TokenDetails) *errors.ApiError {
-	conn, err := c.connect()
-	if err != nil {
-		log.Println(err)
-		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.AuthenticationFailMessage,
-			Error:   err.Error(),
-		}
-	}
-	defer func() {
-		err := conn.Close()
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}()
-
-	accessDetails := model.AccessDetails{
-		AccessUuid:  td.AccessUuid,
-		RefreshUuid: td.RefreshUuid,
-		UserId:      userid,
-	}
-
-	errAccess := c.Set(strconv.Itoa(int(userid)), accessDetails)
-	if errAccess != nil {
-		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: errors.AuthenticationFailMessage,
-			Error:   errAccess.Error(),
-		}
-	}
-
-	return nil
 }

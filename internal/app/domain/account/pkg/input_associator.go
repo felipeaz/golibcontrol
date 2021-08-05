@@ -22,3 +22,17 @@ func AssociateAccountInput(c *gin.Context) (account accountModel.Account, apiErr
 
 	return
 }
+
+// AssociateSessionInput is responsible of associating the params to the user model.
+func AssociateSessionInput(c *gin.Context) (session accountModel.UserSession, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&session)
+	if err != nil {
+		return accountModel.UserSession{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}

@@ -14,6 +14,7 @@ func main() {
 		os.Getenv("ACCOUNT_DB_HOST"),
 		os.Getenv("ACCOUNT_DB_PORT"),
 		os.Getenv("ACCOUNT_DB_DATABASE"),
+		os.Getenv("CONSUMERS_HOST"),
 	)
 	if err != nil {
 		log.Println(err.Error())

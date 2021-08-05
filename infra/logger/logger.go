@@ -11,17 +11,16 @@ import (
 )
 
 func getLogFile() (f *os.File) {
-	// filePath, err := filepath.Abs(os.Getenv("LOG_FILE"))
-	filePath, err := filepath.Abs("internal/app/logs/log.txt")
+	filePath, err := filepath.Abs(os.Getenv("LOG_FILE"))
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("failed to retrieve log file:", err.Error())
 	}
 
-	f, err = os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	f, err = os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		f, err = os.Create(filePath)
 		if err != nil {
-			log.Println(err.Error())
+			log.Println("failed to create log file:", err.Error())
 		}
 	}
 

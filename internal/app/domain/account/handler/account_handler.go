@@ -3,9 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/infra/jwt"
+	"github.com/FelipeAz/golibcontrol/infra/auth"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
-	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/pkg"
@@ -18,9 +17,9 @@ type AccountHandler struct {
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(auth *jwt.Auth, dbService *service.MySQLService, cache *redis.Cache) AccountHandler {
+func NewAccountHandler(dbService *service.MySQLService, auth auth.Auth) AccountHandler {
 	return AccountHandler{
-		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth, cache),
+		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth),
 	}
 }
 
@@ -38,7 +37,12 @@ func (h AccountHandler) Login(c *gin.Context) {
 
 // Logout authenticate the user
 func (h AccountHandler) Logout(c *gin.Context) {
-	logoutMsg := h.Module.Logout(c.Request)
+	session, apiError := pkg.AssociateSessionInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
+		return
+	}
+	logoutMsg := h.Module.Logout(session)
 	c.JSON(logoutMsg.Status, logoutMsg)
 }
 
