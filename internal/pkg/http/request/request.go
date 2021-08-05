@@ -53,6 +53,11 @@ func (h HttpRequest) PostRequest(id string, body []byte) ([]byte, error) {
 
 func (h HttpRequest) PostRequestWithoutBody(concatUrl string) ([]byte, error) {
 	req, err := http.NewRequest("POST", h.Host+concatUrl, nil)
+	if err != nil {
+		logger.LogError(err)
+		return nil, err
+	}
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		logger.LogError(err)
