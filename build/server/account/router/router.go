@@ -17,6 +17,7 @@ func Run(dbService *service.MySQLService, cache *redis.Cache) error {
 
 func buildRoutes(dbService *service.MySQLService, cache *redis.Cache) error {
 	router := gin.Default()
+	router.Use(middleware.CORSMiddleware())
 	jwtAuth := jwt.NewAuth(cache)
 	tokenAuthMiddleware := middleware.NewTokenMiddleware(jwtAuth)
 
