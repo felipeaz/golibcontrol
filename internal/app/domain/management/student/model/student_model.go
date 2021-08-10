@@ -20,11 +20,11 @@ type Student struct {
 }
 
 func (s Student) GetFirstName() string {
-	nameArr := strings.Split(s.Name, "")
+	nameArr := strings.Split(s.Name, " ")
 	return nameArr[0]
 }
 
 func (s Student) GetLastName() string {
-	nameArr := strings.Split(s.Name, "")
+	nameArr := strings.Split(s.Name, " ")
 	return nameArr[len(nameArr)-1]
 }

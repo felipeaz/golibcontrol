@@ -7,6 +7,7 @@ import (
 	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/handler"
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/handler"
 	studentHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +18,7 @@ func Run(dbService *service.MySQLService) error {
 
 func buildRoutes(dbService *service.MySQLService) error {
 	router := gin.Default()
+	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
