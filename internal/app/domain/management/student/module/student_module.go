@@ -6,6 +6,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
+	studentErrors "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model/converter"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository/interface"
@@ -34,8 +35,8 @@ func (m StudentModule) Find(id string) (model.Student, *errors.ApiError) {
 }
 
 // Create persist a student to the database.
-func (m StudentModule) Create(student model.Student, signInUrl string) (string, *errors.ApiError) {
-	accountId, apiError := m.createAccountOnAccountService(student, signInUrl)
+func (m StudentModule) Create(student model.Student, accountHost, accountRoute, tokenName, tokenValue string) (string, *errors.ApiError) {
+	accountId, apiError := m.createAccountOnAccountService(student, accountHost, accountRoute, tokenName, tokenValue)
 	if apiError != nil {
 		return "", apiError
 	}
@@ -53,24 +54,27 @@ func (m StudentModule) Delete(id string) *errors.ApiError {
 	return m.Repository.Delete(id)
 }
 
-func (m StudentModule) createAccountOnAccountService(student model.Student, host string) (uint, *errors.ApiError) {
+func (m StudentModule) createAccountOnAccountService(student model.Student, host, route, tokenName, tokenValue string) (uint, *errors.ApiError) {
 	var resp model.AccountResponse
 	req := request.NewHttpRequest(host)
-	body, err := json.Marshal(converter.ConvertStudentToStudentAccount(student))
+	studentBody := converter.ConvertStudentToStudentAccount(student)
+	body, err := json.Marshal(studentBody)
 	if err != nil {
 		logger.LogError(err)
 		return 0, &errors.ApiError{
-			Status: http.StatusInternalServerError,
-			Error:  err.Error(),
+			Status:  http.StatusInternalServerError,
+			Message: studentErrors.FailedToMarshalRequestBody,
+			Error:   err.Error(),
 		}
 	}
 
-	b, err := req.PostRequest("", body)
+	b, err := req.PostRequestWithHeader(route, body, tokenName, tokenValue)
 	if err != nil {
 		logger.LogError(err)
 		return 0, &errors.ApiError{
-			Status: http.StatusInternalServerError,
-			Error:  err.Error(),
+			Status:  http.StatusInternalServerError,
+			Message: studentErrors.FailedToSendAccountCreationRequest,
+			Error:   err.Error(),
 		}
 	}
 
@@ -78,8 +82,17 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 	if err != nil {
 		logger.LogError(err)
 		return 0, &errors.ApiError{
-			Status: http.StatusInternalServerError,
-			Error:  err.Error(),
+			Status:  http.StatusInternalServerError,
+			Message: studentErrors.FailedToUnmarshalResponse,
+			Error:   err.Error(),
+		}
+	}
+
+	if resp.ID == 0 {
+		return 0, &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: studentErrors.FailedToCreateStudentAccount,
+			Error:   string(b),
 		}
 	}
 	return resp.ID, nil

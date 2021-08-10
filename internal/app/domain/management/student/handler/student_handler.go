@@ -53,8 +53,11 @@ func (h StudentHandler) Create(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-	accountHost := os.Getenv("API_GATEWAY_HOST") + os.Getenv("SIGN_IN_URL")
-	id, apiError := h.Module.Create(student, accountHost)
+
+	authHeaderName := os.Getenv("AUTHORIZATION_TOKEN_NAME")
+	accountHost := os.Getenv("API_GATEWAY_HOST")
+	signinRoute := os.Getenv("SIGN_IN_URL")
+	id, apiError := h.Module.Create(student, accountHost, signinRoute, authHeaderName, c.GetHeader(authHeaderName))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
