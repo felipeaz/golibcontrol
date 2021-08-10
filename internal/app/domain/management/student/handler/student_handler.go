@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
@@ -52,8 +53,8 @@ func (h StudentHandler) Create(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
-	id, apiError := h.Module.Create(student)
+	accountHost := os.Getenv("API_GATEWAY_HOST") + os.Getenv("SIGN_IN_URL")
+	id, apiError := h.Module.Create(student, accountHost)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

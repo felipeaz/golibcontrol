@@ -34,9 +34,9 @@ func (h HttpRequest) GetRequest(id string) ([]byte, error) {
 	return b, nil
 }
 
-func (h HttpRequest) PostRequest(id string, body []byte) ([]byte, error) {
+func (h HttpRequest) PostRequest(route string, body []byte) ([]byte, error) {
 	respBody := bytes.NewBuffer(body)
-	resp, err := http.Post(h.Host+id, "application/json", respBody)
+	resp, err := http.Post(h.Host+route, "application/json", respBody)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -51,8 +51,8 @@ func (h HttpRequest) PostRequest(id string, body []byte) ([]byte, error) {
 	return b, nil
 }
 
-func (h HttpRequest) PostRequestWithoutBody(concatUrl string) ([]byte, error) {
-	req, err := http.NewRequest("POST", h.Host+concatUrl, nil)
+func (h HttpRequest) PostRequestWithoutBody(route string) ([]byte, error) {
+	req, err := http.NewRequest("POST", h.Host+route, nil)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -73,8 +73,8 @@ func (h HttpRequest) PostRequestWithoutBody(concatUrl string) ([]byte, error) {
 	return b, nil
 }
 
-func (h HttpRequest) DeleteRequest(concatUrl string) error {
-	req, err := http.NewRequest("DELETE", h.Host+concatUrl, nil)
+func (h HttpRequest) DeleteRequest(route string) error {
+	req, err := http.NewRequest("DELETE", h.Host+route, nil)
 	if err != nil {
 		logger.LogError(err)
 		return err

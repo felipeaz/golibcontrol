@@ -28,3 +28,14 @@ func ConvertToSliceStudentObj(obj interface{}) ([]model.Student, *errors.ApiErro
 	}
 	return *studentObj, nil
 }
+
+func ConvertStudentToStudentAccount(student model.Student) model.StudentAccount {
+	return model.StudentAccount{
+		Email:          student.Email,
+		Password:       student.Password,
+		FirstName:      student.GetFirstName(),
+		LastName:       student.GetLastName(),
+		Phone:          student.Phone,
+		StudentAccount: true,
+	}
+}
