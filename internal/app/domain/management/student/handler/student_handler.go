@@ -48,15 +48,16 @@ func (h StudentHandler) Find(c *gin.Context) {
 
 // Create persist a student to the database.
 func (h StudentHandler) Create(c *gin.Context) {
+	authHeaderName := os.Getenv("AUTHORIZATION_TOKEN_NAME")
+	accountHost := os.Getenv("API_GATEWAY_HOST")
+	signinRoute := os.Getenv("SIGN_IN_URL")
+
 	student, apiError := pkg.AssociateStudentInput(c)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	authHeaderName := os.Getenv("AUTHORIZATION_TOKEN_NAME")
-	accountHost := os.Getenv("API_GATEWAY_HOST")
-	signinRoute := os.Getenv("SIGN_IN_URL")
 	id, apiError := h.Module.Create(student, accountHost, signinRoute, authHeaderName, c.GetHeader(authHeaderName))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
