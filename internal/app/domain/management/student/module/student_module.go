@@ -3,6 +3,7 @@ package module
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -62,6 +63,7 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 	if err != nil {
 		logger.LogError(err)
 		return 0, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToMarshalRequestBody,
 			Error:   err.Error(),
@@ -72,6 +74,7 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 	if err != nil {
 		logger.LogError(err)
 		return 0, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToSendAccountCreationRequest,
 			Error:   err.Error(),
@@ -82,6 +85,7 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 	if err != nil {
 		logger.LogError(err)
 		return 0, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToUnmarshalResponse,
 			Error:   err.Error(),
@@ -90,6 +94,7 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 
 	if resp.ID == 0 {
 		return 0, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToCreateStudentAccount,
 			Error:   string(b),

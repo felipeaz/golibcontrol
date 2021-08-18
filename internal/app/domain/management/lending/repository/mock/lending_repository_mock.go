@@ -2,6 +2,7 @@ package mock
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -23,6 +24,7 @@ type LendingRepositoryMock struct {
 func (r LendingRepositoryMock) Get() (lendings []model.Lending, apiError *errors.ApiError) {
 	if r.TestError {
 		return nil, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
@@ -45,6 +47,7 @@ func (r LendingRepositoryMock) Get() (lendings []model.Lending, apiError *errors
 func (r LendingRepositoryMock) Find(id string) (lending model.Lending, apiError *errors.ApiError) {
 	if r.TestError {
 		return model.Lending{}, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
@@ -53,6 +56,7 @@ func (r LendingRepositoryMock) Find(id string) (lending model.Lending, apiError 
 
 	if r.TestNotFoundError {
 		return model.Lending{}, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
 			Error:   "lending not found",
@@ -83,6 +87,7 @@ func (r LendingRepositoryMock) Create(lending model.Lending) (uint, *errors.ApiE
 
 	if r.TestError && !r.TestBookNotFoundError && !r.TestStudentNotFoundError {
 		return 0, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   "mocked error",
@@ -108,6 +113,7 @@ func (r LendingRepositoryMock) Update(id string, upLending model.Lending) *error
 
 	if r.TestUpdateError && !r.TestBookNotFoundError && !r.TestStudentNotFoundError {
 		return &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   "mocked error",
@@ -127,6 +133,7 @@ func (r LendingRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 
 	if r.TestDeleteError && !r.TestNotFoundError {
 		return &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   "mocked error",
@@ -141,15 +148,17 @@ func (r LendingRepositoryMock) BeforeCreateAndUpdate(studentId, bookId uint) *er
 	if r.TestStudentNotFoundError {
 		if !r.TestError {
 			return &errors.ApiError{
-				Status: http.StatusNotFound,
-				Error:  "student not found",
+				Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
+				Status:  http.StatusNotFound,
+				Error:   "student not found",
 			}
 		}
 
 		if r.TestError {
 			return &errors.ApiError{
-				Status: http.StatusInternalServerError,
-				Error:  "mocked error",
+				Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
+				Status:  http.StatusInternalServerError,
+				Error:   "mocked error",
 			}
 		}
 	}
@@ -157,14 +166,16 @@ func (r LendingRepositoryMock) BeforeCreateAndUpdate(studentId, bookId uint) *er
 	if r.TestBookNotFoundError {
 		if !r.TestError {
 			return &errors.ApiError{
-				Status: http.StatusNotFound,
-				Error:  "book not found",
+				Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
+				Status:  http.StatusNotFound,
+				Error:   "book not found",
 			}
 		}
 
 		return &errors.ApiError{
-			Status: http.StatusInternalServerError,
-			Error:  "mocked error",
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
+			Status:  http.StatusInternalServerError,
+			Error:   "mocked error",
 		}
 	}
 
@@ -175,15 +186,17 @@ func (r LendingRepositoryMock) BeforeCreateAndUpdate(studentId, bookId uint) *er
 func (r LendingRepositoryMock) BeforeCreate(studentId, bookId uint) *errors.ApiError {
 	if r.TestBookAlreadyLentError {
 		return &errors.ApiError{
-			Status: http.StatusInternalServerError,
-			Error:  "book is already lent",
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
+			Status:  http.StatusInternalServerError,
+			Error:   "book is already lent",
 		}
 	}
 
 	if r.TestStudentAlreadyLentError {
 		return &errors.ApiError{
-			Status: http.StatusInternalServerError,
-			Error:  "student has already lent a book",
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
+			Status:  http.StatusInternalServerError,
+			Error:   "student has already lent a book",
 		}
 	}
 

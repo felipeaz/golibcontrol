@@ -3,6 +3,7 @@ package module
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -116,6 +117,7 @@ func (m AccountModule) authUser(credentials model.Account) (model.Account, *erro
 	account, apiError := m.Repository.FindWhere("email", credentials.Email)
 	if apiError != nil {
 		return model.Account{}, &errors.ApiError{
+			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
 			Status:  apiError.Status,
 			Message: login.FailMessage,
 			Error:   login.AccountNotFoundMessage,
@@ -124,6 +126,7 @@ func (m AccountModule) authUser(credentials model.Account) (model.Account, *erro
 
 	if account.Password != credentials.Password {
 		return model.Account{}, &errors.ApiError{
+			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
 			Status:  http.StatusUnauthorized,
 			Message: login.FailMessage,
 			Error:   login.InvalidPasswordMessage,

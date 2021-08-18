@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 
@@ -131,6 +132,7 @@ func (r LendingRepository) BeforeCreate(studentId, bookId uint) *errors.ApiError
 	}
 	if result != nil && apiError == nil {
 		return &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   errors.LendingNotAvailableError,
