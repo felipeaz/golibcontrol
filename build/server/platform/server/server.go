@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/FelipeAz/golibcontrol/build/server/platform/router"
+	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/platform/database"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 )
@@ -11,10 +12,9 @@ import (
 // Start initialize the webservice,
 func Start(user, password, host, port, databaseName string) (err error) {
 	db, err := database.Connect(user, password, host, port, databaseName)
-
 	if err != nil {
+		logger.LogError(err)
 		log.Fatal(err.Error())
-		return
 	}
 	defer database.CloseConnection(db)
 

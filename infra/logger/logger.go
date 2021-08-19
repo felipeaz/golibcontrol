@@ -15,16 +15,21 @@ func getLogFile(path string) (f *os.File) {
 	filePath, err := filepath.Abs(path)
 	if err != nil {
 		log.Println("failed to retrieve log file:", err.Error())
+		return
 	}
 
 	if _, err = os.Stat(filePath); os.IsNotExist(err) {
-		os.Mkdir(filePath, 0755)
+		err = os.Mkdir(filePath, 0755)
+		if err != nil {
+			log.Println("failed to create logs folder", err.Error())
+			return
+		}
 	}
 
 	fileName := fmt.Sprintf("%s.log", time.Now().Format("2006-01-02"))
-	fullPath := filePath + "/" + fileName
+	fullPath := fmt.Sprintf("%s/%s", filePath, fileName)
 
-	f, err = os.Create(fullPath)
+	f, err = os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Println("failed to create log file:", err.Error())
 		return nil
