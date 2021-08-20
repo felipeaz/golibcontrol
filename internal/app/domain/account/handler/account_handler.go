@@ -1,11 +1,9 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth"
-	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/module/interface"
@@ -27,10 +25,6 @@ func NewAccountHandler(dbService *service.MySQLService, auth auth.Auth) AccountH
 
 // Login authenticate the user
 func (h AccountHandler) Login(c *gin.Context) {
-	err := errors.New("test logs")
-	logger.LogError(err)
-	return
-
 	credentials, apiError := pkg.AssociateAccountInput(c)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
