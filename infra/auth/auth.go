@@ -86,9 +86,9 @@ func (a Auth) CreateConsumer(username string) (*model.Consumer, *errors.ApiError
 	return consumer, nil
 }
 
-func (a Auth) CreateConsumerKey(consumerId string) (*model.ConsumerKey, *errors.ApiError) {
+func (a Auth) CreateConsumerKey(consumerId, secret string) (*model.ConsumerKey, *errors.ApiError) {
 	var consumerKey *model.ConsumerKey
-	concatUrl := consumerId + "/key-auth/"
+	concatUrl := consumerId + "/jwt"
 
 	err := a.HttpRequest.DeleteRequest(concatUrl)
 	if err != nil {
@@ -100,7 +100,18 @@ func (a Auth) CreateConsumerKey(consumerId string) (*model.ConsumerKey, *errors.
 		}
 	}
 
-	b, err := a.HttpRequest.PostRequestWithoutBody(concatUrl)
+	body := model.CreateKeyBody{Secret: secret}
+	bodyBytes, err := json.Marshal(body)
+	if err != nil {
+		logger.LogError(err)
+		return nil, &errors.ApiError{
+			Status:  http.StatusInternalServerError,
+			Message: authErrors.FailedToMarshalKeyRequestBody,
+			Error:   err.Error(),
+		}
+	}
+
+	b, err := a.HttpRequest.PostRequest(concatUrl, bodyBytes)
 	if err != nil {
 		logger.LogError(err)
 		return nil, &errors.ApiError{
@@ -126,18 +137,19 @@ func (a Auth) CreateConsumerKey(consumerId string) (*model.ConsumerKey, *errors.
 			Message: authErrors.FailedToCreateConsumer,
 		}
 	}
+
 	return consumerKey, nil
 }
 
 func (a Auth) GetConsumerKey(consumerId, keyId string) (*model.ConsumerKey, *errors.ApiError) {
-	concatUrl := consumerId + "/key-auth/" + keyId
+	concatUrl := consumerId + "/jwt/" + keyId
 
 	b, err := a.HttpRequest.GetRequest(concatUrl)
 	if err != nil {
 		logger.LogError(err)
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: authErrors.FailedToRetriveConsumerKeys,
+			Message: authErrors.FailedToRetrieveConsumerKeys,
 			Error:   err.Error(),
 		}
 	}
@@ -157,14 +169,14 @@ func (a Auth) GetConsumerKey(consumerId, keyId string) (*model.ConsumerKey, *err
 }
 
 func (a Auth) GetAllConsumerKeys(consumerId string) (*model.Keys, *errors.ApiError) {
-	concatUrl := consumerId + "/key-auth/"
+	concatUrl := consumerId + "/jwt/"
 
 	b, err := a.HttpRequest.GetRequest(concatUrl)
 	if err != nil {
 		logger.LogError(err)
 		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: authErrors.FailedToRetriveConsumerKeys,
+			Message: authErrors.FailedToRetrieveConsumerKeys,
 			Error:   err.Error(),
 		}
 	}
@@ -183,7 +195,7 @@ func (a Auth) GetAllConsumerKeys(consumerId string) (*model.Keys, *errors.ApiErr
 	return consumerKeys, nil
 }
 
-func (a Auth) RetrieveConsumerKey(consumerId string) (*model.ConsumerKey, *errors.ApiError) {
+func (a Auth) RetrieveConsumerKey(consumerId, secret string) (*model.ConsumerKey, *errors.ApiError) {
 	var consumerKey *model.ConsumerKey
 	keys, apiError := a.GetAllConsumerKeys(consumerId)
 	if apiError != nil {
@@ -191,7 +203,7 @@ func (a Auth) RetrieveConsumerKey(consumerId string) (*model.ConsumerKey, *error
 	}
 
 	if keys == nil || len(keys.Data) == 0 {
-		consumerKey, apiError = a.CreateConsumerKey(consumerId)
+		consumerKey, apiError = a.CreateConsumerKey(consumerId, secret)
 		if apiError != nil {
 			return nil, apiError
 		}

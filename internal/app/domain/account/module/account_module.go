@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth"
+	"github.com/FelipeAz/golibcontrol/infra/auth/jwt"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
@@ -35,7 +36,7 @@ func (m AccountModule) Login(credentials model.Account) login.Message {
 		}
 	}
 
-	consumerKey, apiError := m.Auth.RetrieveConsumerKey(account.ConsumerId)
+	consumerKey, apiError := m.Auth.RetrieveConsumerKey(account.ConsumerId, os.Getenv("JWT_SECRET_KEY"))
 	if apiError != nil {
 		return login.Message{
 			Status:  apiError.Status,
@@ -43,15 +44,23 @@ func (m AccountModule) Login(credentials model.Account) login.Message {
 		}
 	}
 
+	token, err := jwt.CreateToken(account.Email, consumerKey.Key, consumerKey.Secret)
+	if err != nil {
+		return login.Message{
+			Status:  err.Status,
+			Message: err.Error,
+		}
+	}
+
 	return login.Message{
 		Message: fmt.Sprintf(login.SuccessMessage, account.FirstName),
-		Token:   consumerKey.Key,
+		Token:   token,
 	}
 }
 
 // Logout authenticate the user
 func (m AccountModule) Logout(session model.UserSession) (message login.Message) {
-	concatUrl := session.UserId + "/key-auth/" + session.KeyId
+	concatUrl := session.UserId + "/jwt/" + session.KeyId
 	apiError := m.Auth.DeleteConsumer(concatUrl)
 	if apiError != nil {
 		return login.Message{
@@ -85,7 +94,7 @@ func (m AccountModule) Create(account model.Account) (uint, *errors.ApiError) {
 	}
 	account.ConsumerId = consumer.Id
 
-	consumerKey, apiError := m.Auth.CreateConsumerKey(account.ConsumerId)
+	consumerKey, apiError := m.Auth.CreateConsumerKey(account.ConsumerId, os.Getenv("JWT_SECRET_KEY"))
 	if apiError != nil {
 		return 0, apiError
 	}

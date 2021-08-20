@@ -12,3 +12,6 @@ stop:
 
 tests:
 	sh scripts/tests.sh
+
+gateway:
+	sh scripts/gateway.sh
