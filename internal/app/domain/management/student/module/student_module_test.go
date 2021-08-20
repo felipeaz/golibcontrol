@@ -114,7 +114,7 @@ func TestCreate(t *testing.T) {
 		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	id, apiError := m.Create(student)
+	id, apiError := m.Create(student, "", "", "", "")
 
 	assert.Nil(t, apiError)
 	assert.NotEqual(t, "", id)
@@ -137,7 +137,7 @@ func TestCreateError(t *testing.T) {
 		UpdatedAt: time.Date(2021, 04, 05, 04, 00, 00, 00, time.UTC),
 	}
 
-	id, apiError := m.Create(student)
+	id, apiError := m.Create(student, "", "", "", "")
 
 	assert.NotNil(t, apiError)
 	assert.Equal(t, "", id)
