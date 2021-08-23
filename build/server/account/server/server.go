@@ -8,11 +8,12 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/account/database"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/infra/redis"
 	"github.com/FelipeAz/golibcontrol/internal/pkg/http/request"
 )
 
 // Start initialize the webservice,
-func Start(user, password, host, port, databaseName, consumersHost string) (err error) {
+func Start(user, password, host, port, databaseName, consumersHost, cacheHost, cachePort, cacheExpireTime string) (err error) {
 	db, err := database.Connect(user, password, host, port, databaseName)
 	if err != nil {
 		logger.LogError(err)
@@ -26,6 +27,8 @@ func Start(user, password, host, port, databaseName, consumersHost string) (err 
 		log.Fatal(err.Error())
 	}
 
+	cache := redis.NewCache(cacheHost, cachePort, cacheExpireTime)
+
 	apiGatewayAuth := auth.NewAuth(request.NewHttpRequest(consumersHost))
-	return router.Run(dbService, apiGatewayAuth)
+	return router.Run(dbService, apiGatewayAuth, cache)
 }

@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
@@ -17,7 +17,7 @@ type BookHandler struct {
 }
 
 // NewBookHandler returns an instance of this handler.
-func NewBookHandler(dbService *service.MySQLService) BookHandler {
+func NewBookHandler(dbService database.GORMServiceInterface) BookHandler {
 	return BookHandler{
 		Module: module.NewBookModule(
 			repository.NewBookRepository(dbService,

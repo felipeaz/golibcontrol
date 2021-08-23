@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/module/interface"
@@ -19,7 +19,7 @@ type LendingHandler struct {
 }
 
 // NewLendingHandler Return an instance of this handler.
-func NewLendingHandler(dbService *service.MySQLService) LendingHandler {
+func NewLendingHandler(dbService database.GORMServiceInterface) LendingHandler {
 	return LendingHandler{
 		Module: module.NewLendingModule(repository.NewLendingRepository(
 			dbService,

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/module/interface"
@@ -18,7 +18,7 @@ type StudentHandler struct {
 }
 
 // NewStudentHandler Return an instance of this handler.
-func NewStudentHandler(dbService *service.MySQLService) StudentHandler {
+func NewStudentHandler(dbService database.GORMServiceInterface) StudentHandler {
 	return StudentHandler{
 		Module: module.NewStudentModule(repository.NewStudentRepository(dbService)),
 	}

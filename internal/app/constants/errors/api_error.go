@@ -2,7 +2,6 @@ package errors
 
 // Default return login
 const (
-	// Messages
 	FailMessage                       = "Failed to fetch data"
 	CreateFailMessage                 = "Failed to create data"
 	UpdateFailMessage                 = "Failed to update data"
@@ -11,10 +10,14 @@ const (
 	FailedToConvertObj                = "Failed on object conversion"
 	FailedToCreateBookCategoryMessage = "Failed to create book category"
 
-	// Errors
-	ItemNotFoundError        = "item not found"
-	CategoryNotFoundError    = "category not found"
-	LendingNotAvailableError = "lending not available"
+	ItemNotFoundError                     = "item not found"
+	CategoryNotFoundError                 = "category not found"
+	LendingNotAvailableError              = "lending not available"
+	FailedToStoreAuthenticationKeyOnCache = "Failed to store authentication key on cache"
+	FailedToGetAuthenticationOnCache      = "Failed to get authentication on cache"
+	FailedToParseAuthenticationFromCache  = "Failed to parse authentication from cache"
+	FailedToMarshalAuthenticationOnCache  = "Failed to marshal authentication on cache"
+	FailedToDeleteAuthenticationOnCache   = "Failed to delete authentication on cache"
 )
 
 // ApiError will be used on API Errors

@@ -213,7 +213,8 @@ func (a Auth) RetrieveConsumerKey(consumerId, secret string) (*model.ConsumerKey
 	return &keys.Data[0], nil
 }
 
-func (a Auth) DeleteConsumer(concatUrl string) *errors.ApiError {
+func (a Auth) DeleteConsumer(consumerId, consumerKeyId string) *errors.ApiError {
+	concatUrl := consumerId + "/jwt/" + consumerKeyId
 	err := a.HttpRequest.DeleteRequest(concatUrl)
 	if err != nil {
 		logger.LogError(err)

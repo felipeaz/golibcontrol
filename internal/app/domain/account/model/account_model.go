@@ -8,7 +8,6 @@ import (
 type Account struct {
 	ID             uint      `json:"id" gorm:"primaryKey;autoIncrement;not null"`
 	ConsumerId     string    `json:"consumerId" gorm:"not null"`
-	ConsumerKeyId  string    `json:"consumerKeyId" gorm:"not null"`
 	Email          string    `json:"email" binding:"required" gorm:"unique"`
 	Password       string    `json:"password" binding:"required"`
 	FirstName      string    `json:"firstName"`

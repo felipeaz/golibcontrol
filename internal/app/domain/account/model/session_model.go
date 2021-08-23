@@ -1,6 +1,6 @@
 package model
 
 type UserSession struct {
-	UserId string `json:"userId" binding:"required"`
-	KeyId  string `json:"keyId" binding:"required"`
+	ConsumerId    string `json:"consumerId" binding:"required"`
+	ConsumerKeyId string `json:"consumerKeyId"`
 }

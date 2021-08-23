@@ -15,6 +15,9 @@ func main() {
 		os.Getenv("ACCOUNT_DB_PORT"),
 		os.Getenv("ACCOUNT_DB_DATABASE"),
 		os.Getenv("CONSUMERS_HOST"),
+		os.Getenv("REDIS_HOST"),
+		os.Getenv("REDIS_PORT"),
+		os.Getenv("REDIS_EXPIRE"),
 	)
 	if err != nil {
 		log.Println(err.Error())

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth"
-	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/pkg"
@@ -17,9 +17,9 @@ type AccountHandler struct {
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(dbService *service.MySQLService, auth auth.Auth) AccountHandler {
+func NewAccountHandler(dbService database.GORMServiceInterface, auth auth.Auth, cache database.CacheInterface) AccountHandler {
 	return AccountHandler{
-		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth),
+		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth, cache),
 	}
 }
 
