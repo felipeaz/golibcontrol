@@ -14,7 +14,7 @@ import (
 // CreateToken generates a JWT Token
 func CreateToken(email, kid, secret string) (string, *errors.ApiError) {
 	td := model.TokenDetails{
-		AtExpires:  time.Now().Add(time.Minute * 5).Unix(),
+		AtExpires:  time.Now().Add(time.Minute * 15).Unix(),
 		AccessUuid: uuid.NewV4().String(),
 	}
 
