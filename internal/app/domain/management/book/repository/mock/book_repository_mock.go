@@ -2,6 +2,7 @@ package mock
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -19,6 +20,7 @@ type BookRepositoryMock struct {
 func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError) {
 	if r.TestError {
 		return nil, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
@@ -43,6 +45,7 @@ func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError
 func (r BookRepositoryMock) Find(id string) (book model.Book, apiError *errors.ApiError) {
 	if r.TestFindError {
 		return model.Book{}, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
@@ -50,6 +53,7 @@ func (r BookRepositoryMock) Find(id string) (book model.Book, apiError *errors.A
 	} else if r.TestNotFoundError {
 
 		return model.Book{}, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
 			Error:   "book not found",
@@ -76,6 +80,7 @@ func (r BookRepositoryMock) Create(book model.Book) (uint, *errors.ApiError) {
 		return 0, apiError
 	} else if r.TestError {
 		return 0, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   "mocked error",
@@ -97,6 +102,7 @@ func (r BookRepositoryMock) Update(id string, upBook model.Book) *errors.ApiErro
 		return err
 	} else if r.TestError {
 		return &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   "mocked error",
@@ -116,6 +122,7 @@ func (r BookRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 	r.BeforeDelete(1)
 	if r.TestError {
 		return &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   "mocked error",
@@ -127,6 +134,7 @@ func (r BookRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 func (r BookRepositoryMock) BeforeCreate(categoriesId string) ([]uint, *errors.ApiError) {
 	if r.TestCategoryNotFoundError {
 		return []uint{}, &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusBadRequest,
 			Error:   "category with ID: 5 not found",
 			Message: errors.CreateFailMessage,
@@ -142,12 +150,14 @@ func (r BookRepositoryMock) AfterCreate(bookId uint, categoriesId []uint) {}
 func (r BookRepositoryMock) BeforeUpdate(bookId uint, categoriesId string) *errors.ApiError {
 	if r.TestBeforeUpdateNotFoundError {
 		return &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusNotFound,
 			Message: errors.UpdateFailMessage,
 			Error:   "book not found",
 		}
 	} else if r.TestCategoryNotFoundError {
 		return &errors.ApiError{
+			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusNotFound,
 			Message: errors.UpdateFailMessage,
 			Error:   "category with ID: 5 not found",

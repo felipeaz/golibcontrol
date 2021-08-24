@@ -1,8 +1,6 @@
 package _interface
 
 import (
-	"net/http"
-
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
@@ -10,8 +8,7 @@ import (
 
 type AccountModuleInterface interface {
 	Login(credentials model.Account) login.Message
-	StoreAuthUser(account model.Account) login.Message
-	Logout(r *http.Request) (message login.Message)
+	Logout(session model.UserSession) (message login.Message)
 	Get() ([]model.Account, *errors.ApiError)
 	Find(id string) (model.Account, *errors.ApiError)
 	Create(account model.Account) (uint, *errors.ApiError)

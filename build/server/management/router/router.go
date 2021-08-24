@@ -2,9 +2,7 @@ package router
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/management/router/build"
-	"github.com/FelipeAz/golibcontrol/infra/jwt"
-	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
-	"github.com/FelipeAz/golibcontrol/infra/redis"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/handler"
 	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/handler"
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/handler"
@@ -14,30 +12,28 @@ import (
 )
 
 // Run Starts the server
-func Run(dbService *service.MySQLService, cache *redis.Cache) error {
-	return buildRoutes(dbService, cache)
+func Run(dbService database.GORMServiceInterface) error {
+	return buildRoutes(dbService)
 }
 
-func buildRoutes(dbService *service.MySQLService, cache *redis.Cache) error {
+func buildRoutes(dbService database.GORMServiceInterface) error {
 	router := gin.Default()
 	router.Use(middleware.CORSMiddleware())
-	jwtAuth := jwt.NewAuth(cache)
-	tokenAuthMiddleware := middleware.NewTokenMiddleware(jwtAuth)
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
 	bHandler := bookHandler.NewBookHandler(dbService)
-	build.BookRoutes(tokenAuthMiddleware, vGroup, bHandler)
+	build.BookRoutes(vGroup, bHandler)
 
 	cHandler := categoryHandler.NewCategoryHandler(dbService)
-	build.CategoryRoutes(tokenAuthMiddleware, vGroup, cHandler)
+	build.CategoryRoutes(vGroup, cHandler)
 
 	sHandler := studentHandler.NewStudentHandler(dbService)
-	build.StudentRoutes(tokenAuthMiddleware, vGroup, sHandler)
+	build.StudentRoutes(vGroup, sHandler)
 
 	lHandler := lendingHandler.NewLendingHandler(dbService)
-	build.LendingRoutes(tokenAuthMiddleware, vGroup, lHandler)
+	build.LendingRoutes(vGroup, lHandler)
 
 	return router.Run(":8081")
 }
