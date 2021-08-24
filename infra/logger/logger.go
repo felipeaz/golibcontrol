@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/logs"
+	"github.com/FelipeAz/golibcontrol/infra/logger/model"
 )
 
 func getLogFile(path string) (f *os.File) {
@@ -42,7 +42,7 @@ func LogError(err error) {
 	f := getLogFile(os.Getenv("LOG_FILE"))
 	defer f.Close()
 
-	errorLog := logs.Log{
+	errorLog := model.Log{
 		Time:    time.Now(),
 		Message: err.Error(),
 	}

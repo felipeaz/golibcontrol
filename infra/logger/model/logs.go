@@ -1,4 +1,4 @@
-package logs
+package model
 
 import (
 	"time"

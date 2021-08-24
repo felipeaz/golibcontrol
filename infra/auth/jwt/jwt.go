@@ -1,18 +1,15 @@
 package jwt
 
 import (
-	"net/http"
 	"time"
 
-	authErrors "github.com/FelipeAz/golibcontrol/infra/auth/errors"
 	"github.com/FelipeAz/golibcontrol/infra/auth/jwt/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
 )
 
 // CreateToken generates a JWT Token
-func CreateToken(email, kid, secret string) (string, *errors.ApiError) {
+func CreateToken(email, kid, secret string) (string, error) {
 	td := model.TokenDetails{
 		AtExpires:  time.Now().Add(time.Minute * 15).Unix(),
 		AccessUuid: uuid.NewV4().String(),
@@ -30,11 +27,7 @@ func CreateToken(email, kid, secret string) (string, *errors.ApiError) {
 
 	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
-		return "", &errors.ApiError{
-			Status:  http.StatusInternalServerError,
-			Message: authErrors.JWTTokenCreationFailMessage,
-			Error:   err.Error(),
-		}
+		return "", err
 	}
 
 	return tokenString, nil

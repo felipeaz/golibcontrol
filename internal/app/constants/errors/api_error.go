@@ -18,6 +18,9 @@ const (
 	FailedToParseAuthenticationFromCache  = "Failed to parse authentication from cache"
 	FailedToMarshalAuthenticationOnCache  = "Failed to marshal authentication on cache"
 	FailedToDeleteAuthenticationOnCache   = "Failed to delete authentication on cache"
+	FailedToCreateConsumer                = "Failed to create consumer"
+	FailedToDeleteConsumer                = "Failed to delete consumer"
+	FailedToRetrieveConsumerKey           = "Failed to retrieve consumer"
 )
 
 // ApiError will be used on API Errors
