@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/management/router/build"
-	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/handler"
 	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/handler"
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/handler"
@@ -12,11 +12,11 @@ import (
 )
 
 // Run Starts the server
-func Run(dbService *service.MySQLService) error {
+func Run(dbService database.GORMServiceInterface) error {
 	return buildRoutes(dbService)
 }
 
-func buildRoutes(dbService *service.MySQLService) error {
+func buildRoutes(dbService database.GORMServiceInterface) error {
 	router := gin.Default()
 	router.Use(middleware.CORSMiddleware())
 

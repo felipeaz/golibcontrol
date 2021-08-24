@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/FelipeAz/golibcontrol/infra/auth"
 	"github.com/FelipeAz/golibcontrol/infra/auth/jwt"
+	"github.com/FelipeAz/golibcontrol/internal/app/auth"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
@@ -17,11 +17,11 @@ import (
 
 type AccountModule struct {
 	Repository _interface.AccountRepositoryInterface
-	Auth       auth.Auth
+	Auth       auth.AuthInterface
 	Cache      databaseInterface.CacheInterface
 }
 
-func NewAccountModule(repo _interface.AccountRepositoryInterface, auth auth.Auth, cache databaseInterface.CacheInterface) AccountModule {
+func NewAccountModule(repo _interface.AccountRepositoryInterface, auth auth.AuthInterface, cache databaseInterface.CacheInterface) AccountModule {
 	return AccountModule{
 		Repository: repo,
 		Auth:       auth,
