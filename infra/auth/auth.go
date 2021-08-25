@@ -3,23 +3,23 @@ package auth
 import (
 	"encoding/json"
 
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/request/interface"
+	"github.com/FelipeAz/golibcontrol/infra/auth/http/interface"
 	"github.com/FelipeAz/golibcontrol/infra/auth/model"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 )
 
 type Auth struct {
-	HttpRequest _interface.HTTPRequestInterface
+	HTTPRequest _interface.HTTPRequestInterface
 }
 
 func NewAuth(httpRequest _interface.HTTPRequestInterface) Auth {
 	return Auth{
-		HttpRequest: httpRequest,
+		HTTPRequest: httpRequest,
 	}
 }
 
 func (a Auth) GetConsumer(consumerId string) (string, error) {
-	b, err := a.HttpRequest.GetRequest(consumerId)
+	b, err := a.HTTPRequest.Get(consumerId)
 	if err != nil {
 		logger.LogError(err)
 		return "", err
@@ -42,7 +42,7 @@ func (a Auth) CreateConsumer(username string) (*model.Consumer, error) {
 		return nil, err
 	}
 
-	b, err := a.HttpRequest.PostRequest("", body)
+	b, err := a.HTTPRequest.Post("", body)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -65,7 +65,7 @@ func (a Auth) CreateConsumerKey(consumerId, secret string) (*model.ConsumerKey, 
 	var consumerKey *model.ConsumerKey
 	concatUrl := consumerId + "/jwt"
 
-	err := a.HttpRequest.DeleteRequest(concatUrl)
+	err := a.HTTPRequest.Delete(concatUrl)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -78,7 +78,7 @@ func (a Auth) CreateConsumerKey(consumerId, secret string) (*model.ConsumerKey, 
 		return nil, err
 	}
 
-	b, err := a.HttpRequest.PostRequest(concatUrl, bodyBytes)
+	b, err := a.HTTPRequest.Post(concatUrl, bodyBytes)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -100,7 +100,7 @@ func (a Auth) CreateConsumerKey(consumerId, secret string) (*model.ConsumerKey, 
 func (a Auth) GetConsumerKey(consumerId, keyId string) (*model.ConsumerKey, error) {
 	concatUrl := consumerId + "/jwt/" + keyId
 
-	b, err := a.HttpRequest.GetRequest(concatUrl)
+	b, err := a.HTTPRequest.Get(concatUrl)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -119,7 +119,7 @@ func (a Auth) GetConsumerKey(consumerId, keyId string) (*model.ConsumerKey, erro
 func (a Auth) GetAllConsumerKeys(consumerId string) (*model.Keys, error) {
 	concatUrl := consumerId + "/jwt/"
 
-	b, err := a.HttpRequest.GetRequest(concatUrl)
+	b, err := a.HTTPRequest.Get(concatUrl)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -153,9 +153,18 @@ func (a Auth) RetrieveConsumerKey(consumerId, secret string) (*model.ConsumerKey
 	return &keys.Data[0], nil
 }
 
-func (a Auth) DeleteConsumer(consumerId, consumerKeyId string) error {
+func (a Auth) DeleteConsumerKey(consumerId, consumerKeyId string) error {
 	concatUrl := consumerId + "/jwt/" + consumerKeyId
-	err := a.HttpRequest.DeleteRequest(concatUrl)
+	err := a.HTTPRequest.Delete(concatUrl)
+	if err != nil {
+		logger.LogError(err)
+		return err
+	}
+	return nil
+}
+
+func (a Auth) DeleteConsumer(consumerId string) error {
+	err := a.HTTPRequest.Delete(consumerId)
 	if err != nil {
 		logger.LogError(err)
 		return err

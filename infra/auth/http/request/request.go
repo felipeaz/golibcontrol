@@ -5,21 +5,30 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	_interface "github.com/FelipeAz/golibcontrol/infra/auth/http/interface"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 )
 
 type HttpRequest struct {
-	Host string
+	Client _interface.HTTPClientInterface
+	Host   string
 }
 
-func NewHttpRequest(host string) HttpRequest {
+func NewHttpRequest(client _interface.HTTPClientInterface, host string) HttpRequest {
 	return HttpRequest{
-		Host: host,
+		Client: client,
+		Host:   host,
 	}
 }
 
-func (h HttpRequest) GetRequest(id string) ([]byte, error) {
-	resp, err := http.Get(h.Host + id)
+func (h HttpRequest) Get(id string) ([]byte, error) {
+	req, err := http.NewRequest("GET", h.Host+id, nil)
+	if err != nil {
+		logger.LogError(err)
+		return nil, err
+	}
+
+	resp, err := h.Client.Do(req)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -34,9 +43,15 @@ func (h HttpRequest) GetRequest(id string) ([]byte, error) {
 	return b, nil
 }
 
-func (h HttpRequest) PostRequest(route string, body []byte) ([]byte, error) {
-	respBody := bytes.NewBuffer(body)
-	resp, err := http.Post(h.Host+route, "application/json", respBody)
+func (h HttpRequest) Post(route string, body []byte) ([]byte, error) {
+	req, err := http.NewRequest("POST", h.Host+route, bytes.NewBuffer(body))
+	if err != nil {
+		logger.LogError(err)
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := h.Client.Do(req)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -51,18 +66,16 @@ func (h HttpRequest) PostRequest(route string, body []byte) ([]byte, error) {
 	return b, nil
 }
 
-func (h HttpRequest) PostRequestWithHeader(route string, body []byte, headerName, headerValue string) ([]byte, error) {
-	respBody := bytes.NewBuffer(body)
-
-	req, err := http.NewRequest("POST", h.Host+route, respBody)
+func (h HttpRequest) PostWithHeader(route string, body []byte, headerName, headerValue string) ([]byte, error) {
+	req, err := http.NewRequest("POST", h.Host+route, bytes.NewBuffer(body))
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set(headerName, headerValue)
-
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := h.Client.Do(req)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -77,7 +90,7 @@ func (h HttpRequest) PostRequestWithHeader(route string, body []byte, headerName
 	return b, nil
 }
 
-func (h HttpRequest) PostRequestWithoutBody(route string) ([]byte, error) {
+func (h HttpRequest) PostWithoutBody(route string) ([]byte, error) {
 	req, err := http.NewRequest("POST", h.Host+route, nil)
 	if err != nil {
 		logger.LogError(err)
@@ -99,7 +112,7 @@ func (h HttpRequest) PostRequestWithoutBody(route string) ([]byte, error) {
 	return b, nil
 }
 
-func (h HttpRequest) DeleteRequest(route string) error {
+func (h HttpRequest) Delete(route string) error {
 	req, err := http.NewRequest("DELETE", h.Host+route, nil)
 	if err != nil {
 		logger.LogError(err)

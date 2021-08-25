@@ -81,7 +81,7 @@ func (m AccountModule) Logout(session model.UserSession) (message login.Message)
 		consumerKeyId = userAuth.ConsumerKeyId
 	}
 
-	err = m.Auth.DeleteConsumer(session.ConsumerId, consumerKeyId)
+	err = m.Auth.DeleteConsumerKey(session.ConsumerId, consumerKeyId)
 	if err != nil {
 		return login.Message{
 			Status: http.StatusInternalServerError,
@@ -142,7 +142,7 @@ func (m AccountModule) Delete(id string) *errors.ApiError {
 		return apiError
 	}
 
-	err := m.Auth.DeleteConsumer(user.ConsumerId, "")
+	err := m.Auth.DeleteConsumer(user.ConsumerId)
 	if err != nil {
 		return &errors.ApiError{
 			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),

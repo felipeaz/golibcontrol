@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -68,8 +69,8 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 		}
 	}
 
-	req := request.NewHttpRequest(host)
-	b, err := req.PostRequestWithHeader(route, body, tokenName, tokenValue)
+	req := request.NewHttpRequest(client.NewHTTPClient(), host)
+	b, err := req.PostWithHeader(route, body, tokenName, tokenValue)
 	if err != nil {
 		logger.LogError(err)
 		return 0, &errors.ApiError{

@@ -5,6 +5,7 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/build/server/account/router"
 	"github.com/FelipeAz/golibcontrol/infra/auth"
+	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/account/database"
@@ -29,6 +30,6 @@ func Start(user, password, host, port, databaseName, consumersHost, cacheHost, c
 
 	cache := redis.NewCache(cacheHost, cachePort, cacheExpireTime)
 
-	apiGatewayAuth := auth.NewAuth(request.NewHttpRequest(consumersHost))
+	apiGatewayAuth := auth.NewAuth(request.NewHttpRequest(client.NewHTTPClient(), consumersHost))
 	return router.Run(dbService, apiGatewayAuth, cache)
 }

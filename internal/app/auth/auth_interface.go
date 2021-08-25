@@ -11,5 +11,6 @@ type AuthInterface interface {
 	GetConsumerKey(consumerId, keyId string) (*model.ConsumerKey, error)
 	GetAllConsumerKeys(consumerId string) (*model.Keys, error)
 	RetrieveConsumerKey(consumerId, secret string) (*model.ConsumerKey, error)
-	DeleteConsumer(consumerId, consumerKeyId string) error
+	DeleteConsumerKey(consumerId, consumerKeyId string) error
+	DeleteConsumer(consumerId string) error
 }
