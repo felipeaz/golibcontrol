@@ -27,7 +27,7 @@ func NewCache(host, port, expire string) *Cache {
 // Connect initialize the cache.
 func (c *Cache) connect() (redis.Conn, error) {
 	h := fmt.Sprintf("%s:%s", c.Host, c.Port)
-	fmt.Println("HERE - ", h)
+
 	conn, err := redis.Dial("tcp", h)
 	if err != nil {
 		logger.LogError(err)
@@ -47,7 +47,7 @@ func (c *Cache) Set(key string, value []byte) error {
 		return err
 	}
 	defer conn.Close()
-	fmt.Println("hereeeeeeeee")
+
 	_, err = conn.Do("SET", key, value)
 	if err != nil {
 		logger.LogError(err)
@@ -62,7 +62,6 @@ func (c *Cache) Set(key string, value []byte) error {
 		return err
 	}
 
-	fmt.Println("stored")
 	return nil
 }
 
