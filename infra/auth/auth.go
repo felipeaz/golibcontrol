@@ -3,9 +3,9 @@ package auth
 import (
 	"encoding/json"
 
+	"github.com/FelipeAz/golibcontrol/infra/auth/http/request/interface"
 	"github.com/FelipeAz/golibcontrol/infra/auth/model"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
-	"github.com/FelipeAz/golibcontrol/internal/pkg/http/request/interface"
 )
 
 type Auth struct {

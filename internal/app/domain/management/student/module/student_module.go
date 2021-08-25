@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	studentErrors "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model/converter"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository/interface"
-	"github.com/FelipeAz/golibcontrol/internal/pkg/http/request"
 )
 
 // StudentModule process the request recieved from handler.
@@ -56,8 +56,6 @@ func (m StudentModule) Delete(id string) *errors.ApiError {
 }
 
 func (m StudentModule) createAccountOnAccountService(student model.Student, host, route, tokenName, tokenValue string) (uint, *errors.ApiError) {
-	var resp model.AccountResponse
-	req := request.NewHttpRequest(host)
 	studentBody := converter.ConvertStudentToStudentAccount(student)
 	body, err := json.Marshal(studentBody)
 	if err != nil {
@@ -70,6 +68,7 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 		}
 	}
 
+	req := request.NewHttpRequest(host)
 	b, err := req.PostRequestWithHeader(route, body, tokenName, tokenValue)
 	if err != nil {
 		logger.LogError(err)
@@ -81,6 +80,7 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 		}
 	}
 
+	var resp model.AccountResponse
 	err = json.Unmarshal(b, &resp)
 	if err != nil {
 		logger.LogError(err)

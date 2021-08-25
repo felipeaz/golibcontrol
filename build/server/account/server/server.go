@@ -5,11 +5,11 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/build/server/account/router"
 	"github.com/FelipeAz/golibcontrol/infra/auth"
+	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/account/database"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/infra/redis"
-	"github.com/FelipeAz/golibcontrol/internal/pkg/http/request"
 )
 
 // Start initialize the webservice,
