@@ -5,7 +5,6 @@ import (
 )
 
 type AuthInterface interface {
-	GetConsumer(consumerId string) (string, error)
 	CreateConsumer(username string) (*model.Consumer, error)
 	CreateConsumerKey(consumerId, secret string) (*model.ConsumerKey, error)
 	GetConsumerKey(consumerId, keyId string) (*model.ConsumerKey, error)

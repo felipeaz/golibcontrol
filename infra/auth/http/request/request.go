@@ -10,19 +10,19 @@ import (
 )
 
 type HttpRequest struct {
-	Client _interface.HTTPClientInterface
-	Host   string
+	Client  _interface.HTTPClientInterface
+	BaseUrl string
 }
 
-func NewHttpRequest(client _interface.HTTPClientInterface, host string) HttpRequest {
+func NewHttpRequest(client _interface.HTTPClientInterface, baseUrl string) HttpRequest {
 	return HttpRequest{
-		Client: client,
-		Host:   host,
+		Client:  client,
+		BaseUrl: baseUrl,
 	}
 }
 
 func (h HttpRequest) Get(id string) ([]byte, error) {
-	req, err := http.NewRequest("GET", h.Host+id, nil)
+	req, err := http.NewRequest("GET", h.BaseUrl+id, nil)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -44,7 +44,7 @@ func (h HttpRequest) Get(id string) ([]byte, error) {
 }
 
 func (h HttpRequest) Post(route string, body []byte) ([]byte, error) {
-	req, err := http.NewRequest("POST", h.Host+route, bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", h.BaseUrl+route, bytes.NewBuffer(body))
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -67,7 +67,7 @@ func (h HttpRequest) Post(route string, body []byte) ([]byte, error) {
 }
 
 func (h HttpRequest) PostWithHeader(route string, body []byte, headerName, headerValue string) ([]byte, error) {
-	req, err := http.NewRequest("POST", h.Host+route, bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", h.BaseUrl+route, bytes.NewBuffer(body))
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -91,7 +91,7 @@ func (h HttpRequest) PostWithHeader(route string, body []byte, headerName, heade
 }
 
 func (h HttpRequest) PostWithoutBody(route string) ([]byte, error) {
-	req, err := http.NewRequest("POST", h.Host+route, nil)
+	req, err := http.NewRequest("POST", h.BaseUrl+route, nil)
 	if err != nil {
 		logger.LogError(err)
 		return nil, err
@@ -113,7 +113,7 @@ func (h HttpRequest) PostWithoutBody(route string) ([]byte, error) {
 }
 
 func (h HttpRequest) Delete(route string) error {
-	req, err := http.NewRequest("DELETE", h.Host+route, nil)
+	req, err := http.NewRequest("DELETE", h.BaseUrl+route, nil)
 	if err != nil {
 		logger.LogError(err)
 		return err

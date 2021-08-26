@@ -18,22 +18,6 @@ func NewAuth(httpRequest _interface.HTTPRequestInterface) Auth {
 	}
 }
 
-func (a Auth) GetConsumer(consumerId string) (string, error) {
-	b, err := a.HTTPRequest.Get(consumerId)
-	if err != nil {
-		logger.LogError(err)
-		return "", err
-	}
-	var consumer model.Consumer
-	err = json.Unmarshal(b, &consumer)
-	if err != nil {
-		logger.LogError(err)
-		return "", err
-	}
-
-	return consumer.Id, nil
-}
-
 func (a Auth) CreateConsumer(username string) (*model.Consumer, error) {
 	var consumer *model.Consumer
 	body, err := json.Marshal(model.Consumer{Username: username})
