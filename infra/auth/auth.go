@@ -19,7 +19,6 @@ func NewAuth(httpRequest _interface.HTTPRequestInterface) Auth {
 }
 
 func (a Auth) CreateConsumer(username string) (*model.Consumer, error) {
-	var consumer *model.Consumer
 	body, err := json.Marshal(model.Consumer{Username: username})
 	if err != nil {
 		logger.LogError(err)
@@ -32,13 +31,10 @@ func (a Auth) CreateConsumer(username string) (*model.Consumer, error) {
 		return nil, err
 	}
 
+	var consumer *model.Consumer
 	err = json.Unmarshal(b, &consumer)
 	if err != nil {
 		logger.LogError(err)
-		return nil, err
-	}
-
-	if consumer == nil {
 		return nil, err
 	}
 
@@ -46,9 +42,7 @@ func (a Auth) CreateConsumer(username string) (*model.Consumer, error) {
 }
 
 func (a Auth) CreateConsumerKey(consumerId, secret string) (*model.ConsumerKey, error) {
-	var consumerKey *model.ConsumerKey
 	concatUrl := consumerId + "/jwt"
-
 	err := a.HTTPRequest.Delete(concatUrl)
 	if err != nil {
 		logger.LogError(err)
@@ -68,13 +62,10 @@ func (a Auth) CreateConsumerKey(consumerId, secret string) (*model.ConsumerKey, 
 		return nil, err
 	}
 
+	var consumerKey *model.ConsumerKey
 	err = json.Unmarshal(b, &consumerKey)
 	if err != nil {
 		logger.LogError(err)
-		return nil, err
-	}
-
-	if consumerKey == nil {
 		return nil, err
 	}
 
