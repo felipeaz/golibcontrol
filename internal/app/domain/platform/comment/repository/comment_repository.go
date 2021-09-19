@@ -9,6 +9,10 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model/converter"
 )
 
+const (
+	ServiceName = "PlatformService"
+)
+
 type CommentRepository struct {
 	DB database.GORMServiceInterface
 }
