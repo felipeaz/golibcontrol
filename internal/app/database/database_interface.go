@@ -1,17 +1,13 @@
 package database
 
-import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-)
-
 type GORMServiceInterface interface {
-	FetchAll(domainObj interface{}) (interface{}, *errors.ApiError)
-	FetchAllWithPreload(domainObj interface{}, preload string) (interface{}, *errors.ApiError)
-	Fetch(domainObj interface{}, id string) (interface{}, *errors.ApiError)
-	FetchWithPreload(domainObj interface{}, id, preload string) (interface{}, *errors.ApiError)
-	FetchAllWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, *errors.ApiError)
-	FetchAllWhereWithQuery(domainObj interface{}, query string) (interface{}, *errors.ApiError)
-	Persist(domainObj interface{}) *errors.ApiError
-	Refresh(domainObj interface{}, id string) *errors.ApiError
-	Remove(domainObj interface{}, id string) *errors.ApiError
+	FetchAll(domainObj interface{}) (interface{}, error)
+	FetchAllWithPreload(domainObj interface{}, preload string) (interface{}, error)
+	Fetch(domainObj interface{}, id string) (interface{}, error)
+	FetchWithPreload(domainObj interface{}, id, preload string) (interface{}, error)
+	FetchAllWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, error)
+	FetchAllWhereWithQuery(domainObj interface{}, query string) (interface{}, error)
+	Persist(domainObj interface{}) error
+	Refresh(domainObj interface{}, id string) error
+	Remove(domainObj interface{}, id string) error
 }

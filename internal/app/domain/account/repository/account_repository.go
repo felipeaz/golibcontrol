@@ -1,10 +1,16 @@
 package repository
 
 import (
+	"net/http"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model/converter"
+)
+
+const (
+	ServiceName = "AccountService"
 )
 
 type AccountRepository struct {
@@ -19,9 +25,14 @@ func NewAccountRepository(dbService database.GORMServiceInterface) AccountReposi
 
 // Get returns all accounts.
 func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
-	result, apiError := r.DB.FetchAll(&[]model.Account{})
-	if apiError != nil {
-		return nil, apiError
+	result, err := r.DB.FetchAll(&[]model.Account{})
+	if err != nil {
+		return nil, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	accounts, apiError := converter.ConvertToSliceAccountObj(result)
 	if apiError != nil {
@@ -32,9 +43,14 @@ func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
 
 // Find return one user by ID.
 func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
-	result, apiError := r.DB.Fetch(&model.Account{}, id)
-	if apiError != nil {
-		return model.Account{}, apiError
+	result, err := r.DB.Fetch(&model.Account{}, id)
+	if err != nil {
+		return model.Account{}, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	account, apiError := converter.ConvertToAccountObj(result)
 	if apiError != nil {
@@ -45,9 +61,14 @@ func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
 
 // FindWhere user by field and value.
 func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Account, *errors.ApiError) {
-	result, apiError := r.DB.FetchAllWhere(&model.Account{}, fieldName, fieldValue)
-	if apiError != nil {
-		return model.Account{}, apiError
+	result, err := r.DB.FetchAllWhere(&model.Account{}, fieldName, fieldValue)
+	if err != nil {
+		return model.Account{}, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	account, apiError := converter.ConvertToAccountObj(result)
 	if apiError != nil {
@@ -58,19 +79,42 @@ func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Accoun
 
 // Create creates an user
 func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError) {
-	apiError := r.DB.Persist(&account)
-	if apiError != nil {
-		return 0, apiError
+	err := r.DB.Persist(&account)
+	if err != nil {
+		return 0, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 	return account.ID, nil
 }
 
 // Update update an existent user.
 func (r AccountRepository) Update(id string, upAccount model.Account) *errors.ApiError {
-	return r.DB.Refresh(&upAccount, id)
+	err := r.DB.Refresh(&upAccount, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }
 
 // Delete delete an existent user by id.
 func (r AccountRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Remove(&model.Account{}, id)
+	err := r.DB.Remove(&model.Account{}, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }

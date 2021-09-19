@@ -1,10 +1,16 @@
 package repository
 
 import (
+	"net/http"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model/converter"
+)
+
+const (
+	ServiceName = "ManagementService"
 )
 
 // CategoryRepository is responsible of getting/saving information from DB.
@@ -20,9 +26,14 @@ func NewCategoryRepository(db database.GORMServiceInterface) CategoryRepository 
 
 // Get returns all categories.
 func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
-	result, apiError := r.DB.FetchAll(&[]model.Category{})
-	if apiError != nil {
-		return nil, apiError
+	result, err := r.DB.FetchAll(&[]model.Category{})
+	if err != nil {
+		return nil, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	categories, apiError := converter.ConvertToSliceCategoryObj(result)
 	if apiError != nil {
@@ -33,9 +44,14 @@ func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
 
 // Find return one category from DB by ID.
 func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
-	result, apiError := r.DB.Fetch(&model.Category{}, id)
-	if apiError != nil {
-		return model.Category{}, apiError
+	result, err := r.DB.Fetch(&model.Category{}, id)
+	if err != nil {
+		return model.Category{}, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	category, apiError := converter.ConvertToCategoryObj(result)
@@ -48,19 +64,42 @@ func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
 
 // Create persist a category to the DB.
 func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiError) {
-	apiError := r.DB.Persist(&category)
-	if apiError != nil {
-		return 0, apiError
+	err := r.DB.Persist(&category)
+	if err != nil {
+		return 0, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 	return category.ID, nil
 }
 
 // Update update an existent category.
 func (r CategoryRepository) Update(id string, upCategory model.Category) *errors.ApiError {
-	return r.DB.Refresh(&upCategory, id)
+	err := r.DB.Refresh(&upCategory, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }
 
 // Delete delete an existent category from DB.
 func (r CategoryRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Remove(&model.Category{}, id)
+	err := r.DB.Remove(&model.Category{}, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }

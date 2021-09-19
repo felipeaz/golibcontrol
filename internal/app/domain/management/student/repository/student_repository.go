@@ -1,10 +1,16 @@
 package repository
 
 import (
+	"net/http"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model/converter"
+)
+
+const (
+	ServiceName = "ManagementService"
 )
 
 // StudentRepository is responsible of getting/saving information from DB.
@@ -20,9 +26,14 @@ func NewStudentRepository(db database.GORMServiceInterface) StudentRepository {
 
 // Get returns all students.
 func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
-	result, apiError := r.DB.FetchAll(&[]model.Student{})
-	if apiError != nil {
-		return nil, apiError
+	result, err := r.DB.FetchAll(&[]model.Student{})
+	if err != nil {
+		return nil, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	students, apiError := converter.ConvertToSliceStudentObj(result)
 	if apiError != nil {
@@ -33,9 +44,14 @@ func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
 
 // Find return one student from DB by ID.
 func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
-	result, apiError := r.DB.Fetch(&model.Student{}, id)
-	if apiError != nil {
-		return model.Student{}, apiError
+	result, err := r.DB.Fetch(&model.Student{}, id)
+	if err != nil {
+		return model.Student{}, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	student, apiError := converter.ConvertToStudentObj(result)
@@ -48,9 +64,14 @@ func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
 
 // Create persist a student to the DB.
 func (r StudentRepository) Create(student model.Student) (string, *errors.ApiError) {
-	apiError := r.DB.Persist(&student)
-	if apiError != nil {
-		return "", apiError
+	err := r.DB.Persist(&student)
+	if err != nil {
+		return "", &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	return student.ID, nil
@@ -58,11 +79,28 @@ func (r StudentRepository) Create(student model.Student) (string, *errors.ApiErr
 
 // Update update an existent student.
 func (r StudentRepository) Update(id string, upStudent model.Student) *errors.ApiError {
-	return r.DB.Refresh(&upStudent, id)
+	err := r.DB.Refresh(&upStudent, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }
 
 // Delete delete an existent student from DB.
 func (r StudentRepository) Delete(id string) *errors.ApiError {
-	apiError := r.DB.Remove(&model.Student{}, id)
-	return apiError
+	err := r.DB.Remove(&model.Student{}, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"net/http"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
@@ -18,9 +20,14 @@ func NewCommentRepository(db database.GORMServiceInterface) CommentRepository {
 }
 
 func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError) {
-	result, apiError := r.DB.FetchAllWhere(&[]model.Comment{}, "book_id", bookId)
-	if apiError != nil {
-		return nil, apiError
+	result, err := r.DB.FetchAllWhere(&[]model.Comment{}, "book_id", bookId)
+	if err != nil {
+		return nil, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	comments, apiError := converter.ConvertToSliceCommentObj(result)
 	if apiError != nil {
@@ -30,9 +37,14 @@ func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError
 }
 
 func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
-	result, apiError := r.DB.Fetch(&model.Comment{}, id)
-	if apiError != nil {
-		return model.Comment{}, apiError
+	result, err := r.DB.Fetch(&model.Comment{}, id)
+	if err != nil {
+		return model.Comment{}, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	comment, apiError := converter.ConvertToCommentObj(result)
 	if apiError != nil {
@@ -42,17 +54,40 @@ func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
 }
 
 func (r CommentRepository) Create(comment model.Comment) (uint, *errors.ApiError) {
-	apiError := r.DB.Persist(&comment)
-	if apiError != nil {
-		return 0, apiError
+	err := r.DB.Persist(&comment)
+	if err != nil {
+		return 0, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 	return comment.ID, nil
 }
 
 func (r CommentRepository) Update(id string, upComment model.Comment) *errors.ApiError {
-	return r.DB.Refresh(&upComment, id)
+	err := r.DB.Refresh(&upComment, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }
 
 func (r CommentRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Remove(&model.Comment{}, id)
+	err := r.DB.Remove(&model.Comment{}, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }

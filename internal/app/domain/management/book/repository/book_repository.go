@@ -1,12 +1,18 @@
 package repository
 
 import (
+	"net/http"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model/converter"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
+)
+
+const (
+	ServiceName = "ManagementService"
 )
 
 // BookRepository is responsible of getting/saving information from DB.
@@ -24,9 +30,14 @@ func NewBookRepository(db database.GORMServiceInterface, repo _interface.BookCat
 
 // Get returns all books from DB.
 func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
-	result, apiError := r.DB.FetchAllWithPreload(&[]model.Book{}, "BookCategory")
-	if apiError != nil {
-		return nil, apiError
+	result, err := r.DB.FetchAllWithPreload(&[]model.Book{}, "BookCategory")
+	if err != nil {
+		return nil, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	books, apiError := converter.ConvertToSliceBookObj(result)
 	if apiError != nil {
@@ -37,9 +48,14 @@ func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
 
 // Find return one book from DB by ID.
 func (r BookRepository) Find(id string) (model.Book, *errors.ApiError) {
-	result, apiError := r.DB.FetchWithPreload(&model.Book{}, id, "BookCategory")
-	if apiError != nil {
-		return model.Book{}, apiError
+	result, err := r.DB.FetchWithPreload(&model.Book{}, id, "BookCategory")
+	if err != nil {
+		return model.Book{}, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	book, apiError := converter.ConvertToBookObj(result)
 	if apiError != nil {
@@ -59,9 +75,14 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 		return 0, apiError
 	}
 
-	apiError = r.DB.Persist(&book)
-	if apiError != nil {
-		return 0, apiError
+	err := r.DB.Persist(&book)
+	if err != nil {
+		return 0, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 
 	r.AfterCreate(book.ID, categoriesIds)
@@ -80,17 +101,35 @@ func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
 		apiError.Message = errors.UpdateFailMessage
 		return apiError
 	}
-	return r.DB.Refresh(&upBook, id)
+	err := r.DB.Refresh(&upBook, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }
 
 // Delete delete an existent book from DB.
 func (r BookRepository) Delete(id string) *errors.ApiError {
-	parsedId, err := pkg.ParseStringToId(id)
-	if err != nil {
-		return err
+	parsedId, apiError := pkg.ParseStringToId(id)
+	if apiError != nil {
+		return apiError
 	}
 	r.BeforeDelete(parsedId)
-	return r.DB.Remove(&model.Book{}, id)
+	err := r.DB.Remove(&model.Book{}, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }
 
 // BeforeCreate validate if the request categories exists

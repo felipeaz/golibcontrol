@@ -12,6 +12,8 @@ const (
 
 	ItemNotFoundError                     = "item not found"
 	CategoryNotFoundError                 = "category not found"
+	BookNotFoundError                     = "book not found"
+	StudentNotFoundError                  = "student not found"
 	LendingNotAvailableError              = "lending not available"
 	FailedToStoreAuthenticationKeyOnCache = "Failed to store authentication key on cache"
 	FailedToGetAuthenticationOnCache      = "Failed to get authentication on cache"

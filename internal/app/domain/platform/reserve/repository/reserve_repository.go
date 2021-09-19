@@ -1,10 +1,16 @@
 package repository
 
 import (
+	"net/http"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model/converter"
+)
+
+const (
+	ServiceName = "PlatformService"
 )
 
 type ReserveRepository struct {
@@ -18,9 +24,14 @@ func NewReserveRepository(db database.GORMServiceInterface) ReserveRepository {
 }
 
 func (r ReserveRepository) Get(bookId string) ([]model.Reserve, *errors.ApiError) {
-	result, apiError := r.DB.FetchAllWhere(&[]model.Reserve{}, "book_id", bookId)
-	if apiError != nil {
-		return nil, apiError
+	result, err := r.DB.FetchAllWhere(&[]model.Reserve{}, "book_id", bookId)
+	if err != nil {
+		return nil, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	reserve, apiError := converter.ConvertToSliceReserveObj(result)
 	if apiError != nil {
@@ -30,9 +41,14 @@ func (r ReserveRepository) Get(bookId string) ([]model.Reserve, *errors.ApiError
 }
 
 func (r ReserveRepository) Find(id string) (model.Reserve, *errors.ApiError) {
-	result, apiError := r.DB.Fetch(&model.Reserve{}, id)
-	if apiError != nil {
-		return model.Reserve{}, apiError
+	result, err := r.DB.Fetch(&model.Reserve{}, id)
+	if err != nil {
+		return model.Reserve{}, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
 	reserve, apiError := converter.ConvertToReserveObj(result)
 	if apiError != nil {
@@ -42,17 +58,40 @@ func (r ReserveRepository) Find(id string) (model.Reserve, *errors.ApiError) {
 }
 
 func (r ReserveRepository) Create(reserve model.Reserve) (uint, *errors.ApiError) {
-	apiError := r.DB.Persist(&reserve)
-	if apiError != nil {
-		return 0, apiError
+	err := r.DB.Persist(&reserve)
+	if err != nil {
+		return 0, &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
 	}
 	return reserve.ID, nil
 }
 
 func (r ReserveRepository) Update(id string, upReserve model.Reserve) *errors.ApiError {
-	return r.DB.Refresh(&upReserve, id)
+	err := r.DB.Refresh(&upReserve, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }
 
 func (r ReserveRepository) Delete(id string) *errors.ApiError {
-	return r.DB.Remove(&model.Reserve{}, id)
+	err := r.DB.Remove(&model.Reserve{}, id)
+	if err != nil {
+		return &errors.ApiError{
+			Service: ServiceName,
+			Status:  http.StatusInternalServerError,
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
 }

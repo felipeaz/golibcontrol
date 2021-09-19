@@ -2,6 +2,7 @@ package repository
 
 import (
 	"log"
+	"net/http"
 	"strconv"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -26,13 +27,18 @@ func (r BookCategoryRepository) GetCategoriesByIds(categoriesIds []uint) (catego
 		var category categoryModel.Category
 		_, err := r.DB.Fetch(&category, strconv.Itoa(int(categoryId)))
 		if err != nil {
-			return nil, err
+			return nil, &errors.ApiError{
+				Service: ServiceName,
+				Status:  http.StatusInternalServerError,
+				Message: errors.UpdateFailMessage,
+				Error:   err.Error(),
+			}
 		}
 
 		categories = append(categories, category.ID)
 	}
 
-	return
+	return nil, nil
 }
 
 // CreateCategories persists category on DB if exists.
@@ -45,17 +51,17 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 			BookID:     bookId,
 			CategoryID: categoryId,
 		}
-		apiError := r.DB.Persist(&bookCategory)
-		if apiError != nil {
-			log.Println(errors.FailedToCreateBookCategoryMessage, apiError.Error)
+		err := r.DB.Persist(&bookCategory)
+		if err != nil {
+			log.Println(errors.FailedToCreateBookCategoryMessage, err.Error())
 		}
 	}
 }
 
 // DeleteCategories removes a Book categories from DB
 func (r BookCategoryRepository) DeleteCategories(bookId uint) {
-	apiErr := r.DB.Remove(bookCategoryModel.BookCategory{}, strconv.Itoa(int(bookId)))
-	if apiErr != nil {
-		log.Println(apiErr)
+	err := r.DB.Remove(bookCategoryModel.BookCategory{}, strconv.Itoa(int(bookId)))
+	if err != nil {
+		log.Println(err.Error())
 	}
 }
