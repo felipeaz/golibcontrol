@@ -17,9 +17,13 @@ type AccountHandler struct {
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(dbService database.GORMServiceInterface, auth auth.AuthInterface, cache database.CacheInterface) AccountHandler {
+func NewAccountHandler(
+	dbService database.GORMServiceInterface,
+	auth auth.AuthInterface,
+	cache database.CacheInterface,
+	authSecret string) AccountHandler {
 	return AccountHandler{
-		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth, cache),
+		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth, cache, authSecret),
 	}
 }
 

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth/jwt"
 	"github.com/FelipeAz/golibcontrol/internal/app/auth"
@@ -15,17 +14,27 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository/interface"
 )
 
+const (
+	ServiceName = "AccountService"
+)
+
 type AccountModule struct {
 	Repository _interface.AccountRepositoryInterface
 	Auth       auth.AuthInterface
 	Cache      databaseInterface.CacheInterface
+	AuthSecret string
 }
 
-func NewAccountModule(repo _interface.AccountRepositoryInterface, auth auth.AuthInterface, cache databaseInterface.CacheInterface) AccountModule {
+func NewAccountModule(
+	repo _interface.AccountRepositoryInterface,
+	auth auth.AuthInterface,
+	cache databaseInterface.CacheInterface,
+	authSecret string) AccountModule {
 	return AccountModule{
 		Repository: repo,
 		Auth:       auth,
 		Cache:      cache,
+		AuthSecret: authSecret,
 	}
 }
 
@@ -60,7 +69,7 @@ func (m AccountModule) Logout(session model.UserSession) (message login.Message)
 	var consumerKeyId string
 	switch data {
 	case nil:
-		consumerKey, err := m.Auth.RetrieveConsumerKey(session.ConsumerId, os.Getenv("JWT_SECRET_KEY"))
+		consumerKey, err := m.Auth.RetrieveConsumerKey(session.ConsumerId, m.AuthSecret)
 		if err != nil {
 			return login.Message{
 				Status:  http.StatusInternalServerError,
@@ -119,7 +128,7 @@ func (m AccountModule) Create(account model.Account) (uint, *errors.ApiError) {
 	consumer, err := m.Auth.CreateConsumer(account.Email)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToCreateConsumer,
 			Error:   err.Error(),
@@ -145,7 +154,7 @@ func (m AccountModule) Delete(id string) *errors.ApiError {
 	err := m.Auth.DeleteConsumer(user.ConsumerId)
 	if err != nil {
 		return &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToDeleteConsumer,
 			Error:   err.Error(),
@@ -155,7 +164,7 @@ func (m AccountModule) Delete(id string) *errors.ApiError {
 	err = m.Cache.Flush(user.ConsumerId)
 	if err != nil {
 		return &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToDeleteAuthenticationOnCache,
 			Error:   err.Error(),
@@ -170,7 +179,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 	account, apiError := m.Repository.FindWhere("email", credentials.Email)
 	if apiError != nil {
 		return "", "", &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  apiError.Status,
 			Message: login.FailMessage,
 			Error:   login.AccountNotFoundMessage,
@@ -179,17 +188,17 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 
 	if account.Password != credentials.Password {
 		return "", "", &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  http.StatusUnauthorized,
 			Message: login.FailMessage,
 			Error:   login.InvalidPasswordMessage,
 		}
 	}
 
-	consumerKey, err := m.Auth.RetrieveConsumerKey(account.ConsumerId, os.Getenv("JWT_SECRET_KEY"))
+	consumerKey, err := m.Auth.RetrieveConsumerKey(account.ConsumerId, m.AuthSecret)
 	if err != nil {
 		return "", "", &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToRetrieveConsumerKey,
 			Error:   err.Error(),
@@ -199,7 +208,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 	token, err := jwt.CreateToken(account.Email, consumerKey.Key, consumerKey.Secret)
 	if err != nil {
 		return "", "", &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Error:   err.Error(),
 		}
 	}
@@ -211,7 +220,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 	b, err := json.Marshal(data)
 	if err != nil {
 		return "", "", &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToMarshalAuthenticationOnCache,
 			Error:   err.Error(),
@@ -221,7 +230,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 	err = m.Cache.Set(account.ConsumerId, b)
 	if err != nil {
 		return "", "", &errors.ApiError{
-			Service: os.Getenv("ACCOUNT_SERVICE_NAME"),
+			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToStoreAuthenticationKeyOnCache,
 			Error:   err.Error(),

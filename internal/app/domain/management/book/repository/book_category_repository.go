@@ -34,11 +34,9 @@ func (r BookCategoryRepository) GetCategoriesByIds(categoriesIds []uint) (catego
 				Error:   err.Error(),
 			}
 		}
-
 		categories = append(categories, category.ID)
 	}
-
-	return nil, nil
+	return categories, nil
 }
 
 // CreateCategories persists category on DB if exists.

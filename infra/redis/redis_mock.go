@@ -1,19 +1,12 @@
 package redis
 
 import (
-	"github.com/garyburd/redigo/redis"
 	"github.com/stretchr/testify/mock"
 )
 
 // MockCache implements Redis functions
 type MockCache struct {
 	mock.Mock
-}
-
-// Connect initialize the cache.
-func (c *MockCache) connect() (redis.Conn, error) {
-	resp := c.Called()
-	return resp.Get(0).(redis.Conn), resp.Error(1)
 }
 
 // Set inserts a value into the MockCache
