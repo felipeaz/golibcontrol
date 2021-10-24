@@ -1,22 +1,37 @@
 package auth
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
+	"github.com/FelipeAz/golibcontrol/infra/auth/model"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateConsumerSuccess(t *testing.T) {
 	username := "email@test.com"
+	expectedConsumer := &model.Consumer{
+		Id:        "49eafa57-d530-4ddc-a399-7df4a30225d2",
+		CustomId:  "123123",
+		Username:  username,
+		Tags:      nil,
+		CreatedAt: 0,
+	}
 	testServer := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/" {
 				w.Header().Add("Content-Type", "application/json")
-				w.Write([]byte(`{"id": "49eafa57-d530-4ddc-a399-7df4a30225d2", "custom_id": "123123", "username": "email@test.com"}`))
+				resp, err := json.Marshal(expectedConsumer)
+				if err != nil {
+					assert.Fail(t, "Failed to marshal expected response")
+				}
+				if _, err := w.Write([]byte(resp)); err != nil {
+					assert.Fail(t, "Failed to Write test response")
+				}
 			}
 		}),
 	)
@@ -27,9 +42,7 @@ func TestCreateConsumerSuccess(t *testing.T) {
 	consumer, err := auth.CreateConsumer(username)
 
 	assert.NoError(t, err)
-	assert.Equal(t, consumer.Username, username)
-	assert.NotEmpty(t, consumer.Id)
-	assert.NotEmpty(t, consumer.CustomId)
+	assert.Equal(t, consumer, expectedConsumer)
 }
 
 func TestCreateConsumerUnmarshalError(t *testing.T) {
@@ -56,11 +69,29 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 func TestCreateConsumerKeySuccess(t *testing.T) {
 	consumerId := "49eafa57-d530-4ddc-a399-7df4a30225d2"
 	secret := "98bf1013-b69f-430b-b4f4-822a9c4e3d59"
+	expectedConsumer := &model.ConsumerKey{
+		Key:       "",
+		CreatedAt: 0,
+		Id:        "",
+		Consumer: struct {
+			Id string `json:"id"`
+		}{},
+		Tags:         nil,
+		RsaPublicKey: nil,
+		Algorithm:    "",
+		Secret:       "",
+	}
 	testServer := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.URL.Path == consumerId+"/jwt" {
+			if r.URL.Path == "/"+consumerId+"/jwt" {
 				w.Header().Add("Content-Type", "application/json")
-				w.Write([]byte(`{"id": "49eafa57-d530-4ddc-a399-7df4a30225d2", "custom_id": "123123", "username": "email@test.com"}`))
+				resp, err := json.Marshal(expectedConsumer)
+				if err != nil {
+					assert.Fail(t, "Failed to marshal expected response")
+				}
+				if _, err := w.Write(resp); err != nil {
+					assert.Fail(t, "Failed to Write test response")
+				}
 			}
 		}),
 	)
@@ -71,6 +102,5 @@ func TestCreateConsumerKeySuccess(t *testing.T) {
 	consumerKey, err := auth.CreateConsumerKey(consumerId, secret)
 
 	assert.NoError(t, err)
-	assert.NotEmpty(t, consumerKey.Id)
-	assert.NotEmpty(t, consumerKey.Consumer.Id)
+	assert.Equal(t, consumerKey, expectedConsumer)
 }
