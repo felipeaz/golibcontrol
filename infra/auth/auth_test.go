@@ -66,6 +66,25 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 	assert.Equal(t, err.Error(), "unexpected end of JSON input")
 }
 
+func TestCreateConsumerHTTPRequestError(t *testing.T) {
+	username := "email@test.com"
+	testServer := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path == "/" {
+				r.Close = true
+			}
+		}),
+	)
+
+	defer testServer.Close()
+	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
+	auth := NewAuth(cli)
+
+	consumer, err := auth.CreateConsumer(username)
+	assert.NoError(t, err)
+	assert.Nil(t, consumer)
+}
+
 func TestCreateConsumerKeySuccess(t *testing.T) {
 	consumerId := "49eafa57-d530-4ddc-a399-7df4a30225d2"
 	secret := "98bf1013-b69f-430b-b4f4-822a9c4e3d59"

@@ -39,7 +39,7 @@ func getLogFile(path string) (f *os.File) {
 }
 
 func LogError(err error) {
-	f := getLogFile(os.Getenv("LOG_FILE"))
+	f := getLogFile("../../logs")
 	defer f.Close()
 
 	errorLog := model.Log{
