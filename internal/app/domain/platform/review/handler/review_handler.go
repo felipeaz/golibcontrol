@@ -3,11 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/module/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,9 +12,9 @@ type ReviewHandler struct {
 	Module _interface.ReviewModuleInterface
 }
 
-func NewReviewHandler(dbService database.GORMServiceInterface) ReviewHandler {
+func NewReviewHandler(module _interface.ReviewModuleInterface) ReviewHandler {
 	return ReviewHandler{
-		Module: module.NewReviewModule(repository.NewReviewRepository(dbService)),
+		Module: module,
 	}
 }
 

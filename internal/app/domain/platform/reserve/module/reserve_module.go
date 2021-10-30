@@ -4,15 +4,18 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 type ReserveModule struct {
 	Repository _interface.ReserveRepositoryInterface
+	Log        logger.LogInterface
 }
 
-func NewReserveModule(repo _interface.ReserveRepositoryInterface) ReserveModule {
+func NewReserveModule(repo _interface.ReserveRepositoryInterface, log logger.LogInterface) ReserveModule {
 	return ReserveModule{
 		Repository: repo,
+		Log:        log,
 	}
 }
 

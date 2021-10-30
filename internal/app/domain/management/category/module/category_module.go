@@ -4,16 +4,19 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 // CategoryModule process the request recieved from handler
 type CategoryModule struct {
 	Repository _interface.CategoryRepositoryInterface
+	Log        logger.LogInterface
 }
 
-func NewCategoryModule(repo _interface.CategoryRepositoryInterface) CategoryModule {
+func NewCategoryModule(repo _interface.CategoryRepositoryInterface, log logger.LogInterface) CategoryModule {
 	return CategoryModule{
 		Repository: repo,
+		Log:        log,
 	}
 }
 

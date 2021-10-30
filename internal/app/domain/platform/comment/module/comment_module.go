@@ -4,15 +4,18 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 type CommentModule struct {
 	Repository _interface.CommentRepositoryInterface
+	Log        logger.LogInterface
 }
 
-func NewCommentModule(repo _interface.CommentRepositoryInterface) CommentModule {
+func NewCommentModule(repo _interface.CommentRepositoryInterface, log logger.LogInterface) CommentModule {
 	return CommentModule{
 		Repository: repo,
+		Log:        log,
 	}
 }
 

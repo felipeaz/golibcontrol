@@ -1,35 +1,24 @@
 package server
 
 import (
-	"log"
-
 	"github.com/FelipeAz/golibcontrol/build/server/account/router"
-	"github.com/FelipeAz/golibcontrol/infra/auth"
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
-	"github.com/FelipeAz/golibcontrol/infra/logger"
-	"github.com/FelipeAz/golibcontrol/infra/mysql/account/database"
-	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
-	"github.com/FelipeAz/golibcontrol/infra/redis"
+	"github.com/FelipeAz/golibcontrol/internal/app/auth"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 // Start initialize the webservice,
-func Start(user, password, host, port, databaseName, consumersHost, cacheHost, cachePort, cacheExpireTime string) (err error) {
-	db, err := database.Connect(user, password, host, port, databaseName)
-	if err != nil {
-		logger.LogError(err)
-		log.Fatal(err.Error())
-	}
-	defer database.CloseConnection(db)
-
-	dbService, err := service.NewMySQLService(db)
-	if err != nil {
-		logger.LogError(err)
-		log.Fatal(err.Error())
-	}
-
-	cache := redis.NewCache(cacheHost, cachePort, cacheExpireTime)
-
-	apiGatewayAuth := auth.NewAuth(request.NewHttpRequest(client.NewHTTPClient(), consumersHost))
-	return router.Run(dbService, apiGatewayAuth, cache)
+func Start(
+	dbService database.GORMServiceInterface,
+	cache database.CacheInterface,
+	apiGatewayAuth auth.AuthInterface,
+	log logger.LogInterface,
+) (err error) {
+	accountRepository := repository.NewAccountRepository(dbService)
+	accountModule := module.NewAccountModule(accountRepository, apiGatewayAuth, cache, log)
+	accountHandler := handler.NewAccountHandler(accountModule)
+	return router.Build(accountHandler)
 }

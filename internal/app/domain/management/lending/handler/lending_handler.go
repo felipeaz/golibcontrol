@@ -3,13 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/module/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
-	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,13 +14,9 @@ type LendingHandler struct {
 }
 
 // NewLendingHandler Return an instance of this handler.
-func NewLendingHandler(dbService database.GORMServiceInterface) LendingHandler {
+func NewLendingHandler(module _interface.LendingModuleInterface) LendingHandler {
 	return LendingHandler{
-		Module: module.NewLendingModule(repository.NewLendingRepository(
-			dbService,
-			studentRepository.NewStudentRepository(dbService),
-			bookRepository.NewBookRepository(dbService, bookRepository.NewBookCategoryRepository(dbService))),
-		),
+		Module: module,
 	}
 }
 

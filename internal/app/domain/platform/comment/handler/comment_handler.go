@@ -3,10 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/module/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
 	"github.com/gin-gonic/gin"
 )
@@ -15,9 +12,9 @@ type CommentHandler struct {
 	Module _interface.CommentModuleInterface
 }
 
-func NewCommentHandler(dbService database.GORMServiceInterface) CommentHandler {
+func NewCommentHandler(module _interface.CommentModuleInterface) CommentHandler {
 	return CommentHandler{
-		Module: module.NewCommentModule(repository.NewCommentRepository(dbService)),
+		Module: module,
 	}
 }
 

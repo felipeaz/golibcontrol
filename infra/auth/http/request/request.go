@@ -3,10 +3,10 @@ package request
 import (
 	"bytes"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	_interface "github.com/FelipeAz/golibcontrol/infra/auth/http/interface"
-	"github.com/FelipeAz/golibcontrol/infra/logger"
 )
 
 type HttpRequest struct {
@@ -24,19 +24,19 @@ func NewHttpRequest(client _interface.HTTPClientInterface, baseUrl string) HttpR
 func (h HttpRequest) Get(id string) ([]byte, error) {
 	req, err := http.NewRequest("GET", h.BaseUrl+id, nil)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
 	resp, err := h.Client.Do(req)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -46,20 +46,20 @@ func (h HttpRequest) Get(id string) ([]byte, error) {
 func (h HttpRequest) Post(route string, body []byte) ([]byte, error) {
 	req, err := http.NewRequest("POST", h.BaseUrl+route, bytes.NewBuffer(body))
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := h.Client.Do(req)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -69,7 +69,7 @@ func (h HttpRequest) Post(route string, body []byte) ([]byte, error) {
 func (h HttpRequest) PostWithHeader(route string, body []byte, headerName, headerValue string) ([]byte, error) {
 	req, err := http.NewRequest("POST", h.BaseUrl+route, bytes.NewBuffer(body))
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -77,13 +77,13 @@ func (h HttpRequest) PostWithHeader(route string, body []byte, headerName, heade
 	req.Header.Set(headerName, headerValue)
 	resp, err := h.Client.Do(req)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -93,19 +93,19 @@ func (h HttpRequest) PostWithHeader(route string, body []byte, headerName, heade
 func (h HttpRequest) PostWithoutBody(route string) ([]byte, error) {
 	req, err := http.NewRequest("POST", h.BaseUrl+route, nil)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -115,7 +115,7 @@ func (h HttpRequest) PostWithoutBody(route string) ([]byte, error) {
 func (h HttpRequest) Delete(route string) error {
 	req, err := http.NewRequest("DELETE", h.BaseUrl+route, nil)
 	if err != nil {
-		logger.LogError(err)
+		log.Println(err)
 		return err
 	}
 	_, err = http.DefaultClient.Do(req)

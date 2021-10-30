@@ -2,7 +2,6 @@ package mock
 
 import (
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -19,7 +18,6 @@ type CategoryRepositoryMock struct {
 func (r CategoryRepositoryMock) Get() (categories []model.Category, apiError *errors.ApiError) {
 	if r.TestError {
 		return nil, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
@@ -41,14 +39,12 @@ func (r CategoryRepositoryMock) Get() (categories []model.Category, apiError *er
 func (r CategoryRepositoryMock) Find(id string) (category model.Category, apiError *errors.ApiError) {
 	if r.TestError {
 		return model.Category{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
 		}
 	} else if r.TestNotFoundError {
 		return model.Category{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
 			Error:   "category not found",
@@ -68,7 +64,6 @@ func (r CategoryRepositoryMock) Find(id string) (category model.Category, apiErr
 func (r CategoryRepositoryMock) Create(category model.Category) (uint, *errors.ApiError) {
 	if r.TestError {
 		return 0, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   "mocked error",
@@ -87,7 +82,6 @@ func (r CategoryRepositoryMock) Update(id string, upCategory model.Category) *er
 
 	if r.TestUpdateError {
 		return &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   "mocked error",
@@ -106,7 +100,6 @@ func (r CategoryRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 
 	if r.TestDeleteError {
 		return &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   "mocked error",

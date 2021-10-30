@@ -9,10 +9,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model/converter"
 )
 
-const (
-	ServiceName = "PlatformService"
-)
-
 type ReserveRepository struct {
 	DB database.GORMServiceInterface
 }
@@ -27,7 +23,6 @@ func (r ReserveRepository) Get(bookId string) ([]model.Reserve, *errors.ApiError
 	result, err := r.DB.FetchAllWhere(&[]model.Reserve{}, "book_id", bookId)
 	if err != nil {
 		return nil, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -44,7 +39,6 @@ func (r ReserveRepository) Find(id string) (model.Reserve, *errors.ApiError) {
 	result, err := r.DB.Fetch(&model.Reserve{}, id)
 	if err != nil {
 		return model.Reserve{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -61,7 +55,6 @@ func (r ReserveRepository) Create(reserve model.Reserve) (uint, *errors.ApiError
 	err := r.DB.Persist(&reserve)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
@@ -74,7 +67,6 @@ func (r ReserveRepository) Update(id string, upReserve model.Reserve) *errors.Ap
 	err := r.DB.Refresh(&upReserve, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -87,7 +79,6 @@ func (r ReserveRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Reserve{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),

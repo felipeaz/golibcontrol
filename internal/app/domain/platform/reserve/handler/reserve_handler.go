@@ -3,11 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/module/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,9 +12,9 @@ type ReserveHandler struct {
 	Module _interface.ReserveModuleInterface
 }
 
-func NewReserveHandler(dbService database.GORMServiceInterface) ReserveHandler {
+func NewReserveHandler(module _interface.ReserveModuleInterface) ReserveHandler {
 	return ReserveHandler{
-		Module: module.NewReserveModule(repository.NewReserveRepository(dbService)),
+		Module: module,
 	}
 }
 

@@ -3,12 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/auth"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/pkg"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,13 +13,9 @@ type AccountHandler struct {
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(
-	dbService database.GORMServiceInterface,
-	auth auth.AuthInterface,
-	cache database.CacheInterface,
-	authSecret string) AccountHandler {
+func NewAccountHandler(module _interface.AccountModuleInterface) AccountHandler {
 	return AccountHandler{
-		Module: module.NewAccountModule(repository.NewAccountRepository(dbService), auth, cache, authSecret),
+		Module: module,
 	}
 }
 

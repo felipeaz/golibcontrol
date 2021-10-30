@@ -4,15 +4,18 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/model"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 type ReviewModule struct {
 	Repository _interface.ReviewRepositoryInterface
+	Log        logger.LogInterface
 }
 
-func NewReviewModule(repo _interface.ReviewRepositoryInterface) ReviewModule {
+func NewReviewModule(repo _interface.ReviewRepositoryInterface, log logger.LogInterface) ReviewModule {
 	return ReviewModule{
 		Repository: repo,
+		Log:        log,
 	}
 }
 

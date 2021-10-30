@@ -3,26 +3,27 @@ package module
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
-	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	studentErrors "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model/converter"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 // StudentModule process the request recieved from handler.
 type StudentModule struct {
 	Repository _interface.StudentRepositoryInterface
+	Log        logger.LogInterface
 }
 
-func NewStudentModule(repo _interface.StudentRepositoryInterface) StudentModule {
+func NewStudentModule(repo _interface.StudentRepositoryInterface, log logger.LogInterface) StudentModule {
 	return StudentModule{
 		Repository: repo,
+		Log:        log,
 	}
 }
 
@@ -60,9 +61,8 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 	studentBody := converter.ConvertStudentToStudentAccount(student)
 	body, err := json.Marshal(studentBody)
 	if err != nil {
-		logger.LogError(err)
+		m.Log.Error(err)
 		return 0, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToMarshalRequestBody,
 			Error:   err.Error(),
@@ -72,9 +72,8 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 	req := request.NewHttpRequest(client.NewHTTPClient(), host)
 	b, err := req.PostWithHeader(route, body, tokenName, tokenValue)
 	if err != nil {
-		logger.LogError(err)
+		m.Log.Error(err)
 		return 0, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToSendAccountCreationRequest,
 			Error:   err.Error(),
@@ -84,9 +83,8 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 	var resp model.AccountResponse
 	err = json.Unmarshal(b, &resp)
 	if err != nil {
-		logger.LogError(err)
+		m.Log.Error(err)
 		return 0, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToUnmarshalResponse,
 			Error:   err.Error(),
@@ -95,7 +93,6 @@ func (m StudentModule) createAccountOnAccountService(student model.Student, host
 
 	if resp.ID == 0 {
 		return 0, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: studentErrors.FailedToCreateStudentAccount,
 			Error:   string(b),
