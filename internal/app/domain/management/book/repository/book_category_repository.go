@@ -28,7 +28,6 @@ func (r BookCategoryRepository) GetCategoriesByIds(categoriesIds []uint) (catego
 		_, err := r.DB.Fetch(&category, strconv.Itoa(int(categoryId)))
 		if err != nil {
 			return nil, &errors.ApiError{
-				Service: ServiceName,
 				Status:  http.StatusInternalServerError,
 				Message: errors.UpdateFailMessage,
 				Error:   err.Error(),

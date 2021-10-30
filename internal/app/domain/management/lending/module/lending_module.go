@@ -4,16 +4,19 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 // LendingModule process the request recieved from handler.
 type LendingModule struct {
 	Repository _interface.LendingRepositoryInterface
+	Log        logger.LogInterface
 }
 
-func NewLendingModule(repo _interface.LendingRepositoryInterface) LendingModule {
+func NewLendingModule(repo _interface.LendingRepositoryInterface, log logger.LogInterface) LendingModule {
 	return LendingModule{
 		Repository: repo,
+		Log:        log,
 	}
 }
 

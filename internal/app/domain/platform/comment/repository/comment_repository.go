@@ -9,10 +9,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model/converter"
 )
 
-const (
-	ServiceName = "PlatformService"
-)
-
 type CommentRepository struct {
 	DB database.GORMServiceInterface
 }
@@ -27,7 +23,6 @@ func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError
 	result, err := r.DB.FetchAllWhere(&[]model.Comment{}, "book_id", bookId)
 	if err != nil {
 		return nil, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -44,7 +39,6 @@ func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
 	result, err := r.DB.Fetch(&model.Comment{}, id)
 	if err != nil {
 		return model.Comment{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -61,7 +55,6 @@ func (r CommentRepository) Create(comment model.Comment) (uint, *errors.ApiError
 	err := r.DB.Persist(&comment)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
@@ -74,7 +67,6 @@ func (r CommentRepository) Update(id string, upComment model.Comment) *errors.Ap
 	err := r.DB.Refresh(&upComment, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -87,7 +79,6 @@ func (r CommentRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Comment{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),

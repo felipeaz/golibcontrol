@@ -3,10 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/module/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
 )
@@ -17,9 +14,9 @@ type CategoryHandler struct {
 }
 
 // NewCategoryHandler returns an instance of category handler.
-func NewCategoryHandler(dbService database.GORMServiceInterface) CategoryHandler {
+func NewCategoryHandler(module _interface.CategoryModuleInterface) CategoryHandler {
 	return CategoryHandler{
-		Module: module.NewCategoryModule(repository.NewCategoryRepository(dbService)),
+		Module: module,
 	}
 }
 

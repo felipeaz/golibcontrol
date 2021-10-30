@@ -11,10 +11,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 )
 
-const (
-	ServiceName = "ManagementService"
-)
-
 // BookRepository is responsible of getting/saving information from DB.
 type BookRepository struct {
 	DB                     database.GORMServiceInterface
@@ -33,7 +29,6 @@ func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
 	result, err := r.DB.FetchAllWithPreload(&[]model.Book{}, "BookCategory")
 	if err != nil {
 		return nil, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -51,7 +46,6 @@ func (r BookRepository) Find(id string) (model.Book, *errors.ApiError) {
 	result, err := r.DB.FetchWithPreload(&model.Book{}, id, "BookCategory")
 	if err != nil {
 		return model.Book{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -78,7 +72,6 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 	err := r.DB.Persist(&book)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
@@ -104,7 +97,6 @@ func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
 	err := r.DB.Refresh(&upBook, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -123,7 +115,6 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Book{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),

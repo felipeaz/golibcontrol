@@ -9,10 +9,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model/converter"
 )
 
-const (
-	ServiceName = "ManagementService"
-)
-
 // CategoryRepository is responsible of getting/saving information from DB.
 type CategoryRepository struct {
 	DB database.GORMServiceInterface
@@ -29,7 +25,6 @@ func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
 	result, err := r.DB.FetchAll(&[]model.Category{})
 	if err != nil {
 		return nil, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -47,7 +42,6 @@ func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
 	result, err := r.DB.Fetch(&model.Category{}, id)
 	if err != nil {
 		return model.Category{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -67,7 +61,6 @@ func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiEr
 	err := r.DB.Persist(&category)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
@@ -81,7 +74,6 @@ func (r CategoryRepository) Update(id string, upCategory model.Category) *errors
 	err := r.DB.Refresh(&upCategory, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -95,7 +87,6 @@ func (r CategoryRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Category{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),

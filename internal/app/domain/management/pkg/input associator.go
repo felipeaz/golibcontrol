@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
@@ -17,7 +16,6 @@ func AssociateBookInput(c *gin.Context) (book bookModel.Book, apiError *errors.A
 	err := c.ShouldBindJSON(&book)
 	if err != nil {
 		return bookModel.Book{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
@@ -32,7 +30,6 @@ func AssociateCategoryInput(c *gin.Context) (category categoryModel.Category, ap
 	err := c.ShouldBindJSON(&category)
 	if err != nil {
 		return categoryModel.Category{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
@@ -47,7 +44,6 @@ func AssociateStudentInput(c *gin.Context) (student studentModel.Student, apiErr
 	err := c.ShouldBindJSON(&student)
 	if err != nil {
 		return studentModel.Student{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
@@ -62,7 +58,6 @@ func AssociateLendingInput(c *gin.Context) (lending lendingModel.Lending, apiErr
 	err := c.ShouldBindJSON(&lending)
 	if err != nil {
 		return lendingModel.Lending{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

@@ -9,10 +9,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model/converter"
 )
 
-const (
-	ServiceName = "AccountService"
-)
-
 type AccountRepository struct {
 	DB database.GORMServiceInterface
 }
@@ -28,7 +24,6 @@ func (r AccountRepository) Get() ([]model.Account, *errors.ApiError) {
 	result, err := r.DB.FetchAll(&[]model.Account{})
 	if err != nil {
 		return nil, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -46,7 +41,6 @@ func (r AccountRepository) Find(id string) (model.Account, *errors.ApiError) {
 	result, err := r.DB.Fetch(&model.Account{}, id)
 	if err != nil {
 		return model.Account{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -64,7 +58,6 @@ func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Accoun
 	result, err := r.DB.FetchAllWhere(&model.Account{}, fieldName, fieldValue)
 	if err != nil {
 		return model.Account{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -82,7 +75,6 @@ func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError
 	err := r.DB.Persist(&account)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
@@ -96,7 +88,6 @@ func (r AccountRepository) Update(id string, upAccount model.Account) *errors.Ap
 	err := r.DB.Refresh(&upAccount, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -110,7 +101,6 @@ func (r AccountRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Account{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),

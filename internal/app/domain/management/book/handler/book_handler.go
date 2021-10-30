@@ -3,10 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/module/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
 )
@@ -17,12 +14,9 @@ type BookHandler struct {
 }
 
 // NewBookHandler returns an instance of this handler.
-func NewBookHandler(dbService database.GORMServiceInterface) BookHandler {
+func NewBookHandler(module _interface.BookModuleInterface) BookHandler {
 	return BookHandler{
-		Module: module.NewBookModule(
-			repository.NewBookRepository(dbService,
-				repository.NewBookCategoryRepository(dbService)),
-		),
+		Module: module,
 	}
 }
 

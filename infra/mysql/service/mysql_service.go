@@ -1,24 +1,26 @@
 package service
 
 import (
-	"github.com/FelipeAz/golibcontrol/infra/logger"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"gorm.io/gorm"
 )
 
 type MySQLService struct {
-	DB *gorm.DB
+	DB  *gorm.DB
+	Log logger.LogInterface
 }
 
-func NewMySQLService(db *gorm.DB) (*MySQLService, error) {
+func NewMySQLService(db *gorm.DB, log logger.LogInterface) *MySQLService {
 	return &MySQLService{
-		DB: db,
-	}, nil
+		DB:  db,
+		Log: log,
+	}
 }
 
 func (s MySQLService) FetchAll(domainObj interface{}) (interface{}, error) {
 	result := s.DB.Find(domainObj)
 	if err := result.Error; err != nil {
-		logger.LogError(err)
+		s.Log.Error(err)
 		return nil, err
 	}
 	return domainObj, nil
@@ -27,7 +29,7 @@ func (s MySQLService) FetchAll(domainObj interface{}) (interface{}, error) {
 func (s MySQLService) FetchAllWithPreload(domainObj interface{}, preload string) (interface{}, error) {
 	result := s.DB.Preload(preload).Find(domainObj)
 	if err := result.Error; err != nil {
-		logger.LogError(err)
+		s.Log.Error(err)
 		return nil, err
 	}
 	return domainObj, nil
@@ -37,7 +39,7 @@ func (s MySQLService) Fetch(domainObj interface{}, id string) (interface{}, erro
 	result := s.DB.Model(domainObj).Where("id = ?", id).Find(domainObj)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
-			logger.LogError(err)
+			s.Log.Error(err)
 			return nil, err
 		}
 	}
@@ -51,7 +53,7 @@ func (s MySQLService) FetchWithPreload(domainObj interface{}, id, preload string
 	result := s.DB.Preload(preload).Model(domainObj).Where("id = ?", id).Find(domainObj)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
-			logger.LogError(err)
+			s.Log.Error(err)
 			return nil, err
 		}
 	}
@@ -65,7 +67,7 @@ func (s MySQLService) FetchAllWhere(domainObj interface{}, fieldName, fieldValue
 	result := s.DB.Model(domainObj).Where(fieldName+" = ? ", fieldValue).Find(domainObj)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
-			logger.LogError(err)
+			s.Log.Error(err)
 			return nil, err
 		}
 	}
@@ -79,7 +81,7 @@ func (s MySQLService) FetchAllWhereWithQuery(domainObj interface{}, query string
 	result := s.DB.Model(domainObj).Where(query).Find(domainObj)
 	if err := result.Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
-			logger.LogError(err)
+			s.Log.Error(err)
 			return nil, err
 		}
 	}
@@ -92,7 +94,7 @@ func (s MySQLService) FetchAllWhereWithQuery(domainObj interface{}, query string
 func (s MySQLService) Persist(domainObj interface{}) error {
 	result := s.DB.Create(domainObj)
 	if err := result.Error; err != nil {
-		logger.LogError(err)
+		s.Log.Error(err)
 		return err
 	}
 	return nil
@@ -101,7 +103,7 @@ func (s MySQLService) Persist(domainObj interface{}) error {
 func (s MySQLService) Refresh(domainObj interface{}, id string) error {
 	result := s.DB.Model(domainObj).Where("id = ?", id).Updates(domainObj)
 	if err := result.Error; err != nil {
-		logger.LogError(err)
+		s.Log.Error(err)
 		return err
 	}
 	return nil
@@ -110,7 +112,7 @@ func (s MySQLService) Refresh(domainObj interface{}, id string) error {
 func (s MySQLService) Remove(domainObj interface{}, id string) error {
 	err := s.DB.Where("id = ?", id).Delete(domainObj).Error
 	if err != nil {
-		logger.LogError(err)
+		s.Log.Error(err)
 		return err
 	}
 	return nil

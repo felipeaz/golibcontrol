@@ -3,7 +3,6 @@ package repository
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 	"sync"
 
@@ -17,10 +16,6 @@ import (
 	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository/interface"
 )
 
-const (
-	ServiceName = "ManagementService"
-)
-
 // LendingRepository is responsible of getting/saving information from DB.
 type LendingRepository struct {
 	DB                database.GORMServiceInterface
@@ -28,7 +23,11 @@ type LendingRepository struct {
 	BookRepository    bookRepository.BookRepositoryInterface
 }
 
-func NewLendingRepository(db database.GORMServiceInterface, stRepo studentRepository.StudentRepositoryInterface, bRepo bookRepository.BookRepositoryInterface) LendingRepository {
+func NewLendingRepository(
+	db database.GORMServiceInterface,
+	stRepo studentRepository.StudentRepositoryInterface,
+	bRepo bookRepository.BookRepositoryInterface,
+) LendingRepository {
 	return LendingRepository{
 		DB:                db,
 		StudentRepository: stRepo,
@@ -41,7 +40,6 @@ func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
 	result, err := r.DB.FetchAll(&[]lendingModel.Lending{})
 	if err != nil {
 		return nil, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -60,7 +58,6 @@ func (r LendingRepository) Find(id string) (lendingModel.Lending, *errors.ApiErr
 	result, err := r.DB.Fetch(&lendingModel.Lending{}, id)
 	if err != nil {
 		return lendingModel.Lending{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -103,7 +100,6 @@ func (r LendingRepository) Create(lending lendingModel.Lending) (uint, *errors.A
 	err := r.DB.Persist(&lending)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
@@ -123,7 +119,6 @@ func (r LendingRepository) Update(id string, upLending lendingModel.Lending) *er
 	err := r.DB.Refresh(&upLending, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -137,7 +132,6 @@ func (r LendingRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&lendingModel.Lending{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
@@ -151,7 +145,6 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 	student, err := r.DB.Fetch(&studentModel.Student{}, strconv.Itoa(int(studentId)))
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -159,16 +152,14 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 	}
 	if student == nil {
 		return &errors.ApiError{
-			Service: ServiceName,
-			Status:  http.StatusBadRequest,
-			Error:   errors.StudentNotFoundError,
+			Status: http.StatusBadRequest,
+			Error:  errors.StudentNotFoundError,
 		}
 	}
 
 	book, err := r.DB.Fetch(&bookModel.Book{}, strconv.Itoa(int(bookId)))
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -176,9 +167,8 @@ func (r LendingRepository) BeforeCreateAndUpdate(studentId, bookId uint) *errors
 	}
 	if book == nil {
 		return &errors.ApiError{
-			Service: ServiceName,
-			Status:  http.StatusBadRequest,
-			Error:   errors.BookNotFoundError,
+			Status: http.StatusBadRequest,
+			Error:  errors.BookNotFoundError,
 		}
 	}
 	return nil
@@ -191,7 +181,6 @@ func (r LendingRepository) BeforeCreate(studentId, bookId uint) *errors.ApiError
 		fmt.Sprintf("book_id = %s OR student_id = %s", strconv.Itoa(int(bookId)), strconv.Itoa(int(studentId))))
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -199,9 +188,8 @@ func (r LendingRepository) BeforeCreate(studentId, bookId uint) *errors.ApiError
 	}
 	if result != nil {
 		return &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
-			Status:  http.StatusBadRequest,
-			Error:   errors.LendingNotAvailableError,
+			Status: http.StatusBadRequest,
+			Error:  errors.LendingNotAvailableError,
 		}
 	}
 	return nil

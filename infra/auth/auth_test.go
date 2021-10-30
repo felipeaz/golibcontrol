@@ -9,6 +9,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
 	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
 	"github.com/FelipeAz/golibcontrol/infra/auth/model"
+	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,7 +38,9 @@ func TestCreateConsumerSuccess(t *testing.T) {
 	)
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
-	auth := NewAuth(cli)
+	loggerMock := new(logger.LoggerMock)
+	jwtSecret := "jwtsecret"
+	auth := NewAuth(cli, loggerMock, jwtSecret)
 
 	consumer, err := auth.CreateConsumer(username)
 
@@ -57,7 +60,9 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 	)
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
-	auth := NewAuth(cli)
+	loggerMock := new(logger.LoggerMock)
+	jwtSecret := "jwtsecret"
+	auth := NewAuth(cli, loggerMock, jwtSecret)
 
 	consumer, err := auth.CreateConsumer(username)
 
@@ -78,7 +83,9 @@ func TestCreateConsumerHTTPRequestError(t *testing.T) {
 
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
-	auth := NewAuth(cli)
+	loggerMock := new(logger.LoggerMock)
+	jwtSecret := "jwtsecret"
+	auth := NewAuth(cli, loggerMock, jwtSecret)
 
 	consumer, err := auth.CreateConsumer(username)
 	assert.NoError(t, err)
@@ -87,7 +94,6 @@ func TestCreateConsumerHTTPRequestError(t *testing.T) {
 
 func TestCreateConsumerKeySuccess(t *testing.T) {
 	consumerId := "49eafa57-d530-4ddc-a399-7df4a30225d2"
-	secret := "98bf1013-b69f-430b-b4f4-822a9c4e3d59"
 	expectedConsumer := &model.ConsumerKey{
 		Key:       "",
 		CreatedAt: 0,
@@ -116,9 +122,11 @@ func TestCreateConsumerKeySuccess(t *testing.T) {
 	)
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
-	auth := NewAuth(cli)
+	loggerMock := new(logger.LoggerMock)
+	jwtSecret := "jwtsecret"
+	auth := NewAuth(cli, loggerMock, jwtSecret)
 
-	consumerKey, err := auth.CreateConsumerKey(consumerId, secret)
+	consumerKey, err := auth.CreateConsumerKey(consumerId)
 
 	assert.NoError(t, err)
 	assert.Equal(t, consumerKey, expectedConsumer)

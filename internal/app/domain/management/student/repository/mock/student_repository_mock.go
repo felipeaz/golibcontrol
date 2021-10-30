@@ -2,7 +2,6 @@ package mock
 
 import (
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -20,7 +19,6 @@ type StudentRepositoryMock struct {
 func (r StudentRepositoryMock) Get() (students []model.Student, apiError *errors.ApiError) {
 	if r.TestError {
 		return nil, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
@@ -47,7 +45,6 @@ func (r StudentRepositoryMock) Get() (students []model.Student, apiError *errors
 func (r StudentRepositoryMock) Find(id string) (student model.Student, apiError *errors.ApiError) {
 	if r.TestError {
 		return model.Student{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   "mocked error",
@@ -56,7 +53,6 @@ func (r StudentRepositoryMock) Find(id string) (student model.Student, apiError 
 
 	if r.TestNotFoundError {
 		return model.Student{}, &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusNotFound,
 			Message: errors.FailMessage,
 			Error:   "student not found",
@@ -81,7 +77,6 @@ func (r StudentRepositoryMock) Find(id string) (student model.Student, apiError 
 func (r StudentRepositoryMock) Create(student model.Student) (string, *errors.ApiError) {
 	if r.TestError {
 		return "", &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   "mocked error",
@@ -101,7 +96,6 @@ func (r StudentRepositoryMock) Update(id string, upStudent model.Student) *error
 
 	if r.TestUpdateError {
 		return &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   "mocked error",
@@ -121,7 +115,6 @@ func (r StudentRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 
 	if r.TestDeleteError {
 		return &errors.ApiError{
-			Service: os.Getenv("MANAGEMENT_SERVICE_NAME"),
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   "mocked error",

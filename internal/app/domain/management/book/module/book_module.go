@@ -4,16 +4,19 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 // BookModule process the request recieved from handler.
 type BookModule struct {
 	Repository _interface.BookRepositoryInterface
+	Log        logger.LogInterface
 }
 
-func NewBookModule(repo _interface.BookRepositoryInterface) BookModule {
+func NewBookModule(repo _interface.BookRepositoryInterface, log logger.LogInterface) BookModule {
 	return BookModule{
 		Repository: repo,
+		Log:        log,
 	}
 }
 

@@ -9,10 +9,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/model/converter"
 )
 
-const (
-	ServiceName = "PlatformService"
-)
-
 type ReviewRepository struct {
 	DB database.GORMServiceInterface
 }
@@ -27,7 +23,6 @@ func (r ReviewRepository) Get(bookId string) ([]model.Review, *errors.ApiError) 
 	result, err := r.DB.FetchAllWhere(&[]model.Review{}, "book_id", bookId)
 	if err != nil {
 		return nil, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -44,7 +39,6 @@ func (r ReviewRepository) Find(id string) (model.Review, *errors.ApiError) {
 	result, err := r.DB.Fetch(&model.Review{}, id)
 	if err != nil {
 		return model.Review{}, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailMessage,
 			Error:   err.Error(),
@@ -61,7 +55,6 @@ func (r ReviewRepository) Create(review model.Review) (uint, *errors.ApiError) {
 	err := r.DB.Persist(&review)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
@@ -74,7 +67,6 @@ func (r ReviewRepository) Update(id string, upReview model.Review) *errors.ApiEr
 	err := r.DB.Refresh(&upReview, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
@@ -87,7 +79,6 @@ func (r ReviewRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Review{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Service: ServiceName,
 			Status:  http.StatusInternalServerError,
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),

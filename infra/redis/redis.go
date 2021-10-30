@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/FelipeAz/golibcontrol/infra/logger"
+	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -13,15 +13,20 @@ type Cache struct {
 	Host   string
 	Port   string
 	Expire string
+	Logger logger.LogInterface
 }
 
 // NewCache returns an instance of Cache
-func NewCache(host, port, expire string) *Cache {
-	return &Cache{
+func NewCache(host, port, expire string, logger logger.LogInterface) (*Cache, error) {
+	cache := &Cache{
 		Host:   host,
 		Port:   port,
 		Expire: expire,
+		Logger: logger,
 	}
+
+	_, err := cache.connect()
+	return cache, err
 }
 
 // Connect initialize the cache.
@@ -30,7 +35,6 @@ func (c *Cache) connect() (redis.Conn, error) {
 
 	conn, err := redis.Dial("tcp", h)
 	if err != nil {
-		logger.LogError(err)
 		log.Println(err.Error())
 		return nil, err
 	}
@@ -42,23 +46,20 @@ func (c *Cache) connect() (redis.Conn, error) {
 func (c *Cache) Set(key string, value []byte) error {
 	conn, err := c.connect()
 	if err != nil {
-		logger.LogError(err)
-		log.Println(err)
+		c.Logger.Error(err)
 		return err
 	}
 	defer conn.Close()
 
 	_, err = conn.Do("SET", key, value)
 	if err != nil {
-		logger.LogError(err)
-		log.Println(err)
+		c.Logger.Error(err)
 		return err
 	}
 
 	_, err = conn.Do("EXPIRE", key, c.Expire)
 	if err != nil {
-		logger.LogError(err)
-		log.Println(err)
+		c.Logger.Error(err)
 		return err
 	}
 
@@ -69,8 +70,7 @@ func (c *Cache) Set(key string, value []byte) error {
 func (c *Cache) Get(key string) ([]byte, error) {
 	conn, err := c.connect()
 	if err != nil {
-		logger.LogError(err)
-		log.Println(err)
+		c.Logger.Error(err)
 		return nil, err
 	}
 	defer conn.Close()
@@ -80,8 +80,7 @@ func (c *Cache) Get(key string) ([]byte, error) {
 		if err == redis.ErrNil {
 			return nil, nil
 		}
-		logger.LogError(err)
-		log.Println(err)
+		c.Logger.Error(err)
 		return nil, err
 	}
 
@@ -92,8 +91,7 @@ func (c *Cache) Get(key string) ([]byte, error) {
 func (c *Cache) Flush(key string) error {
 	conn, err := c.connect()
 	if err != nil {
-		logger.LogError(err)
-		log.Println(err)
+		c.Logger.Error(err)
 		return err
 	}
 	defer conn.Close()
