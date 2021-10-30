@@ -44,14 +44,8 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	apiGatewayAuth := auth.NewAuth(
-		request.NewHttpRequest(
-			client.NewHTTPClient(),
-			os.Getenv("CONSUMERS_HOST"),
-		),
-		logger,
-		os.Getenv("JWT_SECRET_KEY"),
-	)
+	requestClient := request.NewHttpRequest(client.NewHTTPClient(), os.Getenv("CONSUMERS_HOST"))
+	apiGatewayAuth := auth.NewAuth(requestClient, logger, os.Getenv("JWT_SECRET_KEY"))
 
 	err = server.Start(dbService, cache, apiGatewayAuth, logger)
 	if err != nil {
