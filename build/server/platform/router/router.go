@@ -21,9 +21,9 @@ func Build(
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	build.CommentRoutes(vGroup, cHandler)
-	build.ReserveRoutes(vGroup, resHandler)
-	build.ReviewRoutes(vGroup, revHandler)
+	build.CommentsRoutes(vGroup, cHandler)
+	build.ReservesRoutes(vGroup, resHandler)
+	build.ReviewsRoutes(vGroup, revHandler)
 
 	return router.Run(":8083")
 }

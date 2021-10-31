@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ReserveRoutes(rg *gin.RouterGroup, reserveHandler handler.ReserveHandler) {
-	r := rg.Group("/reserve")
+func ReservesRoutes(rg *gin.RouterGroup, reserveHandler handler.ReserveHandler) {
+	r := rg.Group("/reserves")
 	r.GET("/:bookId", reserveHandler.Get)
 	r.POST("/", reserveHandler.Create)
 	r.PUT("/:id", reserveHandler.Update)

@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// BookRoutes initialize Book routes.
-func BookRoutes(rg *gin.RouterGroup, bookHandler handler.BookHandler) {
-	r := rg.Group("/book")
+// BooksRoutes initialize Book routes.
+func BooksRoutes(rg *gin.RouterGroup, bookHandler handler.BookHandler) {
+	r := rg.Group("/books")
 	r.GET("/", bookHandler.Get)
 	r.GET("/:id", bookHandler.Find)
 	r.POST("/", bookHandler.Create)

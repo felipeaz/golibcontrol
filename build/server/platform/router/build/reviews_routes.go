@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ReviewRoutes(rg *gin.RouterGroup, reviewHandler handler.ReviewHandler) {
-	r := rg.Group("/review")
+func ReviewsRoutes(rg *gin.RouterGroup, reviewHandler handler.ReviewHandler) {
+	r := rg.Group("/reviews")
 	r.GET("/:bookId", reviewHandler.Get)
 	r.POST("/", reviewHandler.Create)
 	r.PUT("/:id", reviewHandler.Update)

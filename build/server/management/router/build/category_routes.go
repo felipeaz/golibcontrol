@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CategoryRoutes initialize Category routes.
-func CategoryRoutes(rg *gin.RouterGroup, categoryHandler handler.CategoryHandler) {
-	r := rg.Group("/category")
+// CategoriesRoutes initialize Category routes.
+func CategoriesRoutes(rg *gin.RouterGroup, categoryHandler handler.CategoryHandler) {
+	r := rg.Group("/categories")
 	r.GET("/", categoryHandler.Get)
 	r.GET("/:id", categoryHandler.Find)
 	r.POST("/", categoryHandler.Create)
