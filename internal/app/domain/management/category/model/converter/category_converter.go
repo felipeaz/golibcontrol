@@ -19,6 +19,9 @@ func ConvertToCategoryObj(obj interface{}) (model.Category, *errors.ApiError) {
 }
 
 func ConvertToSliceCategoryObj(obj interface{}) ([]model.Category, *errors.ApiError) {
+	if obj == nil {
+		return []model.Category{}, nil
+	}
 	categoryObj, ok := obj.(*[]model.Category)
 	if !ok {
 		return nil, &errors.ApiError{
