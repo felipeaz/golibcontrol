@@ -5,9 +5,9 @@ import (
 )
 
 type Log struct {
-	Message string    `json:"message"`
-	Service string    `json:"service"`
-	Error   string    `json:"error"`
 	Level   string    `json:"severity"`
+	Service string    `json:"service"`
+	Message string    `json:"message"`
+	Error   string    `json:"error"`
 	Time    time.Time `json:"timestamp"`
 }
