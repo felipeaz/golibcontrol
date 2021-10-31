@@ -12,10 +12,9 @@ import (
 )
 
 const (
-	ClosingLogFileErrorMessage = "failed to close log file"
-	ErrorLevel                 = "ERROR"
-	WarnLevel                  = "WARNING"
-	InfoLevel                  = "INFO"
+	ErrorLevel = "ERROR"
+	WarnLevel  = "WARNING"
+	InfoLevel  = "INFO"
 )
 
 type Logger struct {
@@ -92,7 +91,7 @@ func (l Logger) writeError(errorLog model.Log) {
 	defer func(f *os.File) {
 		err := f.Close()
 		if err != nil {
-			log.Println(l.serviceName, ClosingLogFileErrorMessage, err.Error())
+			log.Println(l.serviceName, "failed to close log file", err.Error())
 		}
 	}(f)
 
