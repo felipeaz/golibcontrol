@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// StudentsRoutes initialize Category routes.
-func StudentsRoutes(rg *gin.RouterGroup, studentHandler handler.StudentHandler) {
+// StudentRoutes initialize Category routes.
+func StudentRoutes(rg *gin.RouterGroup, studentHandler handler.StudentHandler) {
 	r := rg.Group("/students")
 	r.GET("/", studentHandler.Get)
 	r.GET("/:id", studentHandler.Find)

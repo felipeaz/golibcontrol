@@ -22,9 +22,9 @@ func Build(
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	build.BooksRoutes(vGroup, bHandler)
-	build.CategoriesRoutes(vGroup, cHandler)
-	build.StudentsRoutes(vGroup, sHandler)
+	build.BookRoutes(vGroup, bHandler)
+	build.CategoryRoutes(vGroup, cHandler)
+	build.StudentRoutes(vGroup, sHandler)
 	build.LendingRoutes(vGroup, lHandler)
 
 	return router.Run(":8081")

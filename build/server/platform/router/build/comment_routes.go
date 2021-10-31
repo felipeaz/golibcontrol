@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CommentsRoutes(rg *gin.RouterGroup, commentHandler handler.CommentHandler) {
+func CommentRoutes(rg *gin.RouterGroup, commentHandler handler.CommentHandler) {
 	r := rg.Group("/comments")
 	r.GET("/:bookId", commentHandler.Get)
 	r.POST("/", commentHandler.Create)
