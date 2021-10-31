@@ -19,7 +19,7 @@ func NewCommentHandler(module _interface.CommentModuleInterface) CommentHandler 
 }
 
 func (h CommentHandler) Get(c *gin.Context) {
-	comments, apiError := h.Module.Get(c.Param("bookId"))
+	comments, apiError := h.Module.Get(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

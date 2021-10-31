@@ -19,7 +19,7 @@ func NewReviewHandler(module _interface.ReviewModuleInterface) ReviewHandler {
 }
 
 func (h ReviewHandler) Get(c *gin.Context) {
-	reviews, apiError := h.Module.Get(c.Param("bookId"))
+	reviews, apiError := h.Module.Get(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
