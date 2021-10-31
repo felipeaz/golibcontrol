@@ -1,4 +1,4 @@
-echo "Creating Services...\n\n"
+printf "Creating Services...\n\n"
 
 curl --location --request POST 'http://localhost:8001/services' \
 --form 'name="management-service"' \
@@ -21,7 +21,7 @@ curl --location --request POST 'http://localhost:8001/services' \
 --form 'port="8083"' \
 --form 'path="/"'
 
-echo "Creating Routes...\n\n"
+printf "Creating Routes...\n\n"
 
 curl --location --request POST 'http://localhost:8001/services/management-service/routes' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
@@ -50,7 +50,7 @@ curl --location --request POST 'http://localhost:8001/services/platform-service/
 --data-urlencode 'methods=PUT' \
 --data-urlencode 'methods=DELETE'
 
-echo "Setting up authentication...\n\n"
+printf "Setting up authentication...\n\n"
 
 curl --location --request POST 'http://localhost:8001/services/platform-service/plugins' \
 --header 'Content-Type: application/x-www-form-urlencoded' \

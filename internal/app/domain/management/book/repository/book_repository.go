@@ -11,7 +11,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 )
 
-// BookRepository is responsible of getting/saving information from DB.
+// BookRepository is responsible for getting/saving information from DB.
 type BookRepository struct {
 	DB                     database.GORMServiceInterface
 	BookCategoryRepository _interface.BookCategoryRepositoryInterface

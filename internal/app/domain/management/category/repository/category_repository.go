@@ -9,7 +9,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/model/converter"
 )
 
-// CategoryRepository is responsible of getting/saving information from DB.
+// CategoryRepository is responsible for getting/saving information from DB.
 type CategoryRepository struct {
 	DB database.GORMServiceInterface
 }

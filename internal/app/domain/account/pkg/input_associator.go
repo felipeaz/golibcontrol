@@ -9,7 +9,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
-// AssociateAccountInput is responsible of associating the params to the user model.
+// AssociateAccountInput is responsible for associating the params to the user model.
 func AssociateAccountInput(c *gin.Context) (account accountModel.Account, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&account)
 	if err != nil {
@@ -23,7 +23,7 @@ func AssociateAccountInput(c *gin.Context) (account accountModel.Account, apiErr
 	return
 }
 
-// AssociateSessionInput is responsible of associating the params to the user model.
+// AssociateSessionInput is responsible for associating the params to the user model.
 func AssociateSessionInput(c *gin.Context) (session accountModel.UserSession, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&session)
 	if err != nil {

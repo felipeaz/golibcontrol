@@ -8,6 +8,10 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
+const (
+	ClosingConnectionErrorMessage = "Failed to close redis connection %s"
+)
+
 // Cache implements Redis functions
 type Cache struct {
 	Host   string
@@ -49,7 +53,12 @@ func (c *Cache) Set(key string, value []byte) error {
 		c.Logger.Error(err)
 		return err
 	}
-	defer conn.Close()
+	defer func(conn redis.Conn) {
+		err := conn.Close()
+		if err != nil {
+			c.Logger.Warn(fmt.Sprintf(ClosingConnectionErrorMessage, err.Error()))
+		}
+	}(conn)
 
 	_, err = conn.Do("SET", key, value)
 	if err != nil {
@@ -73,7 +82,12 @@ func (c *Cache) Get(key string) ([]byte, error) {
 		c.Logger.Error(err)
 		return nil, err
 	}
-	defer conn.Close()
+	defer func(conn redis.Conn) {
+		err := conn.Close()
+		if err != nil {
+			c.Logger.Warn(fmt.Sprintf(ClosingConnectionErrorMessage, err.Error()))
+		}
+	}(conn)
 
 	data, err := redis.Bytes(conn.Do("GET", key))
 	if err != nil {
@@ -94,7 +108,12 @@ func (c *Cache) Flush(key string) error {
 		c.Logger.Error(err)
 		return err
 	}
-	defer conn.Close()
+	defer func(conn redis.Conn) {
+		err := conn.Close()
+		if err != nil {
+			c.Logger.Warn(fmt.Sprintf(ClosingConnectionErrorMessage, err.Error()))
+		}
+	}(conn)
 
 	_, err = conn.Do("DEL", key)
 	return err

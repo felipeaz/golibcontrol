@@ -26,7 +26,7 @@ services:
      networks:
        - kong-net
      ports:
-       - 8081:8081
+       - "8081:8081"
   management-service-db-host:
     image: mysql:8.0
     container_name: management-service-database
@@ -37,7 +37,7 @@ services:
     networks:
       - kong-net
     ports:
-      - 3307:3306
+      - "3307:3306"
   account-service:
     build:
       context: "./"
@@ -58,7 +58,7 @@ services:
     networks:
       - kong-net
     ports:
-      - 8082:8082
+      - "8082:8082"
   account-service-db-host:
     image: mysql:8.0
     container_name: account-service-database
@@ -69,7 +69,7 @@ services:
     networks:
       - kong-net
     ports:
-      - 3308:3307
+      - "3308:3307"
   platform-service:
     build:
       context: "./"
@@ -90,7 +90,7 @@ services:
     networks:
       - kong-net
     ports:
-      - 8083:8083
+      - "8083:8083"
   platform-service-db-host:
     image: mysql:8.0
     container_name: platform-service-database
@@ -101,14 +101,14 @@ services:
     networks:
       - kong-net
     ports:
-      - 3309:3306
+      - "3309:3306"
   redis:
     image: redis:alpine
     container_name: redis
     networks:
       - kong-net
     ports:
-      - 6380:6379
+      - "6380:6379"
   kong-database:
     image: postgres:9.6
     restart: always

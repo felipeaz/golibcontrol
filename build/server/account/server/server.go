@@ -14,7 +14,7 @@ import (
 func Start(
 	dbService database.GORMServiceInterface,
 	cache database.CacheInterface,
-	apiGatewayAuth auth.AuthInterface,
+	apiGatewayAuth auth.Interface,
 	log logger.LogInterface,
 ) (err error) {
 	accountRepository := repository.NewAccountRepository(dbService)

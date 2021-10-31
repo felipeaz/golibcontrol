@@ -46,7 +46,7 @@ func CloseConnection(db *gorm.DB) {
 	}
 }
 
-// autoMigrateTables creates tables based on constants defined on internal if those tables doesn't exists.
+// autoMigrateTables creates tables based on constants defined on internal if those tables doesn't exist.
 // If the tables exists, this function will check if all properties of the structs are set on the tables
 // and if the properties aren't set, updates them just like the struct definition.
 func (db *DBHandler) autoMigrateTables() error {

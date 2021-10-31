@@ -17,14 +17,14 @@ import (
 
 type AccountModule struct {
 	Repository _interface.AccountRepositoryInterface
-	Auth       auth.AuthInterface
+	Auth       auth.Interface
 	Cache      databaseInterface.CacheInterface
 	Log        logger.LogInterface
 }
 
 func NewAccountModule(
 	repo _interface.AccountRepositoryInterface,
-	auth auth.AuthInterface,
+	auth auth.Interface,
 	cache databaseInterface.CacheInterface,
 	log logger.LogInterface,
 ) AccountModule {

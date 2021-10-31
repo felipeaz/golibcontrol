@@ -11,6 +11,13 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/logger/model"
 )
 
+const (
+	ClosingLogFileErrorMessage = "failed to close log file"
+	ErrorLevel                 = "ERROR"
+	WarnLevel                  = "WARNING"
+	InfoLevel                  = "INFO"
+)
+
 type Logger struct {
 	logFilePath string
 	serviceName string
@@ -24,26 +31,33 @@ func NewLogger(logFilePath, service string) Logger {
 }
 
 func (l Logger) Error(err error) {
-	f := l.getLogFile("../../logs")
-	defer f.Close()
-
 	errorLog := model.Log{
-		Time:    time.Now(),
-		Message: err.Error(),
+		Level:   ErrorLevel,
 		Service: l.serviceName,
+		Error:   err.Error(),
+		Time:    time.Now(),
 	}
+	l.writeError(errorLog)
+}
 
-	b, e := json.Marshal(errorLog)
-	if e != nil {
-		log.Println(l.serviceName, e.Error())
-		return
+func (l Logger) Warn(msg string) {
+	errorLog := model.Log{
+		Level:   WarnLevel,
+		Service: l.serviceName,
+		Message: msg,
+		Time:    time.Now(),
 	}
+	l.writeError(errorLog)
+}
 
-	_, e = f.Write(b)
-	if e != nil {
-		log.Println(l.serviceName, e.Error())
-		return
+func (l Logger) Info(msg string) {
+	errorLog := model.Log{
+		Level:   InfoLevel,
+		Service: l.serviceName,
+		Message: msg,
+		Time:    time.Now(),
 	}
+	l.writeError(errorLog)
 }
 
 func (l Logger) getLogFile(path string) (f *os.File) {
@@ -71,4 +85,24 @@ func (l Logger) getLogFile(path string) (f *os.File) {
 	}
 
 	return
+}
+
+func (l Logger) writeError(errorLog model.Log) {
+	f := l.getLogFile(l.logFilePath)
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			log.Println(l.serviceName, ClosingLogFileErrorMessage, err.Error())
+		}
+	}(f)
+
+	b, e := json.Marshal(errorLog)
+	if e != nil {
+		log.Println(l.serviceName, e.Error())
+	}
+
+	_, e = f.Write(b)
+	if e != nil {
+		log.Println(l.serviceName, e.Error())
+	}
 }

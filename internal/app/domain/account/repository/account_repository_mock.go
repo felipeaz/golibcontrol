@@ -28,7 +28,7 @@ func (r *AccountRepositoryMock) FindWhere(fieldName, fieldValue string) (model.A
 	return resp.Get(0).(model.Account), resp.Get(1).(*errors.ApiError)
 }
 
-// Create creates an user
+// Create creates a user
 func (r *AccountRepositoryMock) Create(account model.Account) (uint, *errors.ApiError) {
 	resp := r.Called(account)
 	return resp.Get(0).(uint), resp.Get(1).(*errors.ApiError)
