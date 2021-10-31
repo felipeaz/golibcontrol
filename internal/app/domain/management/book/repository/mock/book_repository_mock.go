@@ -26,7 +26,7 @@ func (r BookRepositoryMock) Get() (books []model.Book, apiError *errors.ApiError
 	}
 
 	books = []model.Book{
-		model.Book{
+		{
 			ID:             25,
 			RegisterNumber: "123",
 			Title:          "Mocked Book",

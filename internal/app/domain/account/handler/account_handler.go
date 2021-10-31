@@ -64,7 +64,7 @@ func (h AccountHandler) Find(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": account})
 }
 
-// Create creates an user
+// Create creates a user
 func (h AccountHandler) Create(c *gin.Context) {
 	account, apiError := pkg.AssociateAccountInput(c)
 	if apiError != nil {

@@ -19,6 +19,9 @@ func ConvertToLendingObj(obj interface{}) (model.Lending, *errors.ApiError) {
 }
 
 func ConvertToSliceLendingObj(obj interface{}) ([]model.Lending, *errors.ApiError) {
+	if obj == nil {
+		return []model.Lending{}, nil
+	}
 	lendingObj, ok := obj.(*[]model.Lending)
 	if !ok {
 		return nil, &errors.ApiError{

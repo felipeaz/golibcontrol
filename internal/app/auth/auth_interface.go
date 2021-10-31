@@ -4,7 +4,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/auth/model"
 )
 
-type AuthInterface interface {
+type Interface interface {
 	CreateConsumer(username string) (*model.Consumer, error)
 	CreateConsumerKey(consumerId string) (*model.ConsumerKey, error)
 	GetConsumerKey(consumerId, keyId string) (*model.ConsumerKey, error)

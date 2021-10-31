@@ -3,7 +3,7 @@ golibcontrol is a Library Control API where you can control which books are avai
 
 This application is compound by four services:
 
-`Account Service` Service that contains all accounts and which is responsible of user authentication.
+`Account Service` Service that contains all accounts and which is responsible for user authentication.
 
 `Management Service` Service that adds content to the digital library. The content can be Students, Books and Books Lending. 
 

@@ -70,7 +70,7 @@ func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Accoun
 	return account, nil
 }
 
-// Create creates an user
+// Create creates a user
 func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError) {
 	err := r.DB.Persist(&account)
 	if err != nil {

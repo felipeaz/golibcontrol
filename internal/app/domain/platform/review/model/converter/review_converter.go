@@ -19,6 +19,9 @@ func ConvertToReviewObj(obj interface{}) (model.Review, *errors.ApiError) {
 }
 
 func ConvertToSliceReviewObj(obj interface{}) ([]model.Review, *errors.ApiError) {
+	if obj == nil {
+		return []model.Review{}, nil
+	}
 	reviews, ok := obj.(*[]model.Review)
 	if !ok {
 		return nil, &errors.ApiError{

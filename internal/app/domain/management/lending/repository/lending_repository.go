@@ -16,7 +16,7 @@ import (
 	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository/interface"
 )
 
-// LendingRepository is responsible of getting/saving information from DB.
+// LendingRepository is responsible for getting/saving information from DB.
 type LendingRepository struct {
 	DB                database.GORMServiceInterface
 	StudentRepository studentRepository.StudentRepositoryInterface

@@ -9,7 +9,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model/converter"
 )
 
-// StudentRepository is responsible of getting/saving information from DB.
+// StudentRepository is responsible for getting/saving information from DB.
 type StudentRepository struct {
 	DB database.GORMServiceInterface
 }

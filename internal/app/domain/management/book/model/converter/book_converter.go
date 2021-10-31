@@ -19,6 +19,9 @@ func ConvertToBookObj(obj interface{}) (model.Book, *errors.ApiError) {
 }
 
 func ConvertToSliceBookObj(obj interface{}) ([]model.Book, *errors.ApiError) {
+	if obj == nil {
+		return []model.Book{}, nil
+	}
 	bookObj, ok := obj.(*[]model.Book)
 	if !ok {
 		return nil, &errors.ApiError{

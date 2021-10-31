@@ -19,6 +19,9 @@ func ConvertToReserveObj(obj interface{}) (model.Reserve, *errors.ApiError) {
 }
 
 func ConvertToSliceReserveObj(obj interface{}) ([]model.Reserve, *errors.ApiError) {
+	if obj == nil {
+		return []model.Reserve{}, nil
+	}
 	comments, ok := obj.(*[]model.Reserve)
 	if !ok {
 		return nil, &errors.ApiError{

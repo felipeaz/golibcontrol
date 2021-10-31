@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AssociateCommentInput is responsible of associating the params to the user model.
+// AssociateCommentInput is responsible for associating the params to the user model.
 func AssociateCommentInput(c *gin.Context) (comment commentModel.Comment, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&comment)
 	if err != nil {
@@ -24,7 +24,7 @@ func AssociateCommentInput(c *gin.Context) (comment commentModel.Comment, apiErr
 	return
 }
 
-// AssociateReserveInput is responsible of associating the params to the user model.
+// AssociateReserveInput is responsible for associating the params to the user model.
 func AssociateReserveInput(c *gin.Context) (reserve reserveModel.Reserve, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&reserve)
 	if err != nil {
@@ -38,7 +38,7 @@ func AssociateReserveInput(c *gin.Context) (reserve reserveModel.Reserve, apiErr
 	return
 }
 
-// AssociateReviewInput is responsible of associating the params to the user model.
+// AssociateReviewInput is responsible for associating the params to the user model.
 func AssociateReviewInput(c *gin.Context) (review reviewModel.Review, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&review)
 	if err != nil {

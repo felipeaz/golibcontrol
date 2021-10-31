@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AssociateBookInput is responsible of associate the params to the book model.
+// AssociateBookInput is responsible for associate the params to the book model.
 func AssociateBookInput(c *gin.Context) (book bookModel.Book, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&book)
 	if err != nil {
@@ -25,7 +25,7 @@ func AssociateBookInput(c *gin.Context) (book bookModel.Book, apiError *errors.A
 	return
 }
 
-// AssociateCategoryInput is responsible of associating the params to the category model.
+// AssociateCategoryInput is responsible for associating the params to the category model.
 func AssociateCategoryInput(c *gin.Context) (category categoryModel.Category, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&category)
 	if err != nil {
@@ -39,7 +39,7 @@ func AssociateCategoryInput(c *gin.Context) (category categoryModel.Category, ap
 	return
 }
 
-// AssociateStudentInput is responsible of associating the params to the student model.
+// AssociateStudentInput is responsible for associating the params to the student model.
 func AssociateStudentInput(c *gin.Context) (student studentModel.Student, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&student)
 	if err != nil {
@@ -53,7 +53,7 @@ func AssociateStudentInput(c *gin.Context) (student studentModel.Student, apiErr
 	return
 }
 
-// AssociateLendingInput is responsible of associating the params to the lending model.
+// AssociateLendingInput is responsible for associating the params to the lending model.
 func AssociateLendingInput(c *gin.Context) (lending lendingModel.Lending, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&lending)
 	if err != nil {

@@ -30,7 +30,7 @@ func (r LendingRepositoryMock) Get() (lendings []model.Lending, apiError *errors
 	}
 
 	lendings = []model.Lending{
-		model.Lending{
+		{
 			ID:          25,
 			BookID:      5,
 			StudentID:   10,
@@ -136,7 +136,7 @@ func (r LendingRepositoryMock) Delete(id string) (apiError *errors.ApiError) {
 	return nil
 }
 
-// beforeCreateAndUpdate validate if the student or book exists before create the lending.
+// BeforeCreateAndUpdate validate if the student or book exists before create the lending.
 func (r LendingRepositoryMock) BeforeCreateAndUpdate(studentId, bookId uint) *errors.ApiError {
 	if r.TestStudentNotFoundError {
 		if !r.TestError {
@@ -171,7 +171,7 @@ func (r LendingRepositoryMock) BeforeCreateAndUpdate(studentId, bookId uint) *er
 	return nil
 }
 
-// beforeCreate validate if the book is already lent.
+// BeforeCreate validate if the book is already lent.
 func (r LendingRepositoryMock) BeforeCreate(studentId, bookId uint) *errors.ApiError {
 	if r.TestBookAlreadyLentError {
 		return &errors.ApiError{

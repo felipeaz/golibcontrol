@@ -30,7 +30,7 @@ func TestCreateConsumerSuccess(t *testing.T) {
 				if err != nil {
 					assert.Fail(t, "Failed to marshal expected response")
 				}
-				if _, err := w.Write([]byte(resp)); err != nil {
+				if _, err := w.Write(resp); err != nil {
 					assert.Fail(t, "Failed to Write test response")
 				}
 			}
@@ -38,7 +38,7 @@ func TestCreateConsumerSuccess(t *testing.T) {
 	)
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
-	loggerMock := new(logger.LoggerMock)
+	loggerMock := new(logger.Mock)
 	jwtSecret := "jwtsecret"
 	auth := NewAuth(cli, loggerMock, jwtSecret)
 
@@ -60,7 +60,7 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 	)
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
-	loggerMock := new(logger.LoggerMock)
+	loggerMock := new(logger.Mock)
 
 	jwtSecret := "jwtsecret"
 	auth := NewAuth(cli, loggerMock, jwtSecret)
@@ -76,7 +76,7 @@ func TestCreateConsumerHTTPRequestError(t *testing.T) {
 	username := "email@test.com"
 
 	cli := request.NewHttpRequest(client.NewHTTPClient(), "")
-	loggerMock := new(logger.LoggerMock)
+	loggerMock := new(logger.Mock)
 	jwtSecret := "jwtsecret"
 	auth := NewAuth(cli, loggerMock, jwtSecret)
 
@@ -115,7 +115,7 @@ func TestCreateConsumerKeySuccess(t *testing.T) {
 	)
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
-	loggerMock := new(logger.LoggerMock)
+	loggerMock := new(logger.Mock)
 	jwtSecret := "jwtsecret"
 	auth := NewAuth(cli, loggerMock, jwtSecret)
 

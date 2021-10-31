@@ -26,7 +26,7 @@ func (r StudentRepositoryMock) Get() (students []model.Student, apiError *errors
 	}
 
 	students = []model.Student{
-		model.Student{
+		{
 			ID:        "2500651",
 			Name:      "Felipe de Azevedo Silva",
 			Email:     "felipe9_azevedo@hotmail.com",

@@ -19,6 +19,9 @@ func ConvertToStudentObj(obj interface{}) (model.Student, *errors.ApiError) {
 }
 
 func ConvertToSliceStudentObj(obj interface{}) ([]model.Student, *errors.ApiError) {
+	if obj == nil {
+		return []model.Student{}, nil
+	}
 	studentObj, ok := obj.(*[]model.Student)
 	if !ok {
 		return nil, &errors.ApiError{

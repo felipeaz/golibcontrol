@@ -19,6 +19,9 @@ func ConvertToCommentObj(obj interface{}) (model.Comment, *errors.ApiError) {
 }
 
 func ConvertToSliceCommentObj(obj interface{}) ([]model.Comment, *errors.ApiError) {
+	if obj == nil {
+		return []model.Comment{}, nil
+	}
 	comments, ok := obj.(*[]model.Comment)
 	if !ok {
 		return nil, &errors.ApiError{

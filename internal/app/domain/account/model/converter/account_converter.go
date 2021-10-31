@@ -19,6 +19,9 @@ func ConvertToAccountObj(obj interface{}) (model.Account, *errors.ApiError) {
 }
 
 func ConvertToSliceAccountObj(obj interface{}) ([]model.Account, *errors.ApiError) {
+	if obj == nil {
+		return []model.Account{}, nil
+	}
 	accountObj, ok := obj.(*[]model.Account)
 	if !ok {
 		return nil, &errors.ApiError{
