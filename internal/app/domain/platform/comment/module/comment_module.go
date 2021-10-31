@@ -1,8 +1,6 @@
 package module
 
 import (
-	"fmt"
-
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/repository/interface"
@@ -22,9 +20,6 @@ func NewCommentModule(repo _interface.CommentRepositoryInterface, log logger.Log
 }
 
 func (m CommentModule) Get(bookId string) ([]model.Comment, *errors.ApiError) {
-	m.Log.Warn(bookId)
-	m.Log.Info(bookId)
-	m.Log.Error(fmt.Errorf(bookId))
 	return m.Repository.Get(bookId)
 }
 
