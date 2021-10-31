@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"fmt"
+
 	"github.com/stretchr/testify/mock"
 )
 
@@ -9,5 +11,5 @@ type LoggerMock struct {
 }
 
 func (l *LoggerMock) Error(err error) {
-	l.Called(err)
+	fmt.Println("log error: ", err.Error())
 }

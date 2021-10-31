@@ -61,6 +61,7 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 	defer testServer.Close()
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
 	loggerMock := new(logger.LoggerMock)
+
 	jwtSecret := "jwtsecret"
 	auth := NewAuth(cli, loggerMock, jwtSecret)
 
@@ -73,22 +74,14 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 
 func TestCreateConsumerHTTPRequestError(t *testing.T) {
 	username := "email@test.com"
-	testServer := httptest.NewServer(
-		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.URL.Path == "/" {
-				r.Close = true
-			}
-		}),
-	)
 
-	defer testServer.Close()
-	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
+	cli := request.NewHttpRequest(client.NewHTTPClient(), "")
 	loggerMock := new(logger.LoggerMock)
 	jwtSecret := "jwtsecret"
 	auth := NewAuth(cli, loggerMock, jwtSecret)
 
 	consumer, err := auth.CreateConsumer(username)
-	assert.NoError(t, err)
+	assert.NotNil(t, err)
 	assert.Nil(t, consumer)
 }
 

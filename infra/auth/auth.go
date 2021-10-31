@@ -23,11 +23,7 @@ func NewAuth(httpRequest _interface.HTTPRequestInterface, logger logger.LogInter
 }
 
 func (a Auth) CreateConsumer(username string) (*model.Consumer, error) {
-	body, err := json.Marshal(model.Consumer{Username: username})
-	if err != nil {
-		a.Log.Error(err)
-		return nil, err
-	}
+	body, _ := json.Marshal(model.Consumer{Username: username})
 
 	b, err := a.HTTPRequest.Post("", body)
 	if err != nil {
