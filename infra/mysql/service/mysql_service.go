@@ -35,16 +35,23 @@ func (s MySQLService) FetchAllWithPreload(domainObj interface{}, preload string)
 	return domainObj, nil
 }
 
+func (s MySQLService) FetchAllWithWhereAndPreload(domainObj interface{}, fieldName, fieldValue, preload string) (interface{}, error) {
+	result := s.DB.Preload(preload).Where(fieldName+" = ? ", fieldValue).Find(domainObj)
+	if err := result.Error; err != nil {
+		s.Log.Error(err)
+		return nil, err
+	}
+	return domainObj, nil
+}
+
 func (s MySQLService) Fetch(domainObj interface{}, id string) (interface{}, error) {
 	result := s.DB.Model(domainObj).Where("id = ?", id).Find(domainObj)
 	if err := result.Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			s.Log.Error(err)
-			return nil, err
-		}
+		s.Log.Error(err)
+		return nil, err
 	}
 	if result.RowsAffected == 0 {
-		return nil, nil
+		return nil, gorm.ErrRecordNotFound
 	}
 	return domainObj, nil
 }
@@ -52,13 +59,11 @@ func (s MySQLService) Fetch(domainObj interface{}, id string) (interface{}, erro
 func (s MySQLService) FetchWithPreload(domainObj interface{}, id, preload string) (interface{}, error) {
 	result := s.DB.Preload(preload).Model(domainObj).Where("id = ?", id).Find(domainObj)
 	if err := result.Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			s.Log.Error(err)
-			return nil, err
-		}
+		s.Log.Error(err)
+		return nil, err
 	}
 	if result.RowsAffected == 0 {
-		return nil, nil
+		return nil, gorm.ErrRecordNotFound
 	}
 	return domainObj, nil
 }
@@ -66,13 +71,11 @@ func (s MySQLService) FetchWithPreload(domainObj interface{}, id, preload string
 func (s MySQLService) FetchAllWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, error) {
 	result := s.DB.Model(domainObj).Where(fieldName+" = ? ", fieldValue).Find(domainObj)
 	if err := result.Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			s.Log.Error(err)
-			return nil, err
-		}
+		s.Log.Error(err)
+		return nil, err
 	}
 	if result.RowsAffected == 0 {
-		return nil, nil
+		return nil, gorm.ErrRecordNotFound
 	}
 	return domainObj, nil
 }
@@ -80,13 +83,11 @@ func (s MySQLService) FetchAllWhere(domainObj interface{}, fieldName, fieldValue
 func (s MySQLService) FetchAllWhereWithQuery(domainObj interface{}, query string) (interface{}, error) {
 	result := s.DB.Model(domainObj).Where(query).Find(domainObj)
 	if err := result.Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			s.Log.Error(err)
-			return nil, err
-		}
+		s.Log.Error(err)
+		return nil, err
 	}
 	if result.RowsAffected == 0 {
-		return nil, nil
+		return nil, gorm.ErrRecordNotFound
 	}
 	return domainObj, nil
 }

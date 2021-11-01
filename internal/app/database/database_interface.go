@@ -3,6 +3,7 @@ package database
 type GORMServiceInterface interface {
 	FetchAll(domainObj interface{}) (interface{}, error)
 	FetchAllWithPreload(domainObj interface{}, preload string) (interface{}, error)
+	FetchAllWithWhereAndPreload(domainObj interface{}, fieldName, fieldValue, preload string) (interface{}, error)
 	Fetch(domainObj interface{}, id string) (interface{}, error)
 	FetchWithPreload(domainObj interface{}, id, preload string) (interface{}, error)
 	FetchAllWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, error)
