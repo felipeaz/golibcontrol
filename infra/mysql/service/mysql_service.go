@@ -76,9 +76,6 @@ func (s MySQLService) FetchAllWhere(domainObj interface{}, fieldName, fieldValue
 		s.Log.Error(err)
 		return nil, err
 	}
-	if result.RowsAffected == 0 {
-		return nil, gorm.ErrRecordNotFound
-	}
 	return domainObj, nil
 }
 
@@ -87,9 +84,6 @@ func (s MySQLService) FetchAllWhereWithQuery(domainObj interface{}, query string
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return nil, err
-	}
-	if result.RowsAffected == 0 {
-		return nil, gorm.ErrRecordNotFound
 	}
 	return domainObj, nil
 }
