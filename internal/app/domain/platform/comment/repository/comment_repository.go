@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"net/http"
-
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
@@ -23,7 +21,7 @@ func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError
 	result, err := r.DB.FetchAllWhere(&[]model.Comment{}, "book_id", bookId)
 	if err != nil {
 		return nil, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
@@ -39,7 +37,7 @@ func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
 	result, err := r.DB.Fetch(&model.Comment{}, id)
 	if err != nil {
 		return model.Comment{}, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
@@ -55,7 +53,7 @@ func (r CommentRepository) Create(comment model.Comment) (uint, *errors.ApiError
 	err := r.DB.Persist(&comment)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
@@ -67,7 +65,7 @@ func (r CommentRepository) Update(id string, upComment model.Comment) *errors.Ap
 	err := r.DB.Refresh(&upComment, id)
 	if err != nil {
 		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
@@ -79,7 +77,7 @@ func (r CommentRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Comment{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
 		}

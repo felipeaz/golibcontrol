@@ -11,4 +11,5 @@ type GORMServiceInterface interface {
 	Persist(domainObj interface{}) error
 	Refresh(domainObj interface{}, id string) error
 	Remove(domainObj interface{}, id string) error
+	GetErrorStatusCode(err error) int
 }

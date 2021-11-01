@@ -2,7 +2,6 @@ package repository
 
 import (
 	"log"
-	"net/http"
 	"strconv"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
@@ -28,7 +27,7 @@ func (r BookCategoryRepository) GetCategoriesByIds(categoriesIds []uint) (catego
 		_, err := r.DB.Fetch(&category, strconv.Itoa(int(categoryId)))
 		if err != nil {
 			return nil, &errors.ApiError{
-				Status:  http.StatusInternalServerError,
+				Status:  r.DB.GetErrorStatusCode(err),
 				Message: errors.UpdateFailMessage,
 				Error:   err.Error(),
 			}

@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"net/http"
-
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/model"
@@ -23,7 +21,7 @@ func (r ReviewRepository) Get(bookId string) ([]model.Review, *errors.ApiError) 
 	result, err := r.DB.FetchAllWhere(&[]model.Review{}, "book_id", bookId)
 	if err != nil {
 		return nil, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
@@ -39,7 +37,7 @@ func (r ReviewRepository) Find(id string) (model.Review, *errors.ApiError) {
 	result, err := r.DB.Fetch(&model.Review{}, id)
 	if err != nil {
 		return model.Review{}, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
@@ -55,7 +53,7 @@ func (r ReviewRepository) Create(review model.Review) (uint, *errors.ApiError) {
 	err := r.DB.Persist(&review)
 	if err != nil {
 		return 0, &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
@@ -67,7 +65,7 @@ func (r ReviewRepository) Update(id string, upReview model.Review) *errors.ApiEr
 	err := r.DB.Refresh(&upReview, id)
 	if err != nil {
 		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.UpdateFailMessage,
 			Error:   err.Error(),
 		}
@@ -79,7 +77,7 @@ func (r ReviewRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&model.Review{}, id)
 	if err != nil {
 		return &errors.ApiError{
-			Status:  http.StatusInternalServerError,
+			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
 		}

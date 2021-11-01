@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"gorm.io/gorm"
 )
@@ -117,4 +119,13 @@ func (s MySQLService) Remove(domainObj interface{}, id string) error {
 		return err
 	}
 	return nil
+}
+
+func (s MySQLService) GetErrorStatusCode(err error) int {
+	switch err {
+	case gorm.ErrRecordNotFound:
+		return http.StatusNotFound
+	default:
+		return http.StatusInternalServerError
+	}
 }
