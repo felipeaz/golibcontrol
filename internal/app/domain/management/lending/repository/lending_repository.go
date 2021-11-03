@@ -7,12 +7,12 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/model"
-	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/repository/interface"
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
+	bookRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/repository/interface"
 	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model/converter"
-	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/model"
-	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/repository/interface"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model"
+	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/repository/interface"
 )
 
 // LendingRepository is responsible for getting/saving information from DB.

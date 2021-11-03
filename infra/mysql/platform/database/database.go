@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
-	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model"
-	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/model"
+	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model"
+	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/model"
+	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/model"
+	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -51,6 +52,7 @@ func CloseConnection(db *gorm.DB) {
 func (db *DBHandler) autoMigrateTables() error {
 	return db.conn.Migrator().AutoMigrate(
 		&commentModel.Comment{},
+		&replyModel.Reply{},
 		&reserveModel.Reserve{},
 		&reviewModel.Review{},
 	)

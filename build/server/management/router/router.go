@@ -2,10 +2,10 @@ package router
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/management/router/build"
-	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/book/handler"
-	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/category/handler"
+	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/handler"
+	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/handler"
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/handler"
-	studentHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/student/handler"
+	studentHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
 )

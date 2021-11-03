@@ -4,9 +4,10 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comment/model"
-	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserve/model"
-	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/review/model"
+	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model"
+	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/model"
+	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/model"
+	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +16,20 @@ func AssociateCommentInput(c *gin.Context) (comment commentModel.Comment, apiErr
 	err := c.ShouldBindJSON(&comment)
 	if err != nil {
 		return commentModel.Comment{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
+// AssociateReplyInput is responsible for associating the params to the user model.
+func AssociateReplyInput(c *gin.Context) (reply replyModel.Reply, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&reply)
+	if err != nil {
+		return replyModel.Reply{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
