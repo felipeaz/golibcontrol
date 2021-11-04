@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
 )
 
 func ConvertToAccountObj(obj interface{}) (model.Account, *errors.ApiError) {

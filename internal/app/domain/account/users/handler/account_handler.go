@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/module/interface"
 	"github.com/gin-gonic/gin"
 )
 

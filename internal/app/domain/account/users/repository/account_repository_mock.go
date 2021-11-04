@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
 	"github.com/stretchr/testify/mock"
 )
 

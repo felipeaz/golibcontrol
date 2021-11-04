@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/infra/auth/jwt"
-	"github.com/FelipeAz/golibcontrol/internal/app/auth"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/repository/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 

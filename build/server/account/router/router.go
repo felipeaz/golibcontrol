@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/account/router/build"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
 )

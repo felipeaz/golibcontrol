@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/model"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
