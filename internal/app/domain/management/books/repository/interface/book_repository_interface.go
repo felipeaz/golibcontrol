@@ -11,8 +11,4 @@ type BookRepositoryInterface interface {
 	Create(book model.Book) (uint, *errors.ApiError)
 	Update(id string, upBook model.Book) *errors.ApiError
 	Delete(id string) (apiError *errors.ApiError)
-	BeforeCreate(categoriesId string) ([]uint, *errors.ApiError)
-	AfterCreate(bookId uint, categoriesId []uint)
-	BeforeUpdate(bookId uint, categoriesId string) *errors.ApiError
-	BeforeDelete(bookId uint)
 }

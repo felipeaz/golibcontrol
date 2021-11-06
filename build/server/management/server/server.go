@@ -21,8 +21,8 @@ import (
 // Start initialize the webservice,
 func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (err error) {
 	bcRepository := bookRepository.NewBookCategoryRepository(dbService)
-	bRepository := bookRepository.NewBookRepository(dbService, bcRepository)
-	bModule := bookModule.NewBookModule(bRepository, log)
+	bRepository := bookRepository.NewBookRepository(dbService)
+	bModule := bookModule.NewBookModule(bRepository, bcRepository, log)
 	bHandler := bookHandler.NewBookHandler(bModule)
 
 	cRepository := categoryRepository.NewCategoryRepository(dbService)
@@ -33,7 +33,7 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	sModule := studentModule.NewStudentModule(sRepository, log)
 	sHandler := studentHandler.NewStudentHandler(sModule)
 
-	lRepository := lendingRepository.NewLendingRepository(dbService, sRepository, bRepository)
+	lRepository := lendingRepository.NewLendingRepository(dbService)
 	lModule := lendingModule.NewLendingModule(lRepository, log)
 	lHandler := lendingHandler.NewLendingHandler(lModule)
 

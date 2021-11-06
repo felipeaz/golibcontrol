@@ -115,6 +115,15 @@ func (s MySQLService) Remove(domainObj interface{}, id string) error {
 	return nil
 }
 
+func (s MySQLService) RemoveWhere(domainObj interface{}, fieldName, fieldValue string) error {
+	err := s.DB.Where(fieldName+" = ? ", fieldValue).Delete(domainObj).Error
+	if err != nil {
+		s.Log.Error(err)
+		return err
+	}
+	return nil
+}
+
 func (s MySQLService) GetErrorStatusCode(err error) int {
 	switch err {
 	case gorm.ErrRecordNotFound:

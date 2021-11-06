@@ -7,20 +7,22 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
-// LendingModule process the request recieved from handler.
+// LendingModule process the request received from handler.
 type LendingModule struct {
 	Repository _interface.LendingRepositoryInterface
 	Log        logger.LogInterface
 }
 
-func NewLendingModule(repo _interface.LendingRepositoryInterface, log logger.LogInterface) LendingModule {
+func NewLendingModule(
+	repo _interface.LendingRepositoryInterface,
+	log logger.LogInterface) LendingModule {
 	return LendingModule{
 		Repository: repo,
 		Log:        log,
 	}
 }
 
-// Get returns all lendings.
+// Get returns all lending.
 func (m LendingModule) Get() ([]model.Lending, *errors.ApiError) {
 	return m.Repository.Get()
 }

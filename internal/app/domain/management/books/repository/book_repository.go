@@ -5,21 +5,16 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model/converter"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/repository/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
-	_pkg "github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
 )
 
 // BookRepository is responsible for getting/saving information from DB.
 type BookRepository struct {
-	DB                     database.GORMServiceInterface
-	BookCategoryRepository _interface.BookCategoryRepositoryInterface
+	DB database.GORMServiceInterface
 }
 
-func NewBookRepository(db database.GORMServiceInterface, repo _interface.BookCategoryRepositoryInterface) BookRepository {
+func NewBookRepository(db database.GORMServiceInterface) BookRepository {
 	return BookRepository{
-		DB:                     db,
-		BookCategoryRepository: repo,
+		DB: db,
 	}
 }
 
@@ -59,15 +54,6 @@ func (r BookRepository) Find(id string) (model.Book, *errors.ApiError) {
 
 // Create persist a book to the DB.
 func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
-	categoriesIds, apiError := r.BeforeCreate(book.CategoriesId)
-	if apiError != nil {
-		apiError.Message = errors.CreateFailMessage
-		if apiError.Error == errors.ItemNotFoundError {
-			apiError.Error = errors.CategoryNotFoundError
-		}
-		return 0, apiError
-	}
-
 	err := r.DB.Persist(&book)
 	if err != nil {
 		return 0, &errors.ApiError{
@@ -76,23 +62,11 @@ func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-
-	r.AfterCreate(book.ID, categoriesIds)
 	return book.ID, nil
 }
 
 // Update update an existent book.
 func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
-	parsedId, apiError := _pkg.ParseStringToId(id)
-	if apiError != nil {
-		return apiError
-	}
-
-	apiError = r.BeforeUpdate(parsedId, upBook.CategoriesId)
-	if apiError != nil {
-		apiError.Message = errors.UpdateFailMessage
-		return apiError
-	}
 	err := r.DB.Refresh(&upBook, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -106,11 +80,6 @@ func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
 
 // Delete delete an existent book from DB.
 func (r BookRepository) Delete(id string) *errors.ApiError {
-	parsedId, apiError := _pkg.ParseStringToId(id)
-	if apiError != nil {
-		return apiError
-	}
-	r.BeforeDelete(parsedId)
 	err := r.DB.Remove(&model.Book{}, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -120,30 +89,4 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 		}
 	}
 	return nil
-}
-
-// BeforeCreate validate if the request categories exists
-func (r BookRepository) BeforeCreate(categoriesId string) ([]uint, *errors.ApiError) {
-	return r.BookCategoryRepository.GetCategoriesByIds(pkg.ExtractCategoryId(categoriesId))
-}
-
-// AfterCreate persists categories on BookCategory Table after the book persists.
-func (r BookRepository) AfterCreate(bookId uint, categoriesId []uint) {
-	r.BookCategoryRepository.CreateCategories(bookId, categoriesId)
-}
-
-// BeforeUpdate removes book category before updating data from DB.
-func (r BookRepository) BeforeUpdate(bookId uint, categoriesId string) *errors.ApiError {
-	categoriesIdSlice, apiError := r.BeforeCreate(categoriesId)
-	if apiError != nil {
-		return apiError
-	}
-	r.BookCategoryRepository.DeleteCategories(bookId)
-	r.BookCategoryRepository.CreateCategories(bookId, categoriesIdSlice)
-	return nil
-}
-
-// BeforeDelete removes book category before removing data from DB.
-func (r BookRepository) BeforeDelete(bookId uint) {
-	r.BookCategoryRepository.DeleteCategories(bookId)
 }

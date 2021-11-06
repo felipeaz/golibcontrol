@@ -11,6 +11,4 @@ type LendingRepositoryInterface interface {
 	Create(lending model.Lending) (uint, *errors.ApiError)
 	Update(id string, upLending model.Lending) *errors.ApiError
 	Delete(id string) (apiError *errors.ApiError)
-	BeforeCreateAndUpdate(studentId, bookId uint) *errors.ApiError
-	BeforeCreate(studentId, bookId uint) *errors.ApiError
 }
