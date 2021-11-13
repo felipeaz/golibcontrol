@@ -10,9 +10,9 @@ type Review struct {
 	BookId    uint      `json:"bookId"`
 	UserId    uint      `json:"userId"`
 	Rating    int       `json:"rating" binding:"required"`
+	AvgReview float64   `json:"avgReview"`
 	Title     string    `json:"title"`
 	Review    string    `json:"review"`
-	AvgReview float64   `json:"avgReview"`
 	CreatedAt time.Time `time_format:"2006-01-02 15:04:05"`
 	UpdatedAt time.Time `time_format:"2006-01-02 15:04:05"`
 }
