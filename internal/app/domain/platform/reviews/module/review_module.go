@@ -1,6 +1,8 @@
 package module
 
 import (
+	"strconv"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/repository/interface"
@@ -24,7 +26,16 @@ func (m ReviewModule) Get(bookId string) ([]model.Review, *errors.ApiError) {
 }
 
 func (m ReviewModule) Find(id string) (model.Review, *errors.ApiError) {
-	return m.Repository.Find(id)
+	review, apiError := m.Repository.Find(id)
+	if apiError != nil {
+		return model.Review{}, apiError
+	}
+	bookReviews, apiError := m.Get(strconv.Itoa(int(review.BookId)))
+	if apiError != nil {
+		return model.Review{}, apiError
+	}
+	review.CalculateAvg(bookReviews)
+	return review, nil
 }
 
 func (m ReviewModule) Create(comment model.Review) (uint, *errors.ApiError) {
