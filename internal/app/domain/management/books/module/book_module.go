@@ -32,6 +32,11 @@ func (m BookModule) Get() ([]model.Book, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
+// GetWhere return all books from Query
+func (m BookModule) GetWhere(queryBook model.QueryBook) ([]model.Book, *errors.ApiError) {
+	return m.Repository.GetWhere(queryBook)
+}
+
 // Find returns all books on DB.
 func (m BookModule) Find(id string) (model.Book, *errors.ApiError) {
 	return m.Repository.Find(id)

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
@@ -28,11 +30,7 @@ func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	books, apiError := converter.ConvertToSliceBookObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return books, nil
+	return converter.ConvertToSliceBookObj(result)
 }
 
 // Find return one book from DB by ID.
@@ -45,11 +43,22 @@ func (r BookRepository) Find(id string) (model.Book, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	book, apiError := converter.ConvertToBookObj(result)
-	if apiError != nil {
-		return model.Book{}, apiError
+	return converter.ConvertToBookObj(result)
+}
+
+// GetWhere return books from query string.
+func (r BookRepository) GetWhere(queryBook model.QueryBook) ([]model.Book, *errors.ApiError) {
+	join := fmt.Sprintf("JOIN book_categories ON book_categories.book_id = books.id")
+	query := fmt.Sprintf("book_categories.category_id IN (%s)", *queryBook.Categories)
+	result, err := r.DB.FetchAllWithQueryAndPreload(&[]model.Book{}, query, "BookCategory", join)
+	if err != nil {
+		return nil, &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
 	}
-	return book, nil
+	return converter.ConvertToSliceBookObj(result)
 }
 
 // Create persist a book to the DB.

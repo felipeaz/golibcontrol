@@ -45,6 +45,14 @@ func (s MySQLService) FetchAllWithWhereAndPreload(domainObj interface{}, fieldNa
 	}
 	return domainObj, nil
 }
+func (s MySQLService) FetchAllWithQueryAndPreload(domainObj interface{}, query, preload, join string) (interface{}, error) {
+	result := s.DB.Joins(join).Preload(preload).Where(query).Find(domainObj)
+	if err := result.Error; err != nil {
+		s.Log.Error(err)
+		return nil, err
+	}
+	return domainObj, nil
+}
 
 func (s MySQLService) Fetch(domainObj interface{}, id string) (interface{}, error) {
 	result := s.DB.Model(domainObj).Where("id = ?", id).Find(domainObj)
