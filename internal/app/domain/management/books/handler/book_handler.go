@@ -24,13 +24,12 @@ func NewBookHandler(module _interface.BookModuleInterface) BookHandler {
 // Get returns all books.
 func (h BookHandler) Get(c *gin.Context) {
 	var queryBook model.QueryBook
-	if err := c.Bind(&queryBook); err == nil {
+	if err := c.Bind(&queryBook); err == nil && (queryBook.Categories != nil || queryBook.Available != nil) {
 		books, apiError := h.Module.GetWhere(queryBook)
 		if apiError != nil {
 			c.JSON(apiError.Status, apiError)
 			return
 		}
-
 		c.JSON(http.StatusOK, gin.H{"data": books})
 		return
 	}
@@ -40,7 +39,6 @@ func (h BookHandler) Get(c *gin.Context) {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": books})
 }
 
