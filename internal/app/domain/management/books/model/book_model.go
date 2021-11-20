@@ -9,6 +9,8 @@ type Book struct {
 	ID             uint           `json:"id" gorm:"primaryKey;autoIncrement;not null"`
 	Title          string         `json:"title" binding:"required"`
 	Author         string         `json:"author" binding:"required"`
+	Description    string         `json:"description"`
+	Image          string         `json:"image"`
 	RegisterNumber string         `json:"registerNumber" binding:"required" gorm:"unique"`
 	Available      bool           `json:"available" gorm:"default:true"`
 	CategoriesId   string         `json:"categoriesId,omitempty" gorm:"->"`                 // Read Only
