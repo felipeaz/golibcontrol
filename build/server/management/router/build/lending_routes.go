@@ -8,7 +8,7 @@ import (
 // LendingRoutes initialize Category routes.
 func LendingRoutes(rg *gin.RouterGroup, lendingHandler handler.LendingHandler) {
 	r := rg.Group("/lending")
-	r.GET("/", lendingHandler.Get)
+	r.GET("", lendingHandler.Get)
 	r.GET("/:id", lendingHandler.Find)
 	r.POST("/", lendingHandler.Create)
 	r.PUT("/:id", lendingHandler.Update)
