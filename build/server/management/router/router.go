@@ -17,10 +17,10 @@ func Build(
 	lHandler lendingHandler.LendingHandler,
 ) error {
 	router := gin.Default()
-	router.Use(middleware.CORSMiddleware())
-
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
+
+	vGroup.Use(middleware.CORSMiddleware())
 
 	build.BookRoutes(vGroup, bHandler)
 	build.CategoryRoutes(vGroup, cHandler)
