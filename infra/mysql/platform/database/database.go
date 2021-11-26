@@ -2,6 +2,8 @@ package database
 
 import (
 	"fmt"
+	conferenceModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/model"
+	groupModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/model"
 	"log"
 
 	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model"
@@ -55,5 +57,7 @@ func (db *DBHandler) autoMigrateTables() error {
 		&replyModel.Reply{},
 		&reserveModel.Reserve{},
 		&reviewModel.Review{},
+		&conferenceModel.Conference{},
+		&groupModel.Group{},
 	)
 }

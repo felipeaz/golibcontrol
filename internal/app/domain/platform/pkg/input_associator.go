@@ -5,6 +5,8 @@ import (
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model"
+	conferenceModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/model"
+	groupModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/model"
 	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/model"
 	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/model"
 	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model"
@@ -58,6 +60,34 @@ func AssociateReviewInput(c *gin.Context) (review reviewModel.Review, apiError *
 	err := c.ShouldBindJSON(&review)
 	if err != nil {
 		return reviewModel.Review{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
+// AssociateConferenceInput is responsible for associating the params to the user model.
+func AssociateConferenceInput(c *gin.Context) (conference conferenceModel.Conference, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&conference)
+	if err != nil {
+		return conferenceModel.Conference{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
+// AssociateGroupInput is responsible for associating the params to the user model.
+func AssociateGroupInput(c *gin.Context) (group groupModel.Group, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&group)
+	if err != nil {
+		return groupModel.Group{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

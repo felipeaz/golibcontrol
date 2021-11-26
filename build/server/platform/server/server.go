@@ -6,6 +6,12 @@ import (
 	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/handler"
 	commentModule "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/module"
 	commentRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/repository"
+	conferenceHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/handler"
+	conferenceModule "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/module"
+	conferenceRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/repository"
+	groupHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/handler"
+	groupModule "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/module"
+	groupRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/repository"
 	replyHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/handler"
 	replyModule "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/module"
 	replyRepository "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/repository"
@@ -36,5 +42,13 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	revModule := reviewModule.NewReviewModule(revRepository, log)
 	revHandler := reviewHandler.NewReviewHandler(revModule)
 
-	return router.Build(cHandler, replHandler, resHandler, revHandler)
+	confRepository := conferenceRepository.NewConferenceRepository(dbService)
+	confModule := conferenceModule.NewConferenceModule(confRepository, log)
+	confHandler := conferenceHandler.NewConferenceHandler(confModule)
+
+	grpRepository := groupRepository.NewGroupRepository(dbService)
+	grpModule := groupModule.NewGroupModule(grpRepository, log)
+	grpHandler := groupHandler.NewGroupHandler(grpModule)
+
+	return router.Build(cHandler, replHandler, resHandler, revHandler, confHandler, grpHandler)
 }
