@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
@@ -23,23 +22,23 @@ func NewBookHandler(module _interface.BookModuleInterface) BookHandler {
 
 // Get returns all books.
 func (h BookHandler) Get(c *gin.Context) {
-	var queryBook model.QueryBook
-	if err := c.Bind(&queryBook); err == nil && (queryBook.Categories != nil || queryBook.Available != nil) {
-		books, apiError := h.Module.GetWhere(queryBook)
-		if apiError != nil {
-			c.JSON(apiError.Status, apiError)
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"data": books})
-		return
-	}
-
 	books, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": books})
+}
+
+// GetByCategoryId returns all books.
+func (h BookHandler) GetByCategoryId(c *gin.Context) {
+	books, apiError := h.Module.GetWhere(c.Param("id"))
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": books})
+	return
 }
 
 // Find return one book by ID.

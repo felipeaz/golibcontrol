@@ -47,9 +47,9 @@ func (r BookRepository) Find(id string) (model.Book, *errors.ApiError) {
 }
 
 // GetWhere return books from query string.
-func (r BookRepository) GetWhere(queryBook model.QueryBook) ([]model.Book, *errors.ApiError) {
+func (r BookRepository) GetWhere(categoryId string) ([]model.Book, *errors.ApiError) {
 	join := fmt.Sprintf("JOIN book_categories ON book_categories.book_id = books.id")
-	queryString := r.buildQueryString(queryBook)
+	queryString := fmt.Sprintf("book_categories.category_id IN (%s)", categoryId)
 	result, err := r.DB.FetchAllWithQueryAndPreload(
 		&[]model.Book{},
 		queryString,
@@ -104,17 +104,4 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 		}
 	}
 	return nil
-}
-
-func (r BookRepository) buildQueryString(queryBook model.QueryBook) string {
-	query := ""
-	andClause := ""
-	if queryBook.Categories != nil {
-		query = fmt.Sprintf("book_categories.category_id IN (%s)", *queryBook.Categories)
-		andClause = "AND "
-	}
-	if queryBook.Available != nil {
-		query += fmt.Sprintf("%sbooks.available = (%v)", andClause, *queryBook.Available)
-	}
-	return query
 }
