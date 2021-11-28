@@ -25,6 +25,9 @@ func (s MySQLService) FetchAll(domainObj interface{}) (interface{}, error) {
 		s.Log.Error(err)
 		return nil, err
 	}
+	if result.RowsAffected == 0 {
+		return nil, nil
+	}
 	return domainObj, nil
 }
 
@@ -33,6 +36,9 @@ func (s MySQLService) FetchAllWithPreload(domainObj interface{}, preload string)
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return nil, err
+	}
+	if result.RowsAffected == 0 {
+		return nil, nil
 	}
 	return domainObj, nil
 }
@@ -43,6 +49,9 @@ func (s MySQLService) FetchAllWithWhereAndPreload(domainObj interface{}, fieldNa
 		s.Log.Error(err)
 		return nil, err
 	}
+	if result.RowsAffected == 0 {
+		return nil, nil
+	}
 	return domainObj, nil
 }
 func (s MySQLService) FetchAllWithQueryAndPreload(domainObj interface{}, query, preload, join, group string) (interface{}, error) {
@@ -50,6 +59,9 @@ func (s MySQLService) FetchAllWithQueryAndPreload(domainObj interface{}, query, 
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return nil, err
+	}
+	if result.RowsAffected == 0 {
+		return nil, nil
 	}
 	return domainObj, nil
 }
@@ -84,6 +96,9 @@ func (s MySQLService) FetchAllWhere(domainObj interface{}, fieldName, fieldValue
 		s.Log.Error(err)
 		return nil, err
 	}
+	if result.RowsAffected == 0 {
+		return nil, nil
+	}
 	return domainObj, nil
 }
 
@@ -92,6 +107,9 @@ func (s MySQLService) FetchAllWhereWithQuery(domainObj interface{}, query string
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return nil, err
+	}
+	if result.RowsAffected == 0 {
+		return nil, nil
 	}
 	return domainObj, nil
 }
