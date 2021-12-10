@@ -7,7 +7,7 @@ import (
 
 func ReserveRoutes(rg *gin.RouterGroup, reserveHandler handler.ReserveHandler) {
 	r := rg.Group("/reserves")
-	r.GET("/:id/book", reserveHandler.Get)
+	r.GET("/", reserveHandler.Get)
 	r.GET("/:id", reserveHandler.Find)
 	r.POST("/", reserveHandler.Create)
 	r.PUT("/:id", reserveHandler.Update)

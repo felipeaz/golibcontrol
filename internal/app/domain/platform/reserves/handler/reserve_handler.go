@@ -19,7 +19,7 @@ func NewReserveHandler(module _interface.ReserveModuleInterface) ReserveHandler 
 }
 
 func (h ReserveHandler) Get(c *gin.Context) {
-	reserves, apiError := h.Module.Get(c.Param("id"))
+	reserves, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

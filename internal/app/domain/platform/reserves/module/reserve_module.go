@@ -19,8 +19,8 @@ func NewReserveModule(repo _interface.ReserveRepositoryInterface, log logger.Log
 	}
 }
 
-func (m ReserveModule) Get(bookId string) ([]model.Reserve, *errors.ApiError) {
-	return m.Repository.Get(bookId)
+func (m ReserveModule) Get() ([]model.Reserve, *errors.ApiError) {
+	return m.Repository.Get()
 }
 
 func (m ReserveModule) Find(id string) (model.Reserve, *errors.ApiError) {

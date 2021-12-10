@@ -6,7 +6,7 @@ import (
 )
 
 type ReserveModuleInterface interface {
-	Get(bookId string) ([]model.Reserve, *errors.ApiError)
+	Get() ([]model.Reserve, *errors.ApiError)
 	Find(id string) (model.Reserve, *errors.ApiError)
 	Create(comment model.Reserve) (uint, *errors.ApiError)
 	Update(id string, upReserve model.Reserve) *errors.ApiError
