@@ -32,9 +32,9 @@ func (m BookModule) Get() ([]model.Book, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
-// GetWhere return all books from Query
-func (m BookModule) GetWhere(categoryId string) ([]model.Book, *errors.ApiError) {
-	return m.Repository.GetWhere(categoryId)
+// GetByFilter return all books from Query
+func (m BookModule) GetByFilter(filter model.Filter) ([]model.Book, *errors.ApiError) {
+	return m.Repository.GetByFilter(filter)
 }
 
 // Find returns all books on DB.

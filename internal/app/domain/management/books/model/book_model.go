@@ -19,7 +19,13 @@ type Book struct {
 	UpdatedAt      time.Time      `time_format:"2006-01-02 15:04:05"`
 }
 
-type QueryBook struct {
-	Categories *string `form:"categoryId"`
-	Available  *bool   `form:"available"`
+type Filter struct {
+	Title      string `json:"title,omitempty" column:"books.title" array:"false"`
+	Author     string `json:"author,omitempty" column:"books.author" array:"false"`
+	Available  bool   `form:"available" column:"books.available" array:"false"`
+	Categories string `form:"categ,omitempty" column:"book_categories.category_id" array:"true"`
+}
+
+func (f Filter) GetFieldNames() []string {
+	return []string{"Title", "Author", "Categories", "Available"}
 }
