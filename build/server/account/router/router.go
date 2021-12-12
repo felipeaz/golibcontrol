@@ -8,7 +8,7 @@ import (
 )
 
 func Build(accountHandler handler.AccountHandler) error {
-	router := gin.Default()
+	router := gin.New()
 	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")

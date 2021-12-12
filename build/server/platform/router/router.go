@@ -21,7 +21,7 @@ func Build(
 	confHandler conferenceHandler.ConferenceHandler,
 	grpHandler groupHandler.GroupHandler,
 ) error {
-	router := gin.Default()
+	router := gin.New()
 	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")
