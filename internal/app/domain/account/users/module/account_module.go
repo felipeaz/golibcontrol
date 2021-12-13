@@ -38,12 +38,14 @@ func NewAccountModule(
 
 // Login authenticate the user
 func (m AccountModule) Login(credentials model.Account) login.Message {
-	userName, token, apiError := m.authUser(credentials)
+	userName, token, consumerId, userId, apiError := m.authUser(credentials)
 	if apiError != nil {
 		return login.Message{
-			Status:  apiError.Status,
-			Message: apiError.Message,
-			Reason:  apiError.Error,
+			Status:     apiError.Status,
+			Message:    apiError.Message,
+			Reason:     apiError.Error,
+			UserId:     userId,
+			ConsumerId: consumerId,
 		}
 	}
 
@@ -170,10 +172,10 @@ func (m AccountModule) Delete(id string) *errors.ApiError {
 }
 
 // authUser retrieves user and authorize the access if the credentials match
-func (m AccountModule) authUser(credentials model.Account) (string, string, *errors.ApiError) {
+func (m AccountModule) authUser(credentials model.Account) (string, string, string, uint, *errors.ApiError) {
 	account, apiError := m.Repository.FindWhere("email", credentials.Email)
 	if apiError != nil {
-		return "", "", &errors.ApiError{
+		return "", "", "", 0, &errors.ApiError{
 			Status:  apiError.Status,
 			Message: login.FailMessage,
 			Error:   login.AccountNotFoundMessage,
@@ -181,7 +183,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 	}
 
 	if account.Password != credentials.Password {
-		return "", "", &errors.ApiError{
+		return "", "", "", 0, &errors.ApiError{
 			Status:  http.StatusUnauthorized,
 			Message: login.FailMessage,
 			Error:   login.InvalidPasswordMessage,
@@ -190,7 +192,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 
 	consumerKey, err := m.Auth.RetrieveConsumerKey(account.ConsumerId)
 	if err != nil {
-		return "", "", &errors.ApiError{
+		return "", "", "", 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToRetrieveConsumerKey,
 			Error:   err.Error(),
@@ -199,7 +201,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 
 	token, err := jwt.CreateToken(account.Email, consumerKey.Key, consumerKey.Secret)
 	if err != nil {
-		return "", "", &errors.ApiError{
+		return "", "", "", 0, &errors.ApiError{
 			Error: err.Error(),
 		}
 	}
@@ -210,7 +212,7 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 	}
 	b, err := json.Marshal(data)
 	if err != nil {
-		return "", "", &errors.ApiError{
+		return "", "", "", 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToMarshalAuthenticationOnCache,
 			Error:   err.Error(),
@@ -219,12 +221,12 @@ func (m AccountModule) authUser(credentials model.Account) (string, string, *err
 
 	err = m.Cache.Set(account.ConsumerId, b)
 	if err != nil {
-		return "", "", &errors.ApiError{
+		return "", "", "", 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToStoreAuthenticationKeyOnCache,
 			Error:   err.Error(),
 		}
 	}
 
-	return account.FirstName, token, nil
+	return account.FirstName, token, account.ConsumerId, account.ID, nil
 }

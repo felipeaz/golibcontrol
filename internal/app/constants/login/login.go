@@ -7,14 +7,14 @@ const (
 	InvalidPasswordMessage = "Invalid Password"
 
 	LogoutSuccessMessage = "Logout Successfully."
-	LogoutFailMessage    = "Logout Failed."
-	UserNotLoggedIn      = "You are not logged in."
 )
 
 // Message will be used as custom messages for login routes
 type Message struct {
-	Status  int    `json:"-"`
-	Message string `json:"message"`
-	Reason  string `json:"reason,omitempty"`
-	Token   string `json:"token,omitempty"`
+	Status     int    `json:"-"`
+	Message    string `json:"message"`
+	UserId     uint   `json:"userId,omitempty"`
+	ConsumerId string `json:"consumerId,omitempty"`
+	Reason     string `json:"reason,omitempty"`
+	Token      string `json:"token,omitempty"`
 }
