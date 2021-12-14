@@ -9,6 +9,7 @@ type Group struct {
 	Name        string    `json:"name" binding:"required"`
 	Description string    `json:"description" binding:"required"`
 	Status      string    `json:"status" binding:"required"`
+	MeetingHash string    `json:"meetingHash"`
 	CreatedAt   time.Time `time_format:"2006-01-02 15:04:05"`
 	UpdatedAt   time.Time `time_format:"2006-01-02 15:04:05"`
 }
