@@ -92,6 +92,14 @@ func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
 			Error:   err.Error(),
 		}
 	}
+	err = r.DB.Set(&upBook, id, "available", upBook.Available)
+	if err != nil {
+		return &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
 	return nil
 }
 

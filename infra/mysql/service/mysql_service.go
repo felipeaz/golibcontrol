@@ -132,6 +132,15 @@ func (s MySQLService) Refresh(domainObj interface{}, id string) error {
 	return nil
 }
 
+func (s MySQLService) Set(domainObj interface{}, id, fieldName string, fieldValue interface{}) error {
+	result := s.DB.Model(domainObj).Where("id = ?", id).Update(fieldName, fieldValue)
+	if err := result.Error; err != nil {
+		s.Log.Error(err)
+		return err
+	}
+	return nil
+}
+
 func (s MySQLService) Remove(domainObj interface{}, id string) error {
 	err := s.DB.Where("id = ?", id).Delete(domainObj).Error
 	if err != nil {

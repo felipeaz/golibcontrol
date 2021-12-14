@@ -11,6 +11,7 @@ type GORMServiceInterface interface {
 	FetchAllWhereWithQuery(domainObj interface{}, query string) (interface{}, error)
 	Persist(domainObj interface{}) error
 	Refresh(domainObj interface{}, id string) error
+	Set(domainObj interface{}, id, fieldName string, fieldValue interface{}) error
 	Remove(domainObj interface{}, id string) error
 	RemoveWhere(domainObj interface{}, fieldName, fieldValue string) error
 	GetErrorStatusCode(err error) int
