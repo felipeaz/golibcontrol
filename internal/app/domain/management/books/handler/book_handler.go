@@ -68,7 +68,7 @@ func (h BookHandler) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusCreated, resp)
 }
 
 // Update update an existent book.

@@ -51,7 +51,7 @@ func (h CommentHandler) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusCreated, resp)
 }
 
 func (h CommentHandler) Update(c *gin.Context) {

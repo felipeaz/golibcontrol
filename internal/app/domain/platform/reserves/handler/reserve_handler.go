@@ -51,7 +51,7 @@ func (h ReserveHandler) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusCreated, resp)
 }
 
 func (h ReserveHandler) Update(c *gin.Context) {

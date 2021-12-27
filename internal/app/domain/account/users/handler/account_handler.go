@@ -78,7 +78,7 @@ func (h AccountHandler) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusCreated, resp)
 }
 
 // Update update an existent user.

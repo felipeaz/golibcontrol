@@ -51,7 +51,7 @@ func (h ReviewHandler) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusCreated, resp)
 }
 
 func (h ReviewHandler) Update(c *gin.Context) {

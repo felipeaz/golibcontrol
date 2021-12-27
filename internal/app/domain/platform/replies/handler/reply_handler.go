@@ -59,7 +59,7 @@ func (h ReplyHandler) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusCreated, resp)
 }
 
 func (h ReplyHandler) Update(c *gin.Context) {
