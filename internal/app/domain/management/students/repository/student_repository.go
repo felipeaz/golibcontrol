@@ -55,17 +55,17 @@ func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
 }
 
 // Create persist a student to the DB.
-func (r StudentRepository) Create(student model.Student) (string, *errors.ApiError) {
+func (r StudentRepository) Create(student model.Student) (*model.Student, *errors.ApiError) {
 	err := r.DB.Persist(&student)
 	if err != nil {
-		return "", &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
 
-	return student.ID, nil
+	return &student, nil
 }
 
 // Update update an existent student.

@@ -31,7 +31,7 @@ func (m CategoryModule) Find(id string) (model.Category, *errors.ApiError) {
 }
 
 // Create persist a category to the database.
-func (m CategoryModule) Create(category model.Category) (uint, *errors.ApiError) {
+func (m CategoryModule) Create(category model.Category) (*model.Category, *errors.ApiError) {
 	return m.Repository.Create(category)
 }
 

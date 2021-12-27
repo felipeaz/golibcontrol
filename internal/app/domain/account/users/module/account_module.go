@@ -124,10 +124,10 @@ func (m AccountModule) Find(id string) (model.Account, *errors.ApiError) {
 }
 
 // Create creates a user
-func (m AccountModule) Create(account model.Account) (uint, *errors.ApiError) {
+func (m AccountModule) Create(account model.Account) (*model.Account, *errors.ApiError) {
 	consumer, err := m.Auth.CreateConsumer(account.Email)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
 			Message: errors.FailedToCreateConsumer,
 			Error:   err.Error(),

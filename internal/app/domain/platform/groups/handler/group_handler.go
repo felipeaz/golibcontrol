@@ -45,13 +45,13 @@ func (h GroupHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(group)
+	resp, apiError := h.Module.Create(group)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h GroupHandler) Update(c *gin.Context) {

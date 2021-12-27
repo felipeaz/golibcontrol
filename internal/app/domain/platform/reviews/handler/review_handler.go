@@ -45,13 +45,13 @@ func (h ReviewHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(review)
+	resp, apiError := h.Module.Create(review)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReviewHandler) Update(c *gin.Context) {

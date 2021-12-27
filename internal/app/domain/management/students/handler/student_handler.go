@@ -55,13 +55,13 @@ func (h StudentHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(student, accountHost, signinRoute, authHeaderName, c.GetHeader(authHeaderName))
+	resp, apiError := h.Module.Create(student, accountHost, signinRoute, authHeaderName, c.GetHeader(authHeaderName))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Update update an existent student.

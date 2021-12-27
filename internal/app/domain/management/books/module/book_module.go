@@ -43,14 +43,14 @@ func (m BookModule) Find(id string) (model.Book, *errors.ApiError) {
 }
 
 // Create persist a book to the database.
-func (m BookModule) Create(book model.Book) (uint, *errors.ApiError) {
+func (m BookModule) Create(book model.Book) (*model.Book, *errors.ApiError) {
 	categoriesIds := pkg.ExtractCategoryId(book.CategoriesId)
-	bookId, apiError := m.Repository.Create(book)
+	resp, apiError := m.Repository.Create(book)
 	if apiError != nil {
-		return 0, apiError
+		return nil, apiError
 	}
-	m.setBookCategories(bookId, categoriesIds)
-	return bookId, nil
+	m.setBookCategories(resp.ID, categoriesIds)
+	return resp, nil
 }
 
 // Update update an existent book.

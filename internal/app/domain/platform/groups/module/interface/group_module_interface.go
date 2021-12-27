@@ -8,7 +8,7 @@ import (
 type GroupModuleInterface interface {
 	Get() ([]model.Group, *errors.ApiError)
 	Find(id string) (model.Group, *errors.ApiError)
-	Create(group model.Group) (uint, *errors.ApiError)
+	Create(group model.Group) (*model.Group, *errors.ApiError)
 	Update(id string, upGroup model.Group) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }

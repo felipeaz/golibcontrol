@@ -49,16 +49,16 @@ func (r ReplyRepository) Find(id string) (model.Reply, *errors.ApiError) {
 	return reply, nil
 }
 
-func (r ReplyRepository) Create(reply model.Reply) (uint, *errors.ApiError) {
+func (r ReplyRepository) Create(reply model.Reply) (*model.Reply, *errors.ApiError) {
 	err := r.DB.Persist(&reply)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return reply.ID, nil
+	return &reply, nil
 }
 
 func (r ReplyRepository) Update(id string, upReply model.Reply) *errors.ApiError {

@@ -69,16 +69,16 @@ func (r AccountRepository) FindWhere(fieldName, fieldValue string) (model.Accoun
 }
 
 // Create creates a user
-func (r AccountRepository) Create(account model.Account) (uint, *errors.ApiError) {
+func (r AccountRepository) Create(account model.Account) (*model.Account, *errors.ApiError) {
 	err := r.DB.Persist(&account)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return account.ID, nil
+	return &account, nil
 }
 
 // Update update an existent user.

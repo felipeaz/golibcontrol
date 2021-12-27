@@ -8,7 +8,7 @@ import (
 type StudentModuleInterface interface {
 	Get() ([]model.Student, *errors.ApiError)
 	Find(id string) (model.Student, *errors.ApiError)
-	Create(student model.Student, accountHost, accountRoute, tokenName, tokenValue string) (string, *errors.ApiError)
+	Create(student model.Student, accountHost, accountRoute, tokenName, tokenValue string) (*model.Student, *errors.ApiError)
 	Update(id string, upStudent model.Student) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }

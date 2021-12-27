@@ -27,7 +27,7 @@ func (m ReserveModule) Find(id string) (model.Reserve, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-func (m ReserveModule) Create(comment model.Reserve) (uint, *errors.ApiError) {
+func (m ReserveModule) Create(comment model.Reserve) (*model.Reserve, *errors.ApiError) {
 	return m.Repository.Create(comment)
 }
 

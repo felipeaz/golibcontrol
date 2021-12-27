@@ -38,10 +38,10 @@ func (m StudentModule) Find(id string) (model.Student, *errors.ApiError) {
 }
 
 // Create persist a student to the database.
-func (m StudentModule) Create(student model.Student, accountHost, accountRoute, tokenName, tokenValue string) (string, *errors.ApiError) {
+func (m StudentModule) Create(student model.Student, accountHost, accountRoute, tokenName, tokenValue string) (*model.Student, *errors.ApiError) {
 	accountId, apiError := m.createAccountOnAccountService(student, accountHost, accountRoute, tokenName, tokenValue)
 	if apiError != nil {
-		return "", apiError
+		return nil, apiError
 	}
 	student.AccountId = accountId
 	return m.Repository.Create(student)

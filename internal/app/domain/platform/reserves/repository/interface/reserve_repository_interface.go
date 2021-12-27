@@ -8,7 +8,7 @@ import (
 type ReserveRepositoryInterface interface {
 	Get() ([]model.Reserve, *errors.ApiError)
 	Find(id string) (model.Reserve, *errors.ApiError)
-	Create(reserve model.Reserve) (uint, *errors.ApiError)
+	Create(reserve model.Reserve) (*model.Reserve, *errors.ApiError)
 	Update(id string, upReserve model.Reserve) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }

@@ -49,16 +49,16 @@ func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
 	return comment, nil
 }
 
-func (r CommentRepository) Create(comment model.Comment) (uint, *errors.ApiError) {
+func (r CommentRepository) Create(comment model.Comment) (*model.Comment, *errors.ApiError) {
 	err := r.DB.Persist(&comment)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return comment.ID, nil
+	return &comment, nil
 }
 
 func (r CommentRepository) Update(id string, upComment model.Comment) *errors.ApiError {

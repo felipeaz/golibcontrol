@@ -45,13 +45,13 @@ func (h ReserveHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(reserve)
+	resp, apiError := h.Module.Create(reserve)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReserveHandler) Update(c *gin.Context) {
