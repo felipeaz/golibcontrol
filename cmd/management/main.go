@@ -14,20 +14,40 @@ const (
 	ServiceName = "Management Service"
 )
 
+var (
+	envs = map[string]string{
+		"MANAGEMENT_DB_USER":     "",
+		"MANAGEMENT_DB_PASSWORD": "",
+		"MANAGEMENT_DB_HOST":     "",
+		"MANAGEMENT_DB_PORT":     "",
+		"MANAGEMENT_DB_DATABASE": "",
+		"LOG_FILE":               "",
+	}
+)
+
+func init() {
+	for env, _ := range envs {
+		var exist bool
+		if envs[env], exist = os.LookupEnv(env); !exist {
+			log.Fatalf("missing environment variable")
+		}
+	}
+}
+
 func main() {
 	db, err := database.Connect(
-		os.Getenv("MANAGEMENT_DB_USER"),
-		os.Getenv("MANAGEMENT_DB_PASSWORD"),
-		os.Getenv("MANAGEMENT_DB_HOST"),
-		os.Getenv("MANAGEMENT_DB_PORT"),
-		os.Getenv("MANAGEMENT_DB_DATABASE"),
+		envs["MANAGEMENT_DB_USER"],
+		envs["MANAGEMENT_DB_PASSWORD"],
+		envs["MANAGEMENT_DB_HOST"],
+		envs["MANAGEMENT_DB_PORT"],
+		envs["MANAGEMENT_DB_DATABASE"],
 	)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 	defer database.CloseConnection(db)
 
-	logger := _log.NewLogger(os.Getenv("LOG_FILE"), ServiceName)
+	logger := _log.NewLogger(envs["LOG_FILE"], ServiceName)
 	dbService := service.NewMySQLService(db, logger)
 
 	err = server.Start(dbService, logger)
