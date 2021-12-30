@@ -19,8 +19,8 @@ type Review struct {
 
 func (r *Review) CalculateAvg(reviews []Review) {
 	sum := 0
-	for _, review := range reviews {
-		sum += review.Rating
+	for i := 0; i < len(reviews); i++ {
+		sum += reviews[i].Rating
 	}
 	if sum == 0 {
 		r.AvgReview = 0

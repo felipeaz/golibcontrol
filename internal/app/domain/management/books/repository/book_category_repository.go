@@ -24,10 +24,10 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 	if len(categoriesIds) <= 0 {
 		return
 	}
-	for _, categoryId := range categoriesIds {
+	for i := 0; i < len(categoriesIds); i++ {
 		bookCategory := bookCategoryModel.BookCategory{
 			BookID:     bookId,
-			CategoryID: categoryId,
+			CategoryID: categoriesIds[i],
 		}
 		err := r.DB.Persist(&bookCategory)
 		if err != nil {

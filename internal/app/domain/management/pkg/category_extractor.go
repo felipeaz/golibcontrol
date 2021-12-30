@@ -15,8 +15,8 @@ func ExtractCategoryId(categoriesString string) (categoriesId []uint) {
 	tmpSlice := rgx.Split(categoriesString, -1)
 
 	categoriesId = make([]uint, 0)
-	for _, val := range tmpSlice {
-		tmpId, err := strconv.Atoi(val)
+	for i := 0; i < len(tmpSlice); i++ {
+		tmpId, err := strconv.Atoi(tmpSlice[i])
 		if err != nil || tmpId <= 0 {
 			continue
 		}
