@@ -1,7 +1,7 @@
-package auth
+package consumer
 
 import (
-	"github.com/FelipeAz/golibcontrol/infra/auth/model"
+	"github.com/FelipeAz/golibcontrol/infra/consumer/model"
 	"github.com/stretchr/testify/mock"
 )
 

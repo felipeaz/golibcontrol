@@ -35,7 +35,7 @@ curl --location --request POST 'http://localhost:8001/services/management-servic
 curl --location --request POST 'http://localhost:8001/services/account-service/routes' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'name=account' \
---data-urlencode 'paths=/auth' \
+--data-urlencode 'paths=/consumer' \
 --data-urlencode 'methods=GET' \
 --data-urlencode 'methods=POST' \
 --data-urlencode 'methods=PUT' \

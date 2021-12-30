@@ -2,11 +2,10 @@ package request
 
 import (
 	"bytes"
+	"github.com/FelipeAz/golibcontrol/infra/http/interface"
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	_interface "github.com/FelipeAz/golibcontrol/infra/auth/http/interface"
 )
 
 type HttpRequest struct {

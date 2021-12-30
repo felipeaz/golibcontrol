@@ -3,7 +3,7 @@ package jwt
 import (
 	"time"
 
-	"github.com/FelipeAz/golibcontrol/infra/auth/jwt/model"
+	"github.com/FelipeAz/golibcontrol/infra/consumer/jwt/model"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
 )

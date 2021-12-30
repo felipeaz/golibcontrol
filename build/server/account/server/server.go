@@ -3,10 +3,12 @@ package server
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/account/router"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
+	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/handler"
+	auth_module "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/repository"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/consumer"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
@@ -14,11 +16,13 @@ import (
 func Start(
 	dbService database.GORMServiceInterface,
 	cache database.CacheInterface,
-	apiGatewayAuth auth.Interface,
+	consumersService consumer.Interface,
 	log logger.LogInterface,
 ) (err error) {
 	accountRepository := repository.NewAccountRepository(dbService)
-	accountModule := module.NewAccountModule(accountRepository, apiGatewayAuth, cache, log)
+	accountModule := module.NewAccountModule(accountRepository, consumersService, cache, log)
 	accountHandler := handler.NewAccountHandler(accountModule)
-	return router.Build(accountHandler)
+	authModule := auth_module.NewAuthModule(accountRepository, consumersService, cache, log)
+	authHandler := auth_handler.NewAuthHandler(authModule)
+	return router.Build(accountHandler, authHandler)
 }

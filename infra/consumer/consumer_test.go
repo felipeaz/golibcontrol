@@ -1,14 +1,14 @@
-package auth
+package consumer
 
 import (
 	"encoding/json"
+	"github.com/FelipeAz/golibcontrol/infra/http/client"
+	"github.com/FelipeAz/golibcontrol/infra/http/request"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
-	"github.com/FelipeAz/golibcontrol/infra/auth/model"
+	"github.com/FelipeAz/golibcontrol/infra/consumer/model"
 	"github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/stretchr/testify/assert"
 )
@@ -40,7 +40,7 @@ func TestCreateConsumerSuccess(t *testing.T) {
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
 	loggerMock := new(logger.Mock)
 	jwtSecret := "jwtsecret"
-	auth := NewAuth(cli, loggerMock, jwtSecret)
+	auth := NewConsumer(cli, loggerMock, jwtSecret)
 
 	consumer, err := auth.CreateConsumer(username)
 
@@ -63,7 +63,7 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 	loggerMock := new(logger.Mock)
 
 	jwtSecret := "jwtsecret"
-	auth := NewAuth(cli, loggerMock, jwtSecret)
+	auth := NewConsumer(cli, loggerMock, jwtSecret)
 
 	consumer, err := auth.CreateConsumer(username)
 
@@ -78,7 +78,7 @@ func TestCreateConsumerHTTPRequestError(t *testing.T) {
 	cli := request.NewHttpRequest(client.NewHTTPClient(), "")
 	loggerMock := new(logger.Mock)
 	jwtSecret := "jwtsecret"
-	auth := NewAuth(cli, loggerMock, jwtSecret)
+	auth := NewConsumer(cli, loggerMock, jwtSecret)
 
 	consumer, err := auth.CreateConsumer(username)
 	assert.NotNil(t, err)
@@ -117,7 +117,7 @@ func TestCreateConsumerKeySuccess(t *testing.T) {
 	cli := request.NewHttpRequest(client.NewHTTPClient(), testServer.URL+"/")
 	loggerMock := new(logger.Mock)
 	jwtSecret := "jwtsecret"
-	auth := NewAuth(cli, loggerMock, jwtSecret)
+	auth := NewConsumer(cli, loggerMock, jwtSecret)
 
 	consumerKey, err := auth.CreateConsumerKey(consumerId)
 

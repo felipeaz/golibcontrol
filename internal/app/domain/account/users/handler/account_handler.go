@@ -19,29 +19,6 @@ func NewAccountHandler(module _interface.AccountModuleInterface) AccountHandler 
 	}
 }
 
-// Login authenticate the user
-func (h AccountHandler) Login(c *gin.Context) {
-	credentials, apiError := pkg.AssociateAccountInput(c)
-	if apiError != nil {
-		c.JSON(apiError.Status, apiError)
-		return
-	}
-
-	loginMsg := h.Module.Login(credentials)
-	c.JSON(loginMsg.Status, loginMsg)
-}
-
-// Logout authenticate the user
-func (h AccountHandler) Logout(c *gin.Context) {
-	session, apiError := pkg.AssociateSessionInput(c)
-	if apiError != nil {
-		c.JSON(apiError.Status, apiError)
-		return
-	}
-	logoutMsg := h.Module.Logout(session)
-	c.JSON(logoutMsg.Status, logoutMsg)
-}
-
 // Get returns all accounts.
 func (h AccountHandler) Get(c *gin.Context) {
 	accounts, apiError := h.Module.Get()

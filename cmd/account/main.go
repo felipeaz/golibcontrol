@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/account/server"
-	"github.com/FelipeAz/golibcontrol/infra/auth"
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
+	"github.com/FelipeAz/golibcontrol/infra/consumer"
+	"github.com/FelipeAz/golibcontrol/infra/http/client"
+	"github.com/FelipeAz/golibcontrol/infra/http/request"
 	_log "github.com/FelipeAz/golibcontrol/infra/logger"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/account/database"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
@@ -69,9 +69,9 @@ func main() {
 	}
 
 	requestClient := request.NewHttpRequest(client.NewHTTPClient(), envs["CONSUMERS_HOST"])
-	apiGatewayAuth := auth.NewAuth(requestClient, logger, envs["JWT_SECRET_KEY"])
+	consumersService := consumer.NewConsumer(requestClient, logger, envs["JWT_SECRET_KEY"])
 
-	err = server.Start(dbService, cache, apiGatewayAuth, logger)
+	err = server.Start(dbService, cache, consumersService, logger)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

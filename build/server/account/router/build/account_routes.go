@@ -16,7 +16,4 @@ func UserRoutes(rg *gin.RouterGroup, accountHandler handler.AccountHandler) {
 	r = rg.Group("/signin")
 	r.POST("", accountHandler.Create)
 	r = rg.Group("/login")
-	r.POST("", accountHandler.Login)
-	r = rg.Group("/logout")
-	r.POST("", accountHandler.Logout)
 }

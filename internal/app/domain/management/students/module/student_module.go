@@ -2,10 +2,10 @@ package module
 
 import (
 	"encoding/json"
+	"github.com/FelipeAz/golibcontrol/infra/http/client"
+	"github.com/FelipeAz/golibcontrol/infra/http/request"
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/client"
-	"github.com/FelipeAz/golibcontrol/infra/auth/http/request"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	studentErrors "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model"

@@ -2,12 +2,13 @@ package router
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/account/router/build"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/handler"
+	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/handler"
+	account_handler "github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
 )
 
-func Build(accountHandler handler.AccountHandler) error {
+func Build(accountHandler account_handler.AccountHandler, authHandler auth_handler.AuthHandler) error {
 	router := gin.New()
 	router.Use(middleware.CORSMiddleware())
 
@@ -15,6 +16,7 @@ func Build(accountHandler handler.AccountHandler) error {
 	vGroup := apiRg.Group("/v1")
 
 	build.UserRoutes(vGroup, accountHandler)
+	build.AuthRoutes(vGroup, authHandler)
 
 	return router.Run(":8082")
 }
