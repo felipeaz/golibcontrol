@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  account-service:
+    build:
+      context: "./../../../../"
+      dockerfile: "build/docker/images/go/Dockerfile"
+    container_name: account-service
+#    env_file:
+#      - /go/src/github.com/FelipeAz/golibcontrol/.env
+    links:
+      - redis
+    depends_on:
+      - "account-service-db-host"
+      - "redis"
+    restart: unless-stopped
+    working_dir: "/go/src/github.com/FelipeAz/golibcontrol/cmd/account/"
+    expose:
+      - 8082
+    command: bash -c "CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . && ./main"
+    ports:
+      - "8082:8082"
+  account-service-db-host:
+    image: mysql:8.0
+    container_name: account-service-database
+    environment:
+      MYSQL_DATABASE: LibraryAccount
+      MYSQL_ROOT_PASSWORD: abc123
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3307"
+
+networks:
+  default:
+    name: kong-net
