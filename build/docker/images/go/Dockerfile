@@ -17,5 +17,5 @@ COPY go.mod go.sum /go/src/github.com/FelipeAz/golibcontrol/
 # Download all dependencies. Dependencies will be cached if the go.mod and the go.sum files are not changed
 RUN go mod download
 
-# Put all dependencies into a vendor folder
-RUN go mod vendor
+## Put all dependencies into a vendor folder
+#RUN go mod vendor
