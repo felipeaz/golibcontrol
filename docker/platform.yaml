@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  platform-service:
+    build:
+      context: ".."
+      dockerfile: "docker/images/go/Dockerfile"
+    container_name: platform-service
+    env_file:
+      - ../.env
+    links:
+      - redis
+    depends_on:
+      - "platform-service-db-host"
+      - "redis"
+    restart: unless-stopped
+    working_dir: "/go/src/github.com/FelipeAz/golibcontrol/cmd/platform/"
+    expose:
+      - 8083
+    command: bash -c "CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . && ./main"
+    ports:
+      - "8083:8083"
+  platform-service-db-host:
+    image: mysql:8.0
+    container_name: platform-service-database
+    environment:
+      MYSQL_DATABASE: LibraryPlatform
+      MYSQL_ROOT_PASSWORD: abc123
+      MYSQL_TCP_PORT: 3309
+    ports:
+      - "3309:3306"
+
+networks:
+  default:
+    name: kong-net

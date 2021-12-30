@@ -49,16 +49,16 @@ func (r GroupRepository) Find(id string) (model.Group, *errors.ApiError) {
 	return group, nil
 }
 
-func (r GroupRepository) Create(group model.Group) (uint, *errors.ApiError) {
+func (r GroupRepository) Create(group model.Group) (*model.Group, *errors.ApiError) {
 	err := r.DB.Persist(&group)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return group.ID, nil
+	return &group, nil
 }
 
 func (r GroupRepository) Update(id string, upGroup model.Group) *errors.ApiError {

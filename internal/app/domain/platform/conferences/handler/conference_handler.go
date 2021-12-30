@@ -45,13 +45,13 @@ func (h ConferenceHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(conference)
+	resp, apiError := h.Module.Create(conference)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusCreated, resp)
 }
 
 func (h ConferenceHandler) Update(c *gin.Context) {

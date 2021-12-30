@@ -57,21 +57,21 @@ func (r LendingRepository) Find(id string) (lendingModel.Lending, *errors.ApiErr
 }
 
 // Create persist a lending to the DB.
-func (r LendingRepository) Create(lending lendingModel.Lending) (uint, *errors.ApiError) {
+func (r LendingRepository) Create(lending lendingModel.Lending) (*lendingModel.Lending, *errors.ApiError) {
 	apiError := r.beforeCreate(lending.StudentID, lending.BookID)
 	if apiError != nil {
-		return 0, apiError
+		return nil, apiError
 	}
 	err := r.DB.Persist(&lending)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
 
-	return lending.ID, nil
+	return &lending, nil
 }
 
 // Update update an existent lending.

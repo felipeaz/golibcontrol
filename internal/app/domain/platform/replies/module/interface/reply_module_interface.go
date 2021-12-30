@@ -8,7 +8,7 @@ import (
 type ReplyModuleInterface interface {
 	Get(bookId string) ([]model.Reply, *errors.ApiError)
 	Find(id string) (model.Reply, *errors.ApiError)
-	Create(comment model.Reply) (uint, *errors.ApiError)
+	Create(comment model.Reply) (*model.Reply, *errors.ApiError)
 	Update(id string, upReply model.Reply) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }

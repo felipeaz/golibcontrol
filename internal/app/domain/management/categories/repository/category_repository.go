@@ -55,16 +55,16 @@ func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
 }
 
 // Create persist a category to the DB.
-func (r CategoryRepository) Create(category model.Category) (uint, *errors.ApiError) {
+func (r CategoryRepository) Create(category model.Category) (*model.Category, *errors.ApiError) {
 	err := r.DB.Persist(&category)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return category.ID, nil
+	return &category, nil
 }
 
 // Update update an existent category.

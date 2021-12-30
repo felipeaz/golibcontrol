@@ -8,7 +8,7 @@ import (
 type ConferenceModuleInterface interface {
 	Get() ([]model.Conference, *errors.ApiError)
 	Find(id string) (model.Conference, *errors.ApiError)
-	Create(conference model.Conference) (uint, *errors.ApiError)
+	Create(conference model.Conference) (*model.Conference, *errors.ApiError)
 	Update(id string, upConference model.Conference) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }

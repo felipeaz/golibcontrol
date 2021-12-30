@@ -49,16 +49,16 @@ func (r ConferenceRepository) Find(id string) (model.Conference, *errors.ApiErro
 	return conference, nil
 }
 
-func (r ConferenceRepository) Create(conference model.Conference) (uint, *errors.ApiError) {
+func (r ConferenceRepository) Create(conference model.Conference) (*model.Conference, *errors.ApiError) {
 	err := r.DB.Persist(&conference)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return conference.ID, nil
+	return &conference, nil
 }
 
 func (r ConferenceRepository) Update(id string, upConference model.Conference) *errors.ApiError {

@@ -62,13 +62,13 @@ func (h BookHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(book)
+	resp, apiError := h.Module.Create(book)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusCreated, resp)
 }
 
 // Update update an existent book.

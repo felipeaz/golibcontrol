@@ -8,7 +8,7 @@ import (
 type LendingModuleInterface interface {
 	Get() ([]model.Lending, *errors.ApiError)
 	Find(id string) (model.Lending, *errors.ApiError)
-	Create(lending model.Lending) (uint, *errors.ApiError)
+	Create(lending model.Lending) (*model.Lending, *errors.ApiError)
 	Update(id string, upLending model.Lending) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }

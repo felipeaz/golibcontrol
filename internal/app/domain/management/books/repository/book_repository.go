@@ -70,16 +70,16 @@ func (r BookRepository) GetByFilter(filter model.Filter) ([]model.Book, *errors.
 }
 
 // Create persist a book to the DB.
-func (r BookRepository) Create(book model.Book) (uint, *errors.ApiError) {
+func (r BookRepository) Create(book model.Book) (*model.Book, *errors.ApiError) {
 	err := r.DB.Persist(&book)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return book.ID, nil
+	return &book, nil
 }
 
 // Update update an existent book.

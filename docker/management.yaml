@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  management-service:
+    build:
+      context: ".."
+      dockerfile: "docker/images/go/Dockerfile"
+    container_name: management-service
+    env_file:
+      - ../.env
+    links:
+      - redis
+    depends_on:
+      - "management-service-db-host"
+      - "redis"
+    restart: unless-stopped
+    working_dir: "/go/src/github.com/FelipeAz/golibcontrol/cmd/management/"
+    expose:
+      - 8081
+    command: bash -c "CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . && ./main"
+    ports:
+      - "8081:8081"
+  management-service-db-host:
+    image: mysql:8.0
+    container_name: management-service-database
+    environment:
+      MYSQL_DATABASE: LibraryManagement
+      MYSQL_ROOT_PASSWORD: abc123
+      MYSQL_TCP_PORT: 3307
+    ports:
+      - "3307:3306"
+
+networks:
+  default:
+    name: kong-net

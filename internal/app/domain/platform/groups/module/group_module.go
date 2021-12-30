@@ -27,7 +27,7 @@ func (m GroupModule) Find(id string) (model.Group, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-func (m GroupModule) Create(comment model.Group) (uint, *errors.ApiError) {
+func (m GroupModule) Create(comment model.Group) (*model.Group, *errors.ApiError) {
 	return m.Repository.Create(comment)
 }
 

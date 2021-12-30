@@ -45,10 +45,6 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 ```
 ./golibcontrol/
 ├── build
-│   └── docker    
-│   │   └── images
-│   │   │   └── go
-│   │   │       └── Dockerfile
 │   └── server    
 │       └── domain_item
 │           └── router
@@ -58,6 +54,11 @@ Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d8
 │           └── router
 │               └── server
 │                   └── server.go
+├── docker
+│   └── images    
+│   │   └── images_folder
+│   │   │   └── Dockerfile
+│   └── compose.yaml
 ├── cmd
 │   └── domain_item
 │       └── main.go

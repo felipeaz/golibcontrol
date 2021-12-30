@@ -27,7 +27,7 @@ func (m ReplyModule) Find(id string) (model.Reply, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-func (m ReplyModule) Create(comment model.Reply) (uint, *errors.ApiError) {
+func (m ReplyModule) Create(comment model.Reply) (*model.Reply, *errors.ApiError) {
 	return m.Repository.Create(comment)
 }
 

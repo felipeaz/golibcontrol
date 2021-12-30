@@ -49,16 +49,16 @@ func (r ReserveRepository) Find(id string) (model.Reserve, *errors.ApiError) {
 	return reserve, nil
 }
 
-func (r ReserveRepository) Create(reserve model.Reserve) (uint, *errors.ApiError) {
+func (r ReserveRepository) Create(reserve model.Reserve) (*model.Reserve, *errors.ApiError) {
 	err := r.DB.Persist(&reserve)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return reserve.ID, nil
+	return &reserve, nil
 }
 
 func (r ReserveRepository) Update(id string, upReserve model.Reserve) *errors.ApiError {

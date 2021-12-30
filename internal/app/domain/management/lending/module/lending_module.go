@@ -33,7 +33,7 @@ func (m LendingModule) Find(id string) (model.Lending, *errors.ApiError) {
 }
 
 // Create persist a lending to the database.
-func (m LendingModule) Create(lending model.Lending) (uint, *errors.ApiError) {
+func (m LendingModule) Create(lending model.Lending) (*model.Lending, *errors.ApiError) {
 	return m.Repository.Create(lending)
 }
 

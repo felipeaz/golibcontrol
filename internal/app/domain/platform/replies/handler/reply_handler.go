@@ -53,13 +53,13 @@ func (h ReplyHandler) Create(c *gin.Context) {
 	}
 	reply.CommentId = commentId
 
-	id, apiError := h.Module.Create(reply)
+	resp, apiError := h.Module.Create(reply)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusCreated, resp)
 }
 
 func (h ReplyHandler) Update(c *gin.Context) {

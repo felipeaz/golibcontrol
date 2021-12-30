@@ -50,13 +50,13 @@ func (h LendingHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(lending)
+	resp, apiError := h.Module.Create(lending)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusCreated, resp)
 }
 
 // Update update an existent lending.

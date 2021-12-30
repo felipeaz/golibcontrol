@@ -27,7 +27,7 @@ func (m ConferenceModule) Find(id string) (model.Conference, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-func (m ConferenceModule) Create(comment model.Conference) (uint, *errors.ApiError) {
+func (m ConferenceModule) Create(comment model.Conference) (*model.Conference, *errors.ApiError) {
 	return m.Repository.Create(comment)
 }
 

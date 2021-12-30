@@ -49,16 +49,16 @@ func (r ReviewRepository) Find(id string) (model.Review, *errors.ApiError) {
 	return review, nil
 }
 
-func (r ReviewRepository) Create(review model.Review) (uint, *errors.ApiError) {
+func (r ReviewRepository) Create(review model.Review) (*model.Review, *errors.ApiError) {
 	err := r.DB.Persist(&review)
 	if err != nil {
-		return 0, &errors.ApiError{
+		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return review.ID, nil
+	return &review, nil
 }
 
 func (r ReviewRepository) Update(id string, upReview model.Review) *errors.ApiError {

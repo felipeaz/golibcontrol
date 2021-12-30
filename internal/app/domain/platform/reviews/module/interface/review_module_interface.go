@@ -8,7 +8,7 @@ import (
 type ReviewModuleInterface interface {
 	Get(bookId string) ([]model.Review, *errors.ApiError)
 	Find(id string) (model.Review, *errors.ApiError)
-	Create(review model.Review) (uint, *errors.ApiError)
+	Create(review model.Review) (*model.Review, *errors.ApiError)
 	Update(id string, upReview model.Review) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }

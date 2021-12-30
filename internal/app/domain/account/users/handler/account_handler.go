@@ -72,13 +72,13 @@ func (h AccountHandler) Create(c *gin.Context) {
 		return
 	}
 
-	id, apiError := h.Module.Create(account)
+	resp, apiError := h.Module.Create(account)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusCreated, resp)
 }
 
 // Update update an existent user.
