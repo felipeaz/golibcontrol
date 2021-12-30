@@ -7,6 +7,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
+	session_model "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/repository/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/consumer"
@@ -55,7 +56,7 @@ func (m AuthModule) Login(credentials model.Account) login.Message {
 }
 
 // Logout authenticate the user
-func (m AuthModule) Logout(session model.UserSession) (message login.Message) {
+func (m AuthModule) Logout(session session_model.UserSession) (message login.Message) {
 	data, err := m.Cache.Get(session.ConsumerId)
 	if err != nil {
 		return login.Message{
@@ -77,7 +78,7 @@ func (m AuthModule) Logout(session model.UserSession) (message login.Message) {
 		}
 		consumerKeyId = consumerKey.Id
 	default:
-		var userAuth model.UserSession
+		var userAuth session_model.UserSession
 		err = json.Unmarshal(data, &userAuth)
 		if err != nil {
 			return login.Message{
@@ -147,7 +148,7 @@ func (m AuthModule) authUser(credentials model.Account) (string, string, string,
 		}
 	}
 
-	data := model.UserSession{
+	data := session_model.UserSession{
 		ConsumerId:    account.ConsumerId,
 		ConsumerKeyId: consumerKey.Id,
 	}

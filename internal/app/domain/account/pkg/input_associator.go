@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	session_model "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/model"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
@@ -24,10 +25,10 @@ func AssociateAccountInput(c *gin.Context) (account model.Account, apiError *err
 }
 
 // AssociateSessionInput is responsible for associating the params to the user model.
-func AssociateSessionInput(c *gin.Context) (session model.UserSession, apiError *errors.ApiError) {
+func AssociateSessionInput(c *gin.Context) (session session_model.UserSession, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&session)
 	if err != nil {
-		return model.UserSession{}, &errors.ApiError{
+		return session_model.UserSession{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),
