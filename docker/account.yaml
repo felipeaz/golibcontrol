@@ -3,11 +3,11 @@ version: '3.7'
 services:
   account-service:
     build:
-      context: "./../../../../"
-      dockerfile: "build/docker/images/go/Dockerfile"
+      context: ".."
+      dockerfile: "docker/images/go/Dockerfile"
     container_name: account-service
-#    env_file:
-#      - /go/src/github.com/FelipeAz/golibcontrol/.env
+    env_file:
+      - ../.env
     links:
       - redis
     depends_on:

@@ -2,8 +2,6 @@ version: '3.7'
 
 networks:
   kong-net:
-    name: kong-net
-    driver: bridge
     external: true
 
 services:
