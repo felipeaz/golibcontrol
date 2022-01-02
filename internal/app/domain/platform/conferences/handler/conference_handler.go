@@ -3,39 +3,39 @@ package handler
 import (
 	"net/http"
 
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/module/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 type ConferenceHandler struct {
-	Module _interface.ConferenceModuleInterface
+	Module conferences.Module
 }
 
-func NewConferenceHandler(module _interface.ConferenceModuleInterface) ConferenceHandler {
+func NewConferenceHandler(module conferences.Module) ConferenceHandler {
 	return ConferenceHandler{
 		Module: module,
 	}
 }
 
 func (h ConferenceHandler) Get(c *gin.Context) {
-	conferences, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": conferences})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ConferenceHandler) Find(c *gin.Context) {
-	conference, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": conference})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ConferenceHandler) Create(c *gin.Context) {

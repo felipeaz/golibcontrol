@@ -8,26 +8,26 @@ import (
 )
 
 func ParseToLendingObj(obj interface{}) (lending.Lending, *errors.ApiError) {
-	lendingObj, ok := obj.(*lending.Lending)
+	data, ok := obj.(*lending.Lending)
 	if !ok {
 		return lending.Lending{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToConvertObj,
+			Message: errors.FailedToParsetObj,
 		}
 	}
-	return *lendingObj, nil
+	return *data, nil
 }
 
 func ParseToSliceLendingObj(obj interface{}) ([]lending.Lending, *errors.ApiError) {
 	if obj == nil {
 		return []lending.Lending{}, nil
 	}
-	lendingObj, ok := obj.(*[]lending.Lending)
+	data, ok := obj.(*[]lending.Lending)
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToConvertObj,
+			Message: errors.FailedToParsetObj,
 		}
 	}
-	return *lendingObj, nil
+	return *data, nil
 }

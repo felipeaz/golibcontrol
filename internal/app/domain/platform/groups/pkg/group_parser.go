@@ -1,16 +1,16 @@
 package pkg
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
-func ParseToBookObj(obj interface{}) (books.Book, *errors.ApiError) {
-	data, ok := obj.(*books.Book)
+func ParseToGroupObj(obj interface{}) (groups.Group, *errors.ApiError) {
+	data, ok := obj.(*groups.Group)
 	if !ok {
-		return books.Book{}, &errors.ApiError{
+		return groups.Group{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedToParsetObj,
 		}
@@ -18,11 +18,11 @@ func ParseToBookObj(obj interface{}) (books.Book, *errors.ApiError) {
 	return *data, nil
 }
 
-func ParseToSliceBookObj(obj interface{}) ([]books.Book, *errors.ApiError) {
+func ParseToSliceGroupObj(obj interface{}) ([]groups.Group, *errors.ApiError) {
 	if obj == nil {
-		return []books.Book{}, nil
+		return []groups.Group{}, nil
 	}
-	data, ok := obj.(*[]books.Book)
+	data, ok := obj.(*[]groups.Group)
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,

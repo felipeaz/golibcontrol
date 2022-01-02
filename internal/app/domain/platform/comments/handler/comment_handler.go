@@ -3,39 +3,39 @@ package handler
 import (
 	"net/http"
 
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/module/interface"
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 type CommentHandler struct {
-	Module _interface.CommentModuleInterface
+	Module domain.Module
 }
 
-func NewCommentHandler(module _interface.CommentModuleInterface) CommentHandler {
+func NewCommentHandler(module domain.Module) CommentHandler {
 	return CommentHandler{
 		Module: module,
 	}
 }
 
 func (h CommentHandler) Get(c *gin.Context) {
-	comments, apiError := h.Module.Get(c.Param("id"))
+	resp, apiError := h.Module.Get(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": comments})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h CommentHandler) Find(c *gin.Context) {
-	comment, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": comment})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h CommentHandler) Create(c *gin.Context) {

@@ -1,16 +1,16 @@
 package pkg
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
-func ParseToBookObj(obj interface{}) (books.Book, *errors.ApiError) {
-	data, ok := obj.(*books.Book)
+func ParserToReplyObj(obj interface{}) (replies.Reply, *errors.ApiError) {
+	data, ok := obj.(*replies.Reply)
 	if !ok {
-		return books.Book{}, &errors.ApiError{
+		return replies.Reply{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedToParsetObj,
 		}
@@ -18,11 +18,11 @@ func ParseToBookObj(obj interface{}) (books.Book, *errors.ApiError) {
 	return *data, nil
 }
 
-func ParseToSliceBookObj(obj interface{}) ([]books.Book, *errors.ApiError) {
+func ParserToSliceReplyObj(obj interface{}) ([]replies.Reply, *errors.ApiError) {
 	if obj == nil {
-		return []books.Book{}, nil
+		return []replies.Reply{}, nil
 	}
-	data, ok := obj.(*[]books.Book)
+	data, ok := obj.(*[]replies.Reply)
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,

@@ -1,15 +1,15 @@
 package pkg
 
 import (
+	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments"
+	conferenceModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences"
+	groupModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
+	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies"
+	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves"
+	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model"
-	conferenceModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/model"
-	groupModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/model"
-	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/model"
-	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/model"
-	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model"
 	"github.com/gin-gonic/gin"
 )
 

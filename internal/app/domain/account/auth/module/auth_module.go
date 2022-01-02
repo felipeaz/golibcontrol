@@ -18,14 +18,14 @@ import (
 type AuthModule struct {
 	Repository user.Repository
 	Consumer   consumer.Interface
-	Cache      databaseInterface.CacheInterface
+	Cache      databaseInterface.Cache
 	Log        logger.LogInterface
 }
 
 func NewAuthModule(
 	repo user.Repository,
 	consumer consumer.Interface,
-	cache databaseInterface.CacheInterface,
+	cache databaseInterface.Cache,
 	log logger.LogInterface,
 ) AuthModule {
 	return AuthModule{

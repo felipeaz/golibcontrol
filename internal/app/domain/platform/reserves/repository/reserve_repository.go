@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/pkg"
 )
 
 type ReserveRepository struct {
@@ -17,8 +17,8 @@ func NewReserveRepository(db database.GORMServiceInterface) ReserveRepository {
 	}
 }
 
-func (r ReserveRepository) Get() ([]model.Reserve, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]model.Reserve{})
+func (r ReserveRepository) Get() ([]reserves.Reserve, *errors.ApiError) {
+	result, err := r.DB.FetchAll(&[]reserves.Reserve{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -26,30 +26,22 @@ func (r ReserveRepository) Get() ([]model.Reserve, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	reserve, apiError := converter.ConvertToSliceReserveObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return reserve, nil
+	return pkg.ParseToSliceReserveObj(result)
 }
 
-func (r ReserveRepository) Find(id string) (model.Reserve, *errors.ApiError) {
-	result, err := r.DB.Fetch(&model.Reserve{}, id)
+func (r ReserveRepository) Find(id string) (reserves.Reserve, *errors.ApiError) {
+	result, err := r.DB.Fetch(&reserves.Reserve{}, id)
 	if err != nil {
-		return model.Reserve{}, &errors.ApiError{
+		return reserves.Reserve{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
-	reserve, apiError := converter.ConvertToReserveObj(result)
-	if apiError != nil {
-		return model.Reserve{}, apiError
-	}
-	return reserve, nil
+	return pkg.ParseToReserveObj(result)
 }
 
-func (r ReserveRepository) Create(reserve model.Reserve) (*model.Reserve, *errors.ApiError) {
+func (r ReserveRepository) Create(reserve reserves.Reserve) (*reserves.Reserve, *errors.ApiError) {
 	err := r.DB.Persist(&reserve)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -61,7 +53,7 @@ func (r ReserveRepository) Create(reserve model.Reserve) (*model.Reserve, *error
 	return &reserve, nil
 }
 
-func (r ReserveRepository) Update(id string, upReserve model.Reserve) *errors.ApiError {
+func (r ReserveRepository) Update(id string, upReserve reserves.Reserve) *errors.ApiError {
 	err := r.DB.Refresh(&upReserve, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -74,7 +66,7 @@ func (r ReserveRepository) Update(id string, upReserve model.Reserve) *errors.Ap
 }
 
 func (r ReserveRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Reserve{}, id)
+	err := r.DB.Remove(&reserves.Reserve{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

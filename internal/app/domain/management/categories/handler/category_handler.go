@@ -1,7 +1,7 @@
 package handler
 
 import (
-	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
@@ -10,11 +10,11 @@ import (
 
 // CategoryHandler handle the category router call.
 type CategoryHandler struct {
-	Module domain.Module
+	Module categories.Module
 }
 
 // NewCategoryHandler returns an instance of category handler.
-func NewCategoryHandler(module domain.Module) CategoryHandler {
+func NewCategoryHandler(module categories.Module) CategoryHandler {
 	return CategoryHandler{
 		Module: module,
 	}
@@ -22,24 +22,24 @@ func NewCategoryHandler(module domain.Module) CategoryHandler {
 
 // Get returns all categories.
 func (h CategoryHandler) Get(c *gin.Context) {
-	categories, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": categories})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Find return one category by ID.
 func (h CategoryHandler) Find(c *gin.Context) {
-	category, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": category})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Create persist a category to the database.

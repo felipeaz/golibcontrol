@@ -27,11 +27,7 @@ func (r AccountRepository) Get() ([]users.Account, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	accounts, apiError := pkg.ParseInterfaceToSliceAccount(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return accounts, nil
+	return pkg.ParseInterfaceToSliceAccount(result)
 }
 
 // Find return one user by ID.
@@ -44,11 +40,7 @@ func (r AccountRepository) Find(id string) (users.Account, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	account, apiError := pkg.ParseInterfaceToAccount(result)
-	if apiError != nil {
-		return users.Account{}, apiError
-	}
-	return account, nil
+	return pkg.ParseInterfaceToAccount(result)
 }
 
 // FindWhere user by field and value.
@@ -61,11 +53,7 @@ func (r AccountRepository) FindWhere(fieldName, fieldValue string) (users.Accoun
 			Error:   err.Error(),
 		}
 	}
-	account, apiError := pkg.ParseInterfaceToAccount(result)
-	if apiError != nil {
-		return users.Account{}, apiError
-	}
-	return account, nil
+	return pkg.ParseInterfaceToAccount(result)
 }
 
 // Create creates a user

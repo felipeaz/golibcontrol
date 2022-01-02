@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/pkg"
 )
 
 type CommentRepository struct {
@@ -17,8 +17,8 @@ func NewCommentRepository(db database.GORMServiceInterface) CommentRepository {
 	}
 }
 
-func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError) {
-	result, err := r.DB.FetchAllWhere(&[]model.Comment{}, "book_id", bookId)
+func (r CommentRepository) Get(bookId string) ([]comments.Comment, *errors.ApiError) {
+	result, err := r.DB.FetchAllWhere(&[]comments.Comment{}, "book_id", bookId)
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -26,30 +26,22 @@ func (r CommentRepository) Get(bookId string) ([]model.Comment, *errors.ApiError
 			Error:   err.Error(),
 		}
 	}
-	comments, apiError := converter.ConvertToSliceCommentObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return comments, nil
+	return pkg.ParseToSliceCommentObj(result)
 }
 
-func (r CommentRepository) Find(id string) (model.Comment, *errors.ApiError) {
-	result, err := r.DB.Fetch(&model.Comment{}, id)
+func (r CommentRepository) Find(id string) (comments.Comment, *errors.ApiError) {
+	result, err := r.DB.Fetch(&comments.Comment{}, id)
 	if err != nil {
-		return model.Comment{}, &errors.ApiError{
+		return comments.Comment{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
-	comment, apiError := converter.ConvertToCommentObj(result)
-	if apiError != nil {
-		return model.Comment{}, apiError
-	}
-	return comment, nil
+	return pkg.ParseToCommentObj(result)
 }
 
-func (r CommentRepository) Create(comment model.Comment) (*model.Comment, *errors.ApiError) {
+func (r CommentRepository) Create(comment comments.Comment) (*comments.Comment, *errors.ApiError) {
 	err := r.DB.Persist(&comment)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -61,7 +53,7 @@ func (r CommentRepository) Create(comment model.Comment) (*model.Comment, *error
 	return &comment, nil
 }
 
-func (r CommentRepository) Update(id string, upComment model.Comment) *errors.ApiError {
+func (r CommentRepository) Update(id string, upComment comments.Comment) *errors.ApiError {
 	err := r.DB.Refresh(&upComment, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -74,7 +66,7 @@ func (r CommentRepository) Update(id string, upComment model.Comment) *errors.Ap
 }
 
 func (r CommentRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Comment{}, id)
+	err := r.DB.Remove(&comments.Comment{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

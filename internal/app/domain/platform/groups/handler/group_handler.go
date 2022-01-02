@@ -3,39 +3,39 @@ package handler
 import (
 	"net/http"
 
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/module/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 type GroupHandler struct {
-	Module _interface.GroupModuleInterface
+	Module groups.Module
 }
 
-func NewGroupHandler(module _interface.GroupModuleInterface) GroupHandler {
+func NewGroupHandler(module groups.Module) GroupHandler {
 	return GroupHandler{
 		Module: module,
 	}
 }
 
 func (h GroupHandler) Get(c *gin.Context) {
-	groups, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": groups})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h GroupHandler) Find(c *gin.Context) {
-	group, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": group})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h GroupHandler) Create(c *gin.Context) {

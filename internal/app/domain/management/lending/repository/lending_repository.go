@@ -2,7 +2,7 @@ package repository
 
 import (
 	"fmt"
-	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/pkg"
 	"strconv"
 
@@ -22,8 +22,8 @@ func NewLendingRepository(db database.GORMServiceInterface) LendingRepository {
 }
 
 // Get returns all lendings.
-func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]lendingModel.Lending{})
+func (r LendingRepository) Get() ([]lending.Lending, *errors.ApiError) {
+	result, err := r.DB.FetchAll(&[]lending.Lending{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -32,32 +32,24 @@ func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
 		}
 	}
 
-	lendings, apiError := pkg.ParseToSliceLendingObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return lendings, nil
+	return pkg.ParseToSliceLendingObj(result)
 }
 
 // Find return one lending from DB by ID.
-func (r LendingRepository) Find(id string) (lendingModel.Lending, *errors.ApiError) {
-	result, err := r.DB.Fetch(&lendingModel.Lending{}, id)
+func (r LendingRepository) Find(id string) (lending.Lending, *errors.ApiError) {
+	result, err := r.DB.Fetch(&lending.Lending{}, id)
 	if err != nil {
-		return lendingModel.Lending{}, &errors.ApiError{
+		return lending.Lending{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
-	lending, apiError := pkg.ParseToLendingObj(result)
-	if apiError != nil {
-		return lending.Lending{}, apiError
-	}
-	return lending, nil
+	return pkg.ParseToLendingObj(result)
 }
 
 // Create persist a lending to the DB.
-func (r LendingRepository) Create(lending lendingModel.Lending) (*lendingModel.Lending, *errors.ApiError) {
+func (r LendingRepository) Create(lending lending.Lending) (*lending.Lending, *errors.ApiError) {
 	apiError := r.beforeCreate(lending.StudentID, lending.BookID)
 	if apiError != nil {
 		return nil, apiError
@@ -75,7 +67,7 @@ func (r LendingRepository) Create(lending lendingModel.Lending) (*lendingModel.L
 }
 
 // Update update an existent lending.
-func (r LendingRepository) Update(id string, upLending lendingModel.Lending) *errors.ApiError {
+func (r LendingRepository) Update(id string, upLending lending.Lending) *errors.ApiError {
 	err := r.DB.Refresh(&upLending, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -89,7 +81,7 @@ func (r LendingRepository) Update(id string, upLending lendingModel.Lending) *er
 
 // Delete delete an existent lending from DB.
 func (r LendingRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&lendingModel.Lending{}, id)
+	err := r.DB.Remove(&lending.Lending{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -103,7 +95,7 @@ func (r LendingRepository) Delete(id string) *errors.ApiError {
 // BeforeCreate validate if the book is already lent.
 func (r LendingRepository) beforeCreate(studentId, bookId uint) *errors.ApiError {
 	result, err := r.DB.FetchAllWhereWithQuery(
-		&lendingModel.Lending{},
+		&lending.Lending{},
 		fmt.Sprintf("book_id = %s OR student_id = %s", strconv.Itoa(int(bookId)), strconv.Itoa(int(studentId))))
 	if err != nil {
 		return &errors.ApiError{

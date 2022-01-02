@@ -141,6 +141,5 @@ func (r BookRepository) buildQueryFromFilter(filter books.Filter) string {
 			query = append(query, qs)
 		}
 	}
-
 	return strings.Join(query, " AND ")
 }

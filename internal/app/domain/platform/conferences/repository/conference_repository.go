@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/pkg"
 )
 
 type ConferenceRepository struct {
@@ -17,8 +17,8 @@ func NewConferenceRepository(db database.GORMServiceInterface) ConferenceReposit
 	}
 }
 
-func (r ConferenceRepository) Get() ([]model.Conference, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]model.Conference{})
+func (r ConferenceRepository) Get() ([]conferences.Conference, *errors.ApiError) {
+	result, err := r.DB.FetchAll(&[]conferences.Conference{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -26,30 +26,22 @@ func (r ConferenceRepository) Get() ([]model.Conference, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	conferences, apiError := converter.ConvertToSliceConferenceObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return conferences, nil
+	return pkg.ParseToSliceConferenceObj(result)
 }
 
-func (r ConferenceRepository) Find(id string) (model.Conference, *errors.ApiError) {
-	result, err := r.DB.Fetch(&model.Conference{}, id)
+func (r ConferenceRepository) Find(id string) (conferences.Conference, *errors.ApiError) {
+	result, err := r.DB.Fetch(&conferences.Conference{}, id)
 	if err != nil {
-		return model.Conference{}, &errors.ApiError{
+		return conferences.Conference{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
-	conference, apiError := converter.ConvertToConferenceObj(result)
-	if apiError != nil {
-		return model.Conference{}, apiError
-	}
-	return conference, nil
+	return pkg.ParseToConferenceObj(result)
 }
 
-func (r ConferenceRepository) Create(conference model.Conference) (*model.Conference, *errors.ApiError) {
+func (r ConferenceRepository) Create(conference conferences.Conference) (*conferences.Conference, *errors.ApiError) {
 	err := r.DB.Persist(&conference)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -61,7 +53,7 @@ func (r ConferenceRepository) Create(conference model.Conference) (*model.Confer
 	return &conference, nil
 }
 
-func (r ConferenceRepository) Update(id string, upConference model.Conference) *errors.ApiError {
+func (r ConferenceRepository) Update(id string, upConference conferences.Conference) *errors.ApiError {
 	err := r.DB.Refresh(&upConference, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -74,7 +66,7 @@ func (r ConferenceRepository) Update(id string, upConference model.Conference) *
 }
 
 func (r ConferenceRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Conference{}, id)
+	err := r.DB.Remove(&conferences.Conference{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

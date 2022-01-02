@@ -15,7 +15,7 @@ import (
 // Start initialize the webservice,
 func Start(
 	dbService database.GORMServiceInterface,
-	cache database.CacheInterface,
+	cache database.Cache,
 	consumersService consumer.Interface,
 	log logger.LogInterface,
 ) (err error) {

@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/pkg"
 )
 
 type GroupRepository struct {
@@ -17,8 +17,8 @@ func NewGroupRepository(db database.GORMServiceInterface) GroupRepository {
 	}
 }
 
-func (r GroupRepository) Get() ([]model.Group, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]model.Group{})
+func (r GroupRepository) Get() ([]groups.Group, *errors.ApiError) {
+	result, err := r.DB.FetchAll(&[]groups.Group{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -26,30 +26,22 @@ func (r GroupRepository) Get() ([]model.Group, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	groups, apiError := converter.ConvertToSliceGroupObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return groups, nil
+	return pkg.ParseToSliceGroupObj(result)
 }
 
-func (r GroupRepository) Find(id string) (model.Group, *errors.ApiError) {
-	result, err := r.DB.Fetch(&model.Group{}, id)
+func (r GroupRepository) Find(id string) (groups.Group, *errors.ApiError) {
+	result, err := r.DB.Fetch(&groups.Group{}, id)
 	if err != nil {
-		return model.Group{}, &errors.ApiError{
+		return groups.Group{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
-	group, apiError := converter.ConvertToGroupObj(result)
-	if apiError != nil {
-		return model.Group{}, apiError
-	}
-	return group, nil
+	return pkg.ParseToGroupObj(result)
 }
 
-func (r GroupRepository) Create(group model.Group) (*model.Group, *errors.ApiError) {
+func (r GroupRepository) Create(group groups.Group) (*groups.Group, *errors.ApiError) {
 	err := r.DB.Persist(&group)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -61,7 +53,7 @@ func (r GroupRepository) Create(group model.Group) (*model.Group, *errors.ApiErr
 	return &group, nil
 }
 
-func (r GroupRepository) Update(id string, upGroup model.Group) *errors.ApiError {
+func (r GroupRepository) Update(id string, upGroup groups.Group) *errors.ApiError {
 	err := r.DB.Refresh(&upGroup, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -74,7 +66,7 @@ func (r GroupRepository) Update(id string, upGroup model.Group) *errors.ApiError
 }
 
 func (r GroupRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Group{}, id)
+	err := r.DB.Remove(&groups.Group{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

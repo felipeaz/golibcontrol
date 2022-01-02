@@ -17,31 +17,30 @@ func ParseAccountEntry(c *gin.Context) (account users.Account, apiError *errors.
 			Error:   err.Error(),
 		}
 	}
-
 	return
 }
 
 func ParseInterfaceToAccount(obj interface{}) (users.Account, *errors.ApiError) {
-	accountObj, ok := obj.(*users.Account)
+	data, ok := obj.(*users.Account)
 	if !ok {
 		return users.Account{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToConvertObj,
+			Message: errors.FailedToParsetObj,
 		}
 	}
-	return *accountObj, nil
+	return *data, nil
 }
 
 func ParseInterfaceToSliceAccount(obj interface{}) ([]users.Account, *errors.ApiError) {
 	if obj == nil {
 		return []users.Account{}, nil
 	}
-	accountObj, ok := obj.(*[]users.Account)
+	data, ok := obj.(*[]users.Account)
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToConvertObj,
+			Message: errors.FailedToParsetObj,
 		}
 	}
-	return *accountObj, nil
+	return *data, nil
 }

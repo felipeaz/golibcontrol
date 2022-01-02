@@ -1,6 +1,7 @@
-package model
+package reviews
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"math"
 	"time"
 )
@@ -15,6 +16,22 @@ type Review struct {
 	Review    string    `json:"review"`
 	CreatedAt time.Time `time_format:"2006-01-02 15:04:05"`
 	UpdatedAt time.Time `time_format:"2006-01-02 15:04:05"`
+}
+
+type Module interface {
+	Get(bookId string) ([]Review, *errors.ApiError)
+	Find(id string) (Review, *errors.ApiError)
+	Create(review Review) (*Review, *errors.ApiError)
+	Update(id string, upReview Review) *errors.ApiError
+	Delete(id string) *errors.ApiError
+}
+
+type Repository interface {
+	Get(bookId string) ([]Review, *errors.ApiError)
+	Find(id string) (Review, *errors.ApiError)
+	Create(review Review) (*Review, *errors.ApiError)
+	Update(id string, upReview Review) *errors.ApiError
+	Delete(id string) *errors.ApiError
 }
 
 func (r *Review) CalculateAvg(reviews []Review) {

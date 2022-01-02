@@ -2,36 +2,35 @@ package module
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/model"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/repository/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 type GroupModule struct {
-	Repository _interface.GroupRepositoryInterface
+	Repository groups.GroupRepositoryInterface
 	Log        logger.LogInterface
 }
 
-func NewGroupModule(repo _interface.GroupRepositoryInterface, log logger.LogInterface) GroupModule {
+func NewGroupModule(repo groups.GroupRepositoryInterface, log logger.LogInterface) GroupModule {
 	return GroupModule{
 		Repository: repo,
 		Log:        log,
 	}
 }
 
-func (m GroupModule) Get() ([]model.Group, *errors.ApiError) {
+func (m GroupModule) Get() ([]groups.Group, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
-func (m GroupModule) Find(id string) (model.Group, *errors.ApiError) {
+func (m GroupModule) Find(id string) (groups.Group, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-func (m GroupModule) Create(comment model.Group) (*model.Group, *errors.ApiError) {
+func (m GroupModule) Create(comment groups.Group) (*groups.Group, *errors.ApiError) {
 	return m.Repository.Create(comment)
 }
 
-func (m GroupModule) Update(id string, upGroup model.Group) *errors.ApiError {
+func (m GroupModule) Update(id string, upGroup groups.Group) *errors.ApiError {
 	return m.Repository.Update(id, upGroup)
 }
 

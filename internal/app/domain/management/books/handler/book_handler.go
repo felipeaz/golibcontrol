@@ -1,7 +1,7 @@
 package handler
 
 import (
-	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
@@ -10,47 +10,47 @@ import (
 
 // BookHandler handle the book router calls.
 type BookHandler struct {
-	Module domain.Module
+	Module books.Module
 }
 
 // NewBookHandler returns an instance of this handler.
-func NewBookHandler(module domain.Module) BookHandler {
+func NewBookHandler(module books.Module) BookHandler {
 	return BookHandler{
 		Module: module,
 	}
 }
 
-// Get returns all domain.
+// Get returns all books.
 func (h BookHandler) Get(c *gin.Context) {
-	var params domain.Filter
+	var params books.Filter
 	if err := c.Bind(&params); err == nil {
-		books, apiError := h.Module.GetByFilter(params)
+		resp, apiError := h.Module.GetByFilter(params)
 		if apiError != nil {
 			c.JSON(apiError.Status, apiError)
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"data": books})
+		c.JSON(http.StatusOK, resp)
 		return
 	}
 
-	books, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": books})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Find return one book by ID.
 func (h BookHandler) Find(c *gin.Context) {
-	book, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": book})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Create creates a book.

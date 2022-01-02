@@ -3,18 +3,18 @@ package handler
 import (
 	"net/http"
 
-	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 // LendingHandler handle the lending router call.
 type LendingHandler struct {
-	Module domain.Module
+	Module lending.Module
 }
 
 // NewLendingHandler Return an instance of this handler.
-func NewLendingHandler(module domain.Module) LendingHandler {
+func NewLendingHandler(module lending.Module) LendingHandler {
 	return LendingHandler{
 		Module: module,
 	}
@@ -22,35 +22,35 @@ func NewLendingHandler(module domain.Module) LendingHandler {
 
 // Get returns all lendings.
 func (h LendingHandler) Get(c *gin.Context) {
-	lendings, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": lendings})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Find return one lending by ID.
 func (h LendingHandler) Find(c *gin.Context) {
-	lending, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": lending})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Create persist a lending to the database.
 func (h LendingHandler) Create(c *gin.Context) {
-	lending, apiError := pkg.AssociateLendingInput(c)
+	lend, apiError := pkg.AssociateLendingInput(c)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	resp, apiError := h.Module.Create(lending)
+	resp, apiError := h.Module.Create(lend)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return

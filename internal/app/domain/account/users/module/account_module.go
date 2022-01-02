@@ -2,25 +2,25 @@ package module
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/consumer"
-	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
+	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 type AccountModule struct {
-	Repository domain.Repository
+	Repository users.Repository
 	Consumer   consumer.Interface
-	Cache      databaseInterface.CacheInterface
+	Cache      database.Cache
 	Log        logger.LogInterface
 }
 
 func NewAccountModule(
-	repo domain.Repository,
+	repo users.Repository,
 	consumer consumer.Interface,
-	cache databaseInterface.CacheInterface,
+	cache database.Cache,
 	log logger.LogInterface,
 ) AccountModule {
 	return AccountModule{
@@ -32,17 +32,17 @@ func NewAccountModule(
 }
 
 // Get returns all accounts.
-func (m AccountModule) Get() ([]domain.Account, *errors.ApiError) {
+func (m AccountModule) Get() ([]users.Account, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
 // Find return one user by ID.
-func (m AccountModule) Find(id string) (domain.Account, *errors.ApiError) {
+func (m AccountModule) Find(id string) (users.Account, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
 // Create creates a user
-func (m AccountModule) Create(account domain.Account) (*domain.Account, *errors.ApiError) {
+func (m AccountModule) Create(account users.Account) (*users.Account, *errors.ApiError) {
 	cons, err := m.Consumer.CreateConsumer(account.Email)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -57,7 +57,7 @@ func (m AccountModule) Create(account domain.Account) (*domain.Account, *errors.
 }
 
 // Update update an existent user.
-func (m AccountModule) Update(id string, upAccount domain.Account) *errors.ApiError {
+func (m AccountModule) Update(id string, upAccount users.Account) *errors.ApiError {
 	return m.Repository.Update(id, upAccount)
 }
 

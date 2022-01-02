@@ -4,38 +4,38 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/module/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
 	"github.com/gin-gonic/gin"
 )
 
 type ReviewHandler struct {
-	Module _interface.ReviewModuleInterface
+	Module reviews.Module
 }
 
-func NewReviewHandler(module _interface.ReviewModuleInterface) ReviewHandler {
+func NewReviewHandler(module reviews.Module) ReviewHandler {
 	return ReviewHandler{
 		Module: module,
 	}
 }
 
 func (h ReviewHandler) Get(c *gin.Context) {
-	reviews, apiError := h.Module.Get(c.Param("id"))
+	resp, apiError := h.Module.Get(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": reviews})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReviewHandler) Find(c *gin.Context) {
-	review, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": review})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReviewHandler) Create(c *gin.Context) {

@@ -28,11 +28,7 @@ func (r CategoryRepository) Get() ([]categories.Category, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	categories, apiError := pkg.ParseToSliceCategoryObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return categories, nil
+	return pkg.ParseToSliceCategoryObj(result)
 }
 
 // Find return one category from DB by ID.
@@ -45,13 +41,7 @@ func (r CategoryRepository) Find(id string) (categories.Category, *errors.ApiErr
 			Error:   err.Error(),
 		}
 	}
-
-	category, apiError := pkg.ParseToCategoryObj(result)
-	if apiError != nil {
-		return categories.Category{}, apiError
-	}
-
-	return category, nil
+	return pkg.ParseToCategoryObj(result)
 }
 
 // Create persist a category to the DB.

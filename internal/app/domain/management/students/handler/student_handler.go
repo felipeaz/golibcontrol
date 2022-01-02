@@ -5,17 +5,17 @@ import (
 	"os"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
-	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"github.com/gin-gonic/gin"
 )
 
 // StudentHandler handle the student router call.
 type StudentHandler struct {
-	Module domain.Module
+	Module students.Module
 }
 
 // NewStudentHandler Return an instance of this handler.
-func NewStudentHandler(module domain.Module) StudentHandler {
+func NewStudentHandler(module students.Module) StudentHandler {
 	return StudentHandler{
 		Module: module,
 	}
@@ -23,24 +23,24 @@ func NewStudentHandler(module domain.Module) StudentHandler {
 
 // Get returns all students.
 func (h StudentHandler) Get(c *gin.Context) {
-	students, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": students})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Find return one student by ID.
 func (h StudentHandler) Find(c *gin.Context) {
-	student, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": student})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Create persist a student to the database.

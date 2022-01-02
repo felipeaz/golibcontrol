@@ -5,38 +5,38 @@ import (
 
 	_pkg "github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/module/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies"
 	"github.com/gin-gonic/gin"
 )
 
 type ReplyHandler struct {
-	Module _interface.ReplyModuleInterface
+	Module replies.Module
 }
 
-func NewReplyHandler(module _interface.ReplyModuleInterface) ReplyHandler {
+func NewReplyHandler(module replies.Module) ReplyHandler {
 	return ReplyHandler{
 		Module: module,
 	}
 }
 
 func (h ReplyHandler) Get(c *gin.Context) {
-	replys, apiError := h.Module.Get(c.Param("id"))
+	resp, apiError := h.Module.Get(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": replys})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReplyHandler) Find(c *gin.Context) {
-	reply, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": reply})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReplyHandler) Create(c *gin.Context) {

@@ -4,38 +4,38 @@ import (
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/pkg"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/module/interface"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves"
 	"github.com/gin-gonic/gin"
 )
 
 type ReserveHandler struct {
-	Module _interface.ReserveModuleInterface
+	Module reserves.Module
 }
 
-func NewReserveHandler(module _interface.ReserveModuleInterface) ReserveHandler {
+func NewReserveHandler(module reserves.Module) ReserveHandler {
 	return ReserveHandler{
 		Module: module,
 	}
 }
 
 func (h ReserveHandler) Get(c *gin.Context) {
-	reserves, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": reserves})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReserveHandler) Find(c *gin.Context) {
-	reserve, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": reserve})
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h ReserveHandler) Create(c *gin.Context) {

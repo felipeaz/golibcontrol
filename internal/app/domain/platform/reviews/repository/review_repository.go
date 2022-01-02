@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/pkg"
 )
 
 type ReviewRepository struct {
@@ -17,8 +17,8 @@ func NewReviewRepository(db database.GORMServiceInterface) ReviewRepository {
 	}
 }
 
-func (r ReviewRepository) Get(bookId string) ([]model.Review, *errors.ApiError) {
-	result, err := r.DB.FetchAllWhere(&[]model.Review{}, "book_id", bookId)
+func (r ReviewRepository) Get(bookId string) ([]reviews.Review, *errors.ApiError) {
+	result, err := r.DB.FetchAllWhere(&[]reviews.Review{}, "book_id", bookId)
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -26,30 +26,22 @@ func (r ReviewRepository) Get(bookId string) ([]model.Review, *errors.ApiError) 
 			Error:   err.Error(),
 		}
 	}
-	reviews, apiError := converter.ConvertToSliceReviewObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return reviews, nil
+	return pkg.ParseToSliceReviewObj(result)
 }
 
-func (r ReviewRepository) Find(id string) (model.Review, *errors.ApiError) {
-	result, err := r.DB.Fetch(&model.Review{}, id)
+func (r ReviewRepository) Find(id string) (reviews.Review, *errors.ApiError) {
+	result, err := r.DB.Fetch(&reviews.Review{}, id)
 	if err != nil {
-		return model.Review{}, &errors.ApiError{
+		return reviews.Review{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
-	review, apiError := converter.ConvertToReviewObj(result)
-	if apiError != nil {
-		return model.Review{}, apiError
-	}
-	return review, nil
+	return pkg.ParseToReviewObj(result)
 }
 
-func (r ReviewRepository) Create(review model.Review) (*model.Review, *errors.ApiError) {
+func (r ReviewRepository) Create(review reviews.Review) (*reviews.Review, *errors.ApiError) {
 	err := r.DB.Persist(&review)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -61,7 +53,7 @@ func (r ReviewRepository) Create(review model.Review) (*model.Review, *errors.Ap
 	return &review, nil
 }
 
-func (r ReviewRepository) Update(id string, upReview model.Review) *errors.ApiError {
+func (r ReviewRepository) Update(id string, upReview reviews.Review) *errors.ApiError {
 	err := r.DB.Refresh(&upReview, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -74,7 +66,7 @@ func (r ReviewRepository) Update(id string, upReview model.Review) *errors.ApiEr
 }
 
 func (r ReviewRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Review{}, id)
+	err := r.DB.Remove(&reviews.Review{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

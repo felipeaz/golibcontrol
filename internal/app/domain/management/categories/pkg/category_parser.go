@@ -8,26 +8,26 @@ import (
 )
 
 func ParseToCategoryObj(obj interface{}) (categories.Category, *errors.ApiError) {
-	categoryObj, ok := obj.(*categories.Category)
+	data, ok := obj.(*categories.Category)
 	if !ok {
 		return categories.Category{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToConvertObj,
+			Message: errors.FailedToParsetObj,
 		}
 	}
-	return *categoryObj, nil
+	return *data, nil
 }
 
 func ParseToSliceCategoryObj(obj interface{}) ([]categories.Category, *errors.ApiError) {
 	if obj == nil {
 		return []categories.Category{}, nil
 	}
-	categoryObj, ok := obj.(*[]categories.Category)
+	data, ok := obj.(*[]categories.Category)
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToConvertObj,
+			Message: errors.FailedToParsetObj,
 		}
 	}
-	return *categoryObj, nil
+	return *data, nil
 }

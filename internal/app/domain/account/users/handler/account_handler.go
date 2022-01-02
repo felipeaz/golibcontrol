@@ -21,24 +21,24 @@ func NewAccountHandler(module users.Module) AccountHandler {
 
 // Get returns all accounts.
 func (h AccountHandler) Get(c *gin.Context) {
-	accounts, apiError := h.Module.Get()
+	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": accounts})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Find return one user by ID.
 func (h AccountHandler) Find(c *gin.Context) {
-	account, apiError := h.Module.Find(c.Param("id"))
+	resp, apiError := h.Module.Find(c.Param("id"))
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": account})
+	c.JSON(http.StatusOK, resp)
 }
 
 // Create creates a user

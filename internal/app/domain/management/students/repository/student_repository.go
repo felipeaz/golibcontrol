@@ -28,11 +28,7 @@ func (r StudentRepository) Get() ([]students.Student, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	students, apiError := pkg.ConvertToSliceStudentObj(result)
-	if apiError != nil {
-		return nil, apiError
-	}
-	return students, apiError
+	return pkg.ParseToSliceStudentObj(result)
 }
 
 // Find return one student from DB by ID.
@@ -45,13 +41,7 @@ func (r StudentRepository) Find(id string) (students.Student, *errors.ApiError) 
 			Error:   err.Error(),
 		}
 	}
-
-	student, apiError := pkg.ConvertToStudentObj(result)
-	if apiError != nil {
-		return students.Student{}, apiError
-	}
-
-	return student, nil
+	return pkg.ParseToStudentObj(result)
 }
 
 // Create persist a student to the DB.
@@ -64,7 +54,6 @@ func (r StudentRepository) Create(student students.Student) (*students.Student, 
 			Error:   err.Error(),
 		}
 	}
-
 	return &student, nil
 }
 

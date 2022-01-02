@@ -17,6 +17,5 @@ func ParseSessionEntry(c *gin.Context) (session auth.Session, apiError *errors.A
 			Error:   err.Error(),
 		}
 	}
-
 	return
 }
