@@ -1,7 +1,7 @@
 package build
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/account/auth/handler"
 	"github.com/gin-gonic/gin"
 )
 

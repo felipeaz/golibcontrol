@@ -2,13 +2,13 @@ package router
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/platform/router/build"
-	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/handler"
-	conferenceHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/handler"
-	groupHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/handler"
-	replyHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/handler"
-	reserveHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/handler"
-	reviewHandler "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
+	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/handler"
+	conferenceHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/conferences/handler"
+	groupHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/groups/handler"
+	replyHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/replies/handler"
+	reserveHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/reserves/handler"
+	reviewHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/reviews/handler"
 
 	"github.com/gin-gonic/gin"
 )

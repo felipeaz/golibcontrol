@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/account/router/build"
-	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/handler"
-	account_handler "github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/handler"
+	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/account/auth/handler"
+	account_handler "github.com/FelipeAz/golibcontrol/internal/app/account/users/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
 )

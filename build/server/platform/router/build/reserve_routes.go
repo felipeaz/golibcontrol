@@ -1,7 +1,7 @@
 package build
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/platform/reserves/handler"
 	"github.com/gin-gonic/gin"
 )
 

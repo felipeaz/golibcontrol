@@ -1,7 +1,7 @@
 package build
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/management/categories/handler"
 	"github.com/gin-gonic/gin"
 )
 

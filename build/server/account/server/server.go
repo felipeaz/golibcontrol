@@ -2,13 +2,13 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/server/account/router"
+	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/account/auth/handler"
+	auth_module "github.com/FelipeAz/golibcontrol/internal/app/account/auth/module"
+	"github.com/FelipeAz/golibcontrol/internal/app/account/users/handler"
+	"github.com/FelipeAz/golibcontrol/internal/app/account/users/module"
+	"github.com/FelipeAz/golibcontrol/internal/app/account/users/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/consumer"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/handler"
-	auth_module "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/module"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/handler"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/module"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/repository"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
