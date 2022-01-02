@@ -1,6 +1,7 @@
-package model
+package users
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"time"
 )
 
@@ -16,4 +17,12 @@ type Account struct {
 	StudentAccount bool      `json:"studentAccount" gorm:"<-:create"`
 	CreatedAt      time.Time `time_format:"2006-01-02 15:04:05"`
 	UpdatedAt      time.Time `time_format:"2006-01-02 15:04:05"`
+}
+
+type Module interface {
+	Get() ([]Account, *errors.ApiError)
+	Find(id string) (Account, *errors.ApiError)
+	Create(account Account) (*Account, *errors.ApiError)
+	Update(id string, upAccount Account) *errors.ApiError
+	Delete(id string) *errors.ApiError
 }

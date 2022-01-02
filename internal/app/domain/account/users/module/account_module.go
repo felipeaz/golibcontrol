@@ -1,12 +1,12 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/consumer"
+	"github.com/FelipeAz/golibcontrol/internal/app/consumer"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/repository/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
@@ -33,17 +33,17 @@ func NewAccountModule(
 }
 
 // Get returns all accounts.
-func (m AccountModule) Get() ([]model.Account, *errors.ApiError) {
+func (m AccountModule) Get() ([]users.Account, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
 // Find return one user by ID.
-func (m AccountModule) Find(id string) (model.Account, *errors.ApiError) {
+func (m AccountModule) Find(id string) (users.Account, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
 // Create creates a user
-func (m AccountModule) Create(account model.Account) (*model.Account, *errors.ApiError) {
+func (m AccountModule) Create(account users.Account) (*users.Account, *errors.ApiError) {
 	cons, err := m.Consumer.CreateConsumer(account.Email)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -58,7 +58,7 @@ func (m AccountModule) Create(account model.Account) (*model.Account, *errors.Ap
 }
 
 // Update update an existent user.
-func (m AccountModule) Update(id string, upAccount model.Account) *errors.ApiError {
+func (m AccountModule) Update(id string, upAccount users.Account) *errors.ApiError {
 	return m.Repository.Update(id, upAccount)
 }
 

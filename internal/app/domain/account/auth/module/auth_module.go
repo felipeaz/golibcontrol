@@ -6,11 +6,11 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/consumer/jwt"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
+	"github.com/FelipeAz/golibcontrol/internal/app/consumer"
 	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
-	session_model "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
+	session_model "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
 	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/repository/interface"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/consumer"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"net/http"
 )
@@ -37,7 +37,7 @@ func NewAuthModule(
 }
 
 // Login authenticate the user
-func (m AuthModule) Login(credentials model.Account) login.Message {
+func (m AuthModule) Login(credentials users.Account) login.Message {
 	userName, token, consumerId, userId, apiError := m.authUser(credentials)
 	if apiError != nil {
 		return login.Message{
@@ -56,7 +56,7 @@ func (m AuthModule) Login(credentials model.Account) login.Message {
 }
 
 // Logout authenticate the user
-func (m AuthModule) Logout(session session_model.UserSession) (message login.Message) {
+func (m AuthModule) Logout(session session_model.Session) (message login.Message) {
 	data, err := m.Cache.Get(session.ConsumerId)
 	if err != nil {
 		return login.Message{
@@ -78,7 +78,7 @@ func (m AuthModule) Logout(session session_model.UserSession) (message login.Mes
 		}
 		consumerKeyId = consumerKey.Id
 	default:
-		var userAuth session_model.UserSession
+		var userAuth session_model.Session
 		err = json.Unmarshal(data, &userAuth)
 		if err != nil {
 			return login.Message{
@@ -114,7 +114,7 @@ func (m AuthModule) Logout(session session_model.UserSession) (message login.Mes
 }
 
 // authUser retrieves user and authorize the access if the credentials match
-func (m AuthModule) authUser(credentials model.Account) (string, string, string, uint, *errors.ApiError) {
+func (m AuthModule) authUser(credentials users.Account) (string, string, string, uint, *errors.ApiError) {
 	account, apiError := m.Repository.FindWhere("email", credentials.Email)
 	if apiError != nil {
 		return "", "", "", 0, &errors.ApiError{
@@ -148,7 +148,7 @@ func (m AuthModule) authUser(credentials model.Account) (string, string, string,
 		}
 	}
 
-	data := session_model.UserSession{
+	data := session_model.Session{
 		ConsumerId:    account.ConsumerId,
 		ConsumerKeyId: consumerKey.Id,
 	}

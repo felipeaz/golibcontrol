@@ -2,9 +2,9 @@ package database
 
 import (
 	"fmt"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
 	"log"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -48,6 +48,6 @@ func CloseConnection(db *gorm.DB) {
 // and if the properties aren't set, updates them just like the struct definition.
 func (db *DBHandler) autoMigrateTables() error {
 	return db.conn.Migrator().AutoMigrate(
-		&model.Account{},
+		&users.Account{},
 	)
 }

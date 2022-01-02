@@ -1,19 +1,19 @@
 package handler
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/pkg"
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/pkg"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/module/interface"
 	"github.com/gin-gonic/gin"
 )
 
 type AccountHandler struct {
-	Module _interface.AccountModuleInterface
+	Module users.Module
 }
 
 // NewAccountHandler returns an instance of authHandler
-func NewAccountHandler(module _interface.AccountModuleInterface) AccountHandler {
+func NewAccountHandler(module users.Module) AccountHandler {
 	return AccountHandler{
 		Module: module,
 	}
@@ -43,7 +43,7 @@ func (h AccountHandler) Find(c *gin.Context) {
 
 // Create creates a user
 func (h AccountHandler) Create(c *gin.Context) {
-	account, apiError := pkg.AssociateAccountInput(c)
+	account, apiError := pkg.ParseAccountEntry(c)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
@@ -60,7 +60,7 @@ func (h AccountHandler) Create(c *gin.Context) {
 
 // Update update an existent user.
 func (h AccountHandler) Update(c *gin.Context) {
-	upAccount, apiError := pkg.AssociateAccountInput(c)
+	upAccount, apiError := pkg.ParseAccountEntry(c)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
