@@ -51,12 +51,11 @@ func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
 // GetByFilter return books from query string.
 func (r BookRepository) GetByFilter(filter books.Filter) ([]books.Book, *errors.ApiError) {
 	queryString := r.buildQueryFromFilter(filter)
-	join := fmt.Sprintf("JOIN book_categories ON book_categories.book_id = books.id")
 	result, err := r.DB.FetchAllWithQueryAndPreload(
 		&[]books.Book{},
 		queryString,
 		"Category",
-		join,
+		"JOIN book_categories ON book_categories.book_id = books.id",
 		"books.id",
 	)
 	if err != nil {

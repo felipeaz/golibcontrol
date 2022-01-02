@@ -26,7 +26,7 @@ var (
 )
 
 func init() {
-	for env, _ := range envs {
+	for env := range envs {
 		var exist bool
 		if envs[env], exist = os.LookupEnv(env); !exist {
 			log.Fatalf("missing environment variable")

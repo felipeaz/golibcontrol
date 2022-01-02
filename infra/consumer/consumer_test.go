@@ -54,7 +54,10 @@ func TestCreateConsumerUnmarshalError(t *testing.T) {
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/" {
 				w.Header().Add("Content-Type", "application/json")
-				w.Write([]byte(nil))
+				_, err := w.Write([]byte(nil))
+				if err != nil {
+					t.Fail()
+				}
 			}
 		}),
 	)
