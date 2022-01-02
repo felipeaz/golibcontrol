@@ -2,18 +2,17 @@ package module
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/repository/interface"
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 // CategoryModule process the request recieved from handler
 type CategoryModule struct {
-	Repository _interface.CategoryRepositoryInterface
+	Repository domain.Repository
 	Log        logger.LogInterface
 }
 
-func NewCategoryModule(repo _interface.CategoryRepositoryInterface, log logger.LogInterface) CategoryModule {
+func NewCategoryModule(repo domain.Repository, log logger.LogInterface) CategoryModule {
 	return CategoryModule{
 		Repository: repo,
 		Log:        log,
@@ -21,22 +20,22 @@ func NewCategoryModule(repo _interface.CategoryRepositoryInterface, log logger.L
 }
 
 // Get returns all categories.
-func (m CategoryModule) Get() ([]model.Category, *errors.ApiError) {
+func (m CategoryModule) Get() ([]domain.Category, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
 // Find return one category by ID.
-func (m CategoryModule) Find(id string) (model.Category, *errors.ApiError) {
+func (m CategoryModule) Find(id string) (domain.Category, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
 // Create persist a category to the database.
-func (m CategoryModule) Create(category model.Category) (*model.Category, *errors.ApiError) {
+func (m CategoryModule) Create(category domain.Category) (*domain.Category, *errors.ApiError) {
 	return m.Repository.Create(category)
 }
 
 // Update update an existent category.
-func (m CategoryModule) Update(id string, upCategory model.Category) *errors.ApiError {
+func (m CategoryModule) Update(id string, upCategory domain.Category) *errors.ApiError {
 	return m.Repository.Update(id, upCategory)
 }
 

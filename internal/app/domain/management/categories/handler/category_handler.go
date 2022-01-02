@@ -1,20 +1,20 @@
 package handler
 
 import (
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"net/http"
 
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 // CategoryHandler handle the category router call.
 type CategoryHandler struct {
-	Module _interface.CategoryModuleInterface
+	Module domain.Module
 }
 
 // NewCategoryHandler returns an instance of category handler.
-func NewCategoryHandler(module _interface.CategoryModuleInterface) CategoryHandler {
+func NewCategoryHandler(module domain.Module) CategoryHandler {
 	return CategoryHandler{
 		Module: module,
 	}

@@ -8,22 +8,22 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/consumer"
 	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
-	session_model "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/account/users/repository/interface"
+	user "github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"net/http"
 )
 
 type AuthModule struct {
-	Repository _interface.AccountRepositoryInterface
+	Repository user.Repository
 	Consumer   consumer.Interface
 	Cache      databaseInterface.CacheInterface
 	Log        logger.LogInterface
 }
 
 func NewAuthModule(
-	repo _interface.AccountRepositoryInterface,
+	repo user.Repository,
 	consumer consumer.Interface,
 	cache databaseInterface.CacheInterface,
 	log logger.LogInterface,
@@ -56,7 +56,7 @@ func (m AuthModule) Login(credentials users.Account) login.Message {
 }
 
 // Logout authenticate the user
-func (m AuthModule) Logout(session session_model.Session) (message login.Message) {
+func (m AuthModule) Logout(session domain.Session) (message login.Message) {
 	data, err := m.Cache.Get(session.ConsumerId)
 	if err != nil {
 		return login.Message{
@@ -78,7 +78,7 @@ func (m AuthModule) Logout(session session_model.Session) (message login.Message
 		}
 		consumerKeyId = consumerKey.Id
 	default:
-		var userAuth session_model.Session
+		var userAuth domain.Session
 		err = json.Unmarshal(data, &userAuth)
 		if err != nil {
 			return login.Message{
@@ -148,7 +148,7 @@ func (m AuthModule) authUser(credentials users.Account) (string, string, string,
 		}
 	}
 
-	data := session_model.Session{
+	data := domain.Session{
 		ConsumerId:    account.ConsumerId,
 		ConsumerKeyId: consumerKey.Id,
 	}

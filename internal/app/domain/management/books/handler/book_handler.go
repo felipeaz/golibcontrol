@@ -1,29 +1,28 @@
 package handler
 
 import (
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/module/interface"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 // BookHandler handle the book router calls.
 type BookHandler struct {
-	Module _interface.BookModuleInterface
+	Module domain.Module
 }
 
 // NewBookHandler returns an instance of this handler.
-func NewBookHandler(module _interface.BookModuleInterface) BookHandler {
+func NewBookHandler(module domain.Module) BookHandler {
 	return BookHandler{
 		Module: module,
 	}
 }
 
-// Get returns all books.
+// Get returns all domain.
 func (h BookHandler) Get(c *gin.Context) {
-	var params model.Filter
+	var params domain.Filter
 	if err := c.Bind(&params); err == nil {
 		books, apiError := h.Module.GetByFilter(params)
 		if apiError != nil {

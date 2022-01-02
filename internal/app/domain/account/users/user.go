@@ -26,3 +26,12 @@ type Module interface {
 	Update(id string, upAccount Account) *errors.ApiError
 	Delete(id string) *errors.ApiError
 }
+
+type Repository interface {
+	Get() (accounts []Account, apiError *errors.ApiError)
+	Find(id string) (account Account, apiError *errors.ApiError)
+	FindWhere(fieldName, fieldValue string) (account Account, apiError *errors.ApiError)
+	Create(account Account) (*Account, *errors.ApiError)
+	Update(id string, upAccount Account) *errors.ApiError
+	Delete(id string) (apiError *errors.ApiError)
+}

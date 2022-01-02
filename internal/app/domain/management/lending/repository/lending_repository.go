@@ -2,12 +2,12 @@ package repository
 
 import (
 	"fmt"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/pkg"
 	"strconv"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model/converter"
 )
 
 // LendingRepository is responsible for getting/saving information from DB.
@@ -32,7 +32,7 @@ func (r LendingRepository) Get() ([]lendingModel.Lending, *errors.ApiError) {
 		}
 	}
 
-	lendings, apiError := converter.ConvertToSliceLendingObj(result)
+	lendings, apiError := pkg.ParseToSliceLendingObj(result)
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -49,9 +49,9 @@ func (r LendingRepository) Find(id string) (lendingModel.Lending, *errors.ApiErr
 			Error:   err.Error(),
 		}
 	}
-	lending, apiError := converter.ConvertToLendingObj(result)
+	lending, apiError := pkg.ParseToLendingObj(result)
 	if apiError != nil {
-		return lendingModel.Lending{}, apiError
+		return lending.Lending{}, apiError
 	}
 	return lending, nil
 }

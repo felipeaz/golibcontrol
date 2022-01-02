@@ -2,12 +2,12 @@ package database
 
 import (
 	"fmt"
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"log"
 
-	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
-	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/model"
-	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
-	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -54,7 +54,7 @@ func (db *DBHandler) autoMigrateTables() error {
 		&studentModel.Student{},
 		&bookModel.Book{},
 		&categoryModel.Category{},
-		&bookModel.BookCategory{},
+		&bookModel.Category{},
 		&lendingModel.Lending{},
 	)
 }

@@ -1,13 +1,13 @@
 package pkg
 
 import (
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
-	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/model"
-	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
-	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -57,7 +57,7 @@ func AssociateStudentInput(c *gin.Context) (student studentModel.Student, apiErr
 func AssociateLendingInput(c *gin.Context) (lending lendingModel.Lending, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&lending)
 	if err != nil {
-		return lendingModel.Lending{}, &errors.ApiError{
+		return lending.Lending{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

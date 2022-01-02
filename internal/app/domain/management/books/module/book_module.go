@@ -2,8 +2,7 @@ package module
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/repository/interface"
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	_pkg "github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
@@ -11,14 +10,14 @@ import (
 
 // BookModule process the request received from handler.
 type BookModule struct {
-	Repository             _interface.BookRepositoryInterface
-	BookCategoryRepository _interface.BookCategoryRepositoryInterface
+	Repository             domain.Repository
+	BookCategoryRepository domain.CategoryRepository
 	Log                    logger.LogInterface
 }
 
 func NewBookModule(
-	repo _interface.BookRepositoryInterface,
-	cRepo _interface.BookCategoryRepositoryInterface,
+	repo domain.Repository,
+	cRepo domain.CategoryRepository,
 	log logger.LogInterface) BookModule {
 	return BookModule{
 		Repository:             repo,
@@ -28,22 +27,22 @@ func NewBookModule(
 }
 
 // Get returns all books on DB.
-func (m BookModule) Get() ([]model.Book, *errors.ApiError) {
+func (m BookModule) Get() ([]domain.Book, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
 // GetByFilter return all books from Query
-func (m BookModule) GetByFilter(filter model.Filter) ([]model.Book, *errors.ApiError) {
+func (m BookModule) GetByFilter(filter domain.Filter) ([]domain.Book, *errors.ApiError) {
 	return m.Repository.GetByFilter(filter)
 }
 
 // Find returns all books on DB.
-func (m BookModule) Find(id string) (model.Book, *errors.ApiError) {
+func (m BookModule) Find(id string) (domain.Book, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
 // Create persist a book to the database.
-func (m BookModule) Create(book model.Book) (*model.Book, *errors.ApiError) {
+func (m BookModule) Create(book domain.Book) (*domain.Book, *errors.ApiError) {
 	categoriesIds := pkg.ExtractCategoryId(book.CategoriesId)
 	resp, apiError := m.Repository.Create(book)
 	if apiError != nil {
@@ -54,7 +53,7 @@ func (m BookModule) Create(book model.Book) (*model.Book, *errors.ApiError) {
 }
 
 // Update update an existent book.
-func (m BookModule) Update(id string, upBook model.Book) *errors.ApiError {
+func (m BookModule) Update(id string, upBook domain.Book) *errors.ApiError {
 	categoriesIds := pkg.ExtractCategoryId(upBook.CategoriesId)
 	apiError := m.Repository.Update(id, upBook)
 	if apiError != nil {

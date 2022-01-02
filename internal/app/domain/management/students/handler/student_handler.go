@@ -5,17 +5,17 @@ import (
 	"os"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/module/interface"
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"github.com/gin-gonic/gin"
 )
 
 // StudentHandler handle the student router call.
 type StudentHandler struct {
-	Module _interface.StudentModuleInterface
+	Module domain.Module
 }
 
 // NewStudentHandler Return an instance of this handler.
-func NewStudentHandler(module _interface.StudentModuleInterface) StudentHandler {
+func NewStudentHandler(module domain.Module) StudentHandler {
 	return StudentHandler{
 		Module: module,
 	}

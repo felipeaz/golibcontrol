@@ -2,13 +2,13 @@ package repository
 
 import (
 	"fmt"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/pkg"
 	"reflect"
 	"strings"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model/converter"
 )
 
 // BookRepository is responsible for getting/saving information from DB.
@@ -23,8 +23,8 @@ func NewBookRepository(db database.GORMServiceInterface) BookRepository {
 }
 
 // Get returns all books from DB.
-func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
-	result, err := r.DB.FetchAllWithPreload(&[]model.Book{}, "BookCategory")
+func (r BookRepository) Get() ([]books.Book, *errors.ApiError) {
+	result, err := r.DB.FetchAllWithPreload(&[]books.Book{}, "Category")
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -32,30 +32,30 @@ func (r BookRepository) Get() ([]model.Book, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	return converter.ConvertToSliceBookObj(result)
+	return pkg.ParseToSliceBookObj(result)
 }
 
 // Find return one book from DB by ID.
-func (r BookRepository) Find(id string) (model.Book, *errors.ApiError) {
-	result, err := r.DB.FetchWithPreload(&model.Book{}, id, "BookCategory")
+func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
+	result, err := r.DB.FetchWithPreload(&books.Book{}, id, "Category")
 	if err != nil {
-		return model.Book{}, &errors.ApiError{
+		return books.Book{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
-	return converter.ConvertToBookObj(result)
+	return pkg.ParseToBookObj(result)
 }
 
 // GetByFilter return books from query string.
-func (r BookRepository) GetByFilter(filter model.Filter) ([]model.Book, *errors.ApiError) {
+func (r BookRepository) GetByFilter(filter books.Filter) ([]books.Book, *errors.ApiError) {
 	queryString := r.buildQueryFromFilter(filter)
 	join := fmt.Sprintf("JOIN book_categories ON book_categories.book_id = books.id")
 	result, err := r.DB.FetchAllWithQueryAndPreload(
-		&[]model.Book{},
+		&[]books.Book{},
 		queryString,
-		"BookCategory",
+		"Category",
 		join,
 		"books.id",
 	)
@@ -66,11 +66,11 @@ func (r BookRepository) GetByFilter(filter model.Filter) ([]model.Book, *errors.
 			Error:   err.Error(),
 		}
 	}
-	return converter.ConvertToSliceBookObj(result)
+	return pkg.ParseToSliceBookObj(result)
 }
 
 // Create persist a book to the DB.
-func (r BookRepository) Create(book model.Book) (*model.Book, *errors.ApiError) {
+func (r BookRepository) Create(book books.Book) (*books.Book, *errors.ApiError) {
 	err := r.DB.Persist(&book)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -83,7 +83,7 @@ func (r BookRepository) Create(book model.Book) (*model.Book, *errors.ApiError) 
 }
 
 // Update update an existent book.
-func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
+func (r BookRepository) Update(id string, upBook books.Book) *errors.ApiError {
 	err := r.DB.Refresh(&upBook, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -105,7 +105,7 @@ func (r BookRepository) Update(id string, upBook model.Book) *errors.ApiError {
 
 // Delete delete an existent book from DB.
 func (r BookRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Book{}, id)
+	err := r.DB.Remove(&books.Book{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -116,7 +116,7 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 	return nil
 }
 
-func (r BookRepository) buildQueryFromFilter(filter model.Filter) string {
+func (r BookRepository) buildQueryFromFilter(filter books.Filter) string {
 	var query []string
 
 	// reflect allows accessing type metadata (ex: struct tags)

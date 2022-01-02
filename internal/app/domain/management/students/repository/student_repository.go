@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/pkg"
 )
 
 // StudentRepository is responsible for getting/saving information from DB.
@@ -19,8 +19,8 @@ func NewStudentRepository(db database.GORMServiceInterface) StudentRepository {
 }
 
 // Get returns all students.
-func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]model.Student{})
+func (r StudentRepository) Get() ([]students.Student, *errors.ApiError) {
+	result, err := r.DB.FetchAll(&[]students.Student{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -28,7 +28,7 @@ func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	students, apiError := converter.ConvertToSliceStudentObj(result)
+	students, apiError := pkg.ConvertToSliceStudentObj(result)
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -36,26 +36,26 @@ func (r StudentRepository) Get() ([]model.Student, *errors.ApiError) {
 }
 
 // Find return one student from DB by ID.
-func (r StudentRepository) Find(id string) (model.Student, *errors.ApiError) {
-	result, err := r.DB.Fetch(&model.Student{}, id)
+func (r StudentRepository) Find(id string) (students.Student, *errors.ApiError) {
+	result, err := r.DB.Fetch(&students.Student{}, id)
 	if err != nil {
-		return model.Student{}, &errors.ApiError{
+		return students.Student{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
 
-	student, apiError := converter.ConvertToStudentObj(result)
+	student, apiError := pkg.ConvertToStudentObj(result)
 	if apiError != nil {
-		return model.Student{}, apiError
+		return students.Student{}, apiError
 	}
 
 	return student, nil
 }
 
 // Create persist a student to the DB.
-func (r StudentRepository) Create(student model.Student) (*model.Student, *errors.ApiError) {
+func (r StudentRepository) Create(student students.Student) (*students.Student, *errors.ApiError) {
 	err := r.DB.Persist(&student)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -69,7 +69,7 @@ func (r StudentRepository) Create(student model.Student) (*model.Student, *error
 }
 
 // Update update an existent student.
-func (r StudentRepository) Update(id string, upStudent model.Student) *errors.ApiError {
+func (r StudentRepository) Update(id string, upStudent students.Student) *errors.ApiError {
 	err := r.DB.Refresh(&upStudent, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -83,7 +83,7 @@ func (r StudentRepository) Update(id string, upStudent model.Student) *errors.Ap
 
 // Delete delete an existent student from DB.
 func (r StudentRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Student{}, id)
+	err := r.DB.Remove(&students.Student{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

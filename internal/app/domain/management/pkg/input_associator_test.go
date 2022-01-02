@@ -1,16 +1,16 @@
 package pkg
 
 import (
+	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
+	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
-	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/model"
-	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/model"
-	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/model/converter"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories/pkg"
 )
 
 // CategoryRepository is responsible for getting/saving information from DB.
@@ -19,8 +19,8 @@ func NewCategoryRepository(db database.GORMServiceInterface) CategoryRepository 
 }
 
 // Get returns all categories.
-func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]model.Category{})
+func (r CategoryRepository) Get() ([]categories.Category, *errors.ApiError) {
+	result, err := r.DB.FetchAll(&[]categories.Category{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -28,7 +28,7 @@ func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
 			Error:   err.Error(),
 		}
 	}
-	categories, apiError := converter.ConvertToSliceCategoryObj(result)
+	categories, apiError := pkg.ParseToSliceCategoryObj(result)
 	if apiError != nil {
 		return nil, apiError
 	}
@@ -36,26 +36,26 @@ func (r CategoryRepository) Get() ([]model.Category, *errors.ApiError) {
 }
 
 // Find return one category from DB by ID.
-func (r CategoryRepository) Find(id string) (model.Category, *errors.ApiError) {
-	result, err := r.DB.Fetch(&model.Category{}, id)
+func (r CategoryRepository) Find(id string) (categories.Category, *errors.ApiError) {
+	result, err := r.DB.Fetch(&categories.Category{}, id)
 	if err != nil {
-		return model.Category{}, &errors.ApiError{
+		return categories.Category{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.FailMessage,
 			Error:   err.Error(),
 		}
 	}
 
-	category, apiError := converter.ConvertToCategoryObj(result)
+	category, apiError := pkg.ParseToCategoryObj(result)
 	if apiError != nil {
-		return model.Category{}, apiError
+		return categories.Category{}, apiError
 	}
 
 	return category, nil
 }
 
 // Create persist a category to the DB.
-func (r CategoryRepository) Create(category model.Category) (*model.Category, *errors.ApiError) {
+func (r CategoryRepository) Create(category categories.Category) (*categories.Category, *errors.ApiError) {
 	err := r.DB.Persist(&category)
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -68,7 +68,7 @@ func (r CategoryRepository) Create(category model.Category) (*model.Category, *e
 }
 
 // Update update an existent category.
-func (r CategoryRepository) Update(id string, upCategory model.Category) *errors.ApiError {
+func (r CategoryRepository) Update(id string, upCategory categories.Category) *errors.ApiError {
 	err := r.DB.Refresh(&upCategory, id)
 	if err != nil {
 		return &errors.ApiError{
@@ -82,7 +82,7 @@ func (r CategoryRepository) Update(id string, upCategory model.Category) *errors
 
 // Delete delete an existent category from DB.
 func (r CategoryRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&model.Category{}, id)
+	err := r.DB.Remove(&categories.Category{}, id)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

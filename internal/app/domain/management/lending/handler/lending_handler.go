@@ -3,18 +3,18 @@ package handler
 import (
 	"net/http"
 
-	_interface "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending/module/interface"
+	domain "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 // LendingHandler handle the lending router call.
 type LendingHandler struct {
-	Module _interface.LendingModuleInterface
+	Module domain.Module
 }
 
 // NewLendingHandler Return an instance of this handler.
-func NewLendingHandler(module _interface.LendingModuleInterface) LendingHandler {
+func NewLendingHandler(module domain.Module) LendingHandler {
 	return LendingHandler{
 		Module: module,
 	}

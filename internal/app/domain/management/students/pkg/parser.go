@@ -1,16 +1,16 @@
-package converter
+package pkg
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"net/http"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students/model"
 )
 
-func ConvertToStudentObj(obj interface{}) (model.Student, *errors.ApiError) {
-	studentObj, ok := obj.(*model.Student)
+func ConvertToStudentObj(obj interface{}) (students.Student, *errors.ApiError) {
+	studentObj, ok := obj.(*students.Student)
 	if !ok {
-		return model.Student{}, &errors.ApiError{
+		return students.Student{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedToConvertObj,
 		}
@@ -18,11 +18,11 @@ func ConvertToStudentObj(obj interface{}) (model.Student, *errors.ApiError) {
 	return *studentObj, nil
 }
 
-func ConvertToSliceStudentObj(obj interface{}) ([]model.Student, *errors.ApiError) {
+func ConvertToSliceStudentObj(obj interface{}) ([]students.Student, *errors.ApiError) {
 	if obj == nil {
-		return []model.Student{}, nil
+		return []students.Student{}, nil
 	}
-	studentObj, ok := obj.(*[]model.Student)
+	studentObj, ok := obj.(*[]students.Student)
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
@@ -32,8 +32,8 @@ func ConvertToSliceStudentObj(obj interface{}) ([]model.Student, *errors.ApiErro
 	return *studentObj, nil
 }
 
-func ConvertStudentToStudentAccount(student model.Student) model.StudentAccount {
-	return model.StudentAccount{
+func ConvertStudentToStudentAccount(student students.Student) students.Account {
+	return students.Account{
 		Email:          student.Email,
 		Password:       student.Password,
 		FirstName:      student.GetFirstName(),

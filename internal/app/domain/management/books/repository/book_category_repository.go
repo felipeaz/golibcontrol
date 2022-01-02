@@ -1,12 +1,12 @@
 package repository
 
 import (
+	bookCategoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"log"
 	"strconv"
 
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	bookCategoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books/model"
 )
 
 type BookCategoryRepository struct {
@@ -25,7 +25,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 		return
 	}
 	for i := 0; i < len(categoriesIds); i++ {
-		bookCategory := bookCategoryModel.BookCategory{
+		bookCategory := bookCategoryModel.Category{
 			BookID:     bookId,
 			CategoryID: categoriesIds[i],
 		}
@@ -38,7 +38,7 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 
 // DeleteCategories removes a Book categories from DB
 func (r BookCategoryRepository) DeleteCategories(bookId uint) {
-	err := r.DB.RemoveWhere(bookCategoryModel.BookCategory{}, "book_id", strconv.Itoa(int(bookId)))
+	err := r.DB.RemoveWhere(bookCategoryModel.Category{}, "book_id", strconv.Itoa(int(bookId)))
 	if err != nil {
 		log.Println(err.Error())
 	}
