@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/FelipeAz/golibcontrol/build/server/management/router"
+	"github.com/FelipeAz/golibcontrol/build/router/management/router"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/management/books/handler"
@@ -37,5 +37,5 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	lModule := lendingModule.NewLendingModule(lRepository, log)
 	lHandler := lendingHandler.NewLendingHandler(lModule)
 
-	return router.Build(bHandler, cHandler, sHandler, lHandler)
+	return router.Route(bHandler, cHandler, sHandler, lHandler)
 }

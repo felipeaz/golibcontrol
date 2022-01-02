@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/FelipeAz/golibcontrol/build/server/account/router"
+	"github.com/FelipeAz/golibcontrol/build/router/account/router"
 	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/account/auth/handler"
 	auth_module "github.com/FelipeAz/golibcontrol/internal/app/account/auth/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/account/users/handler"
@@ -24,5 +24,5 @@ func Start(
 	accountHandler := handler.NewAccountHandler(accountModule)
 	authModule := auth_module.NewAuthModule(accountRepository, consumersService, cache, log)
 	authHandler := auth_handler.NewAuthHandler(authModule)
-	return router.Build(accountHandler, authHandler)
+	return router.Route(accountHandler, authHandler)
 }

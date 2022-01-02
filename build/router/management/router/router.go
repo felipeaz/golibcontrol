@@ -1,16 +1,16 @@
 package router
 
 import (
-	"github.com/FelipeAz/golibcontrol/build/server/management/router/build"
+	"github.com/FelipeAz/golibcontrol/build/router/management/router/routes"
+	"github.com/FelipeAz/golibcontrol/infra/middleware"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/management/books/handler"
 	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/management/categories/handler"
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/management/lending/handler"
 	studentHandler "github.com/FelipeAz/golibcontrol/internal/app/management/students/handler"
-	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
 	"github.com/gin-gonic/gin"
 )
 
-func Build(
+func Route(
 	bHandler bookHandler.BookHandler,
 	cHandler categoryHandler.CategoryHandler,
 	sHandler studentHandler.StudentHandler,
@@ -22,10 +22,10 @@ func Build(
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	build.BookRoutes(vGroup, bHandler)
-	build.CategoryRoutes(vGroup, cHandler)
-	build.StudentRoutes(vGroup, sHandler)
-	build.LendingRoutes(vGroup, lHandler)
+	routes.BookRoutes(vGroup, bHandler)
+	routes.CategoryRoutes(vGroup, cHandler)
+	routes.StudentRoutes(vGroup, sHandler)
+	routes.LendingRoutes(vGroup, lHandler)
 
 	return router.Run(":8081")
 }

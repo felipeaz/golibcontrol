@@ -1,4 +1,4 @@
-package build
+package routes
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/reviews/handler"

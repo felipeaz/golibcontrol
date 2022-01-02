@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/FelipeAz/golibcontrol/build/server/platform/router/build"
-	"github.com/FelipeAz/golibcontrol/internal/app/middleware"
+	"github.com/FelipeAz/golibcontrol/build/router/platform/router/routes"
+	"github.com/FelipeAz/golibcontrol/infra/middleware"
 	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/handler"
 	conferenceHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/conferences/handler"
 	groupHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/groups/handler"
@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Build(
+func Route(
 	cHandler commentHandler.CommentHandler,
 	replHandler replyHandler.ReplyHandler,
 	resHandler reserveHandler.ReserveHandler,
@@ -27,12 +27,12 @@ func Build(
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	build.CommentRoutes(vGroup, cHandler)
-	build.ReplyRoutes(vGroup, replHandler)
-	build.ReserveRoutes(vGroup, resHandler)
-	build.ReviewRoutes(vGroup, revHandler)
-	build.ConferenceRoutes(vGroup, confHandler)
-	build.GroupRoutes(vGroup, grpHandler)
+	routes.CommentRoutes(vGroup, cHandler)
+	routes.ReplyRoutes(vGroup, replHandler)
+	routes.ReserveRoutes(vGroup, resHandler)
+	routes.ReviewRoutes(vGroup, revHandler)
+	routes.ConferenceRoutes(vGroup, confHandler)
+	routes.GroupRoutes(vGroup, grpHandler)
 
 	return router.Run(":8083")
 }

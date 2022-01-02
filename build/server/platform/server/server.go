@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/FelipeAz/golibcontrol/build/server/platform/router"
+	"github.com/FelipeAz/golibcontrol/build/router/platform/router"
 	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/handler"
@@ -50,5 +50,5 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	grpModule := groupModule.NewGroupModule(grpRepository, log)
 	grpHandler := groupHandler.NewGroupHandler(grpModule)
 
-	return router.Build(cHandler, replHandler, resHandler, revHandler, confHandler, grpHandler)
+	return router.Route(cHandler, replHandler, resHandler, revHandler, confHandler, grpHandler)
 }
