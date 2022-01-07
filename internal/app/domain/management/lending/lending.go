@@ -2,15 +2,18 @@ package lending
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"time"
+	"gorm.io/gorm"
 )
 
 // Lending contains all Lending's table properties.
 type Lending struct {
-	ID          uint      `json:"id" gorm:"primaryKey;autoIncrement;not null"`
-	BookID      uint      `json:"bookId" binding:"required" gorm:"unique"`
-	StudentID   uint      `json:"studentId" binding:"required" gorm:"unique"`
-	LendingDate time.Time `json:"lendingDate" gorm:"autoCreateTime"`
+	gorm.Model
+	BookID    uint `json:"bookId" binding:"required" gorm:"unique"`
+	StudentID uint `json:"studentId" binding:"required" gorm:"unique"`
+}
+
+func (l Lending) TableName() string {
+	return "lending"
 }
 
 type Module interface {

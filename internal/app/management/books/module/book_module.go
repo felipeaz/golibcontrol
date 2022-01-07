@@ -63,6 +63,7 @@ func (m BookModule) Update(id string, upBook books.Book) *errors.ApiError {
 	if apiError != nil {
 		return apiError
 	}
+	m.unsetBookCategories(bookId)
 	m.setBookCategories(bookId, categoriesIds)
 	return nil
 }
@@ -78,7 +79,6 @@ func (m BookModule) Delete(id string) *errors.ApiError {
 }
 
 func (m BookModule) setBookCategories(bookId uint, categoriesId []uint) {
-	m.unsetBookCategories(bookId)
 	m.BookCategoryRepository.CreateCategories(bookId, categoriesId)
 }
 

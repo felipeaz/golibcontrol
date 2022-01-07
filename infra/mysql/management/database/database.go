@@ -52,9 +52,9 @@ func CloseConnection(db *gorm.DB) {
 func (db *DBHandler) autoMigrateTables() error {
 	return db.conn.Migrator().AutoMigrate(
 		&studentModel.Student{},
-		&bookModel.Book{},
 		&categoryModel.Category{},
-		&bookModel.Category{},
+		&bookModel.Book{},
+		&bookModel.BookCategories{},
 		&lendingModel.Lending{},
 	)
 }

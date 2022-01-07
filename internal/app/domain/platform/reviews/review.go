@@ -2,20 +2,22 @@ package reviews
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
+	"gorm.io/gorm"
 	"math"
-	"time"
 )
 
 type Review struct {
-	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement;not null"`
-	BookId    uint      `json:"bookId"`
-	UserId    uint      `json:"userId"`
-	Rating    int       `json:"rating" binding:"required"`
-	AvgReview float64   `json:"avgReview"`
-	Title     string    `json:"title"`
-	Review    string    `json:"review"`
-	CreatedAt time.Time `time_format:"2006-01-02 15:04:05"`
-	UpdatedAt time.Time `time_format:"2006-01-02 15:04:05"`
+	gorm.Model
+	BookId    uint    `json:"bookId"`
+	UserId    uint    `json:"userId"`
+	Rating    int     `json:"rating" binding:"required"`
+	AvgReview float64 `json:"avgReview"`
+	Title     string  `json:"title"`
+	Review    string  `json:"review"`
+}
+
+func (r Review) TableName() string {
+	return "reviews"
 }
 
 type Module interface {

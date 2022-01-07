@@ -10,6 +10,10 @@ type Session struct {
 	ConsumerKeyId string `json:"consumerKeyId"`
 }
 
+func (s Session) TableName() string {
+	return "sessions"
+}
+
 type Module interface {
 	Login(credentials users.Account) login.Message
 	Logout(session Session) (message login.Message)

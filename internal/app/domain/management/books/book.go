@@ -2,22 +2,24 @@ package books
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"time"
+	"gorm.io/gorm"
 )
 
 // Book contains all Book's table properties.
 type Book struct {
-	ID             uint       `json:"id" gorm:"primaryKey;autoIncrement;not null"`
-	Title          string     `json:"title"`
-	Author         string     `json:"author"`
-	Description    string     `json:"description"`
-	Image          string     `json:"image"`
-	RegisterNumber string     `json:"registerNumber" gorm:"unique"`
-	Available      bool       `json:"available" gorm:"default:true"`
-	CategoriesId   string     `json:"categoriesId,omitempty" gorm:"->"`                                       // Read Only
-	BookCategory   []Category `gorm:"one2many:bookCategory,->;constraint:OnDelete:CASCADE,OnUpdate:CASCADE;"` // Read Only
-	CreatedAt      time.Time  `time_format:"2006-01-02 15:04:05"`
-	UpdatedAt      time.Time  `time_format:"2006-01-02 15:04:05"`
+	gorm.Model
+	Title          string           `json:"title"`
+	Author         string           `json:"author"`
+	Description    string           `json:"description"`
+	Image          string           `json:"image"`
+	RegisterNumber string           `json:"registerNumber" gorm:"unique"`
+	Available      bool             `json:"available" gorm:"default:true"`
+	CategoriesId   string           `json:"categoriesId,omitempty" gorm:"->"` // Read Only
+	BookCategories []BookCategories `gorm:"->"`
+}
+
+func (b Book) TableName() string {
+	return "books"
 }
 
 type Module interface {
@@ -38,10 +40,14 @@ type Repository interface {
 	Delete(id string) (apiError *errors.ApiError)
 }
 
-type Category struct {
-	ID         uint `json:"id" gorm:"primaryKey;autoIncrement;not null"`
+type BookCategories struct {
+	gorm.Model
 	BookID     uint `json:"bookId" gorm:"not null"`
 	CategoryID uint `json:"categoryId" gorm:"not null"`
+}
+
+func (bc BookCategories) TableName() string {
+	return "book_categories"
 }
 
 type CategoryRepository interface {
