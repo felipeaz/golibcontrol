@@ -5,13 +5,6 @@ networks:
     external: true
 
 services:
-  redis:
-    image: redis:alpine
-    container_name: redis
-    networks:
-      - kong-net
-    ports:
-      - "6380:6379"
   kong-database:
     image: postgres:9.6
     restart: always

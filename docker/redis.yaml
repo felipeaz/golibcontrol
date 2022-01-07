@@ -1,0 +1,14 @@
+version: '3.7'
+
+networks:
+  kong-net:
+    external: true
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    networks:
+      - kong-net
+    ports:
+      - "6380:6379"
