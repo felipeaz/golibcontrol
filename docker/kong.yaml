@@ -1,9 +1,5 @@
 version: '3.7'
 
-networks:
-  kong-net:
-    external: true
-
 services:
   kong-database:
     image: postgres:9.6
@@ -97,3 +93,7 @@ services:
       - konga-prepare
     ports:
       - "1337:1337"
+
+networks:
+  kong-net:
+    driver: bridge

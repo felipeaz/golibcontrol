@@ -7,7 +7,8 @@ require (
 	github.com/garyburd/redigo v1.6.2
 	github.com/gin-gonic/gin v1.6.3
 	github.com/myesui/uuid v1.0.0 // indirect
-	github.com/stretchr/testify v1.4.0
+	github.com/segmentio/kafka-go v0.4.25
+	github.com/stretchr/testify v1.6.1
 	github.com/twinj/uuid v1.0.0
 	gopkg.in/stretchr/testify.v1 v1.2.2 // indirect
 	gorm.io/driver/mysql v1.0.4

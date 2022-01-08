@@ -1,1 +1,1 @@
-cp .env_example .env && docker-compose -f docker/redis.yaml up --build
+docker-compose -f docker/redis.yaml up --build
