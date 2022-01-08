@@ -6,6 +6,8 @@ services:
       context: ".."
       dockerfile: "docker/images/go/Dockerfile"
     container_name: platform-service
+    networks:
+      - lib-net
     env_file:
       - ../.env
     links:
@@ -23,13 +25,14 @@ services:
   platform-service-db-host:
     image: mysql:8.0
     container_name: platform-service-database
+    networks:
+      - lib-net
     environment:
       MYSQL_DATABASE: LibraryPlatform
       MYSQL_ROOT_PASSWORD: abc123
       MYSQL_TCP_PORT: 3309
     ports:
       - "3309:3306"
-
 networks:
-  default:
-    name: lib-net
+  lib-net:
+    external: true

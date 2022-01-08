@@ -93,7 +93,7 @@ services:
       - konga-prepare
     ports:
       - "1337:1337"
-
 networks:
   lib-net:
     driver: bridge
+    name: "lib-net"

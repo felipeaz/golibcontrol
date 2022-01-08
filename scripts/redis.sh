@@ -1,1 +1,1 @@
-docker-compose -f docker/redis.yaml up --build
+docker-compose -f docker/redis.yaml up --build --remove-orphans
