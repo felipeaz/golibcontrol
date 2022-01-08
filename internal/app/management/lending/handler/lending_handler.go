@@ -22,6 +22,18 @@ func NewLendingHandler(module lending.Module) LendingHandler {
 
 // Get returns all lendings.
 func (h LendingHandler) Get(c *gin.Context) {
+	var params lending.Filter
+	if err := c.Bind(&params); err == nil {
+		resp, apiError := h.Module.GetByFilter(params)
+		if apiError != nil {
+			c.JSON(apiError.Status, apiError)
+			return
+		}
+
+		c.JSON(http.StatusOK, resp)
+		return
+	}
+
 	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)

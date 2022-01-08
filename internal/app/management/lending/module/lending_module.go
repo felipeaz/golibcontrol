@@ -26,6 +26,11 @@ func (m LendingModule) Get() ([]lending.Lending, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
+// GetByFilter returns all lending.
+func (m LendingModule) GetByFilter(filter lending.Filter) ([]lending.Lending, *errors.ApiError) {
+	return m.Repository.GetByFilter(filter)
+}
+
 // Find return one lending by ID.
 func (m LendingModule) Find(id string) (lending.Lending, *errors.ApiError) {
 	return m.Repository.Find(id)

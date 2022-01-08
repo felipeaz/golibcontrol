@@ -120,7 +120,6 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 
 func (r BookRepository) buildQueryFromFilter(filter books.Filter) string {
 	var query []string
-
 	// reflect allows accessing type metadata (ex: struct tags)
 	fields := reflect.TypeOf(filter)
 	for _, name := range filter.GetFieldNames() {
@@ -128,16 +127,15 @@ func (r BookRepository) buildQueryFromFilter(filter books.Filter) string {
 		if !ok {
 			continue
 		}
-
 		fieldValue := reflect.ValueOf(filter).FieldByName(name)
 		if !fieldValue.IsZero() {
 			var qs string
 
 			switch field.Tag.Get("array") {
 			case "false":
-				qs = fmt.Sprintf("%s = %v", field.Tag.Get("column"), fieldValue.Interface())
-			default:
 				qs = fmt.Sprintf("%s IN (%v)", field.Tag.Get("column"), fieldValue.Interface())
+			default:
+				qs = fmt.Sprintf("%s = %v", field.Tag.Get("column"), fieldValue.Interface())
 			}
 
 			query = append(query, qs)
