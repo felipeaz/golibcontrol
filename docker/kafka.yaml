@@ -4,7 +4,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     networks:
-      - kong-net
+      - broker
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -12,7 +12,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:latest
     networks:
-      - kong-net
+      - broker
     depends_on:
       - zookeeper
     ports:
@@ -28,10 +28,14 @@ services:
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     networks:
-      - kong-net
+      - broker
     depends_on:
       - kafka
     ports:
       - "19000:9000"
     environment:
       KAFKA_BROKERCONNECT: kafka:29092
+
+networks:
+  broker:
+    driver: lib-net

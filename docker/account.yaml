@@ -32,4 +32,4 @@ services:
 
 networks:
   default:
-    name: kong-net
+    name: lib-net
