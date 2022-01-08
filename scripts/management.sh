@@ -1,0 +1,1 @@
+cp .env_example .env && docker-compose -f docker/management.yaml up --build

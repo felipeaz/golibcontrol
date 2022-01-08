@@ -2,14 +2,14 @@ package database
 
 import (
 	"fmt"
-	conferenceModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences/model"
-	groupModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups/model"
+	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments"
+	conferenceModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences"
+	groupModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
+	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies"
+	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves"
+	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
 	"log"
 
-	commentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments/model"
-	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies/model"
-	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves/model"
-	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
