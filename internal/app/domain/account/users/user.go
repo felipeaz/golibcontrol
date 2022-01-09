@@ -1,7 +1,7 @@
 package users
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"gorm.io/gorm"
 )
 

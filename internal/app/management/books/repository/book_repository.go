@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/books/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/database"
 	"reflect"
 	"strings"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 )
 
 // BookRepository is responsible for getting/saving information from DB.

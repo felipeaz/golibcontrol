@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/infra/consumer/jwt"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
-	"github.com/FelipeAz/golibcontrol/internal/app/consumer"
-	databaseInterface "github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/constants/login"
+	"github.com/FelipeAz/golibcontrol/internal/consumer"
+	databaseInterface "github.com/FelipeAz/golibcontrol/internal/database"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 	"net/http"
 )
 

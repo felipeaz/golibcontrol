@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/conferences/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/database"
 )
 
 type ConferenceRepository struct {

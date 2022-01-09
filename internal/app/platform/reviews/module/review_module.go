@@ -2,10 +2,9 @@ package module
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 	"strconv"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 type ReviewModule struct {

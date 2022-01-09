@@ -2,9 +2,8 @@ package pkg
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
 func ParseToLendingObj(obj interface{}) (lending.Lending, *errors.ApiError) {

@@ -2,9 +2,8 @@ package pkg
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
 func ParseToConferenceObj(obj interface{}) (conferences.Conference, *errors.ApiError) {

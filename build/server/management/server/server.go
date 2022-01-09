@@ -2,8 +2,6 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/router/management/router"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/management/books/handler"
 	bookModule "github.com/FelipeAz/golibcontrol/internal/app/management/books/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/books/repository"
@@ -16,6 +14,8 @@ import (
 	studentHandler "github.com/FelipeAz/golibcontrol/internal/app/management/students/handler"
 	studentModule "github.com/FelipeAz/golibcontrol/internal/app/management/students/module"
 	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/management/students/repository"
+	"github.com/FelipeAz/golibcontrol/internal/database"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 )
 
 // Start initialize the webservice,

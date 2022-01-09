@@ -2,9 +2,8 @@ package pkg
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
 func ParseToReviewObj(obj interface{}) (reviews.Review, *errors.ApiError) {

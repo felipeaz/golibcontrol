@@ -7,10 +7,9 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	_errors "github.com/FelipeAz/golibcontrol/internal/app/management/students/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/students/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 	"net/http"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 // StudentModule process the request recieved from handler.

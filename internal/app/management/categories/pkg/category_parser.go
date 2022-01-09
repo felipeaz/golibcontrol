@@ -2,9 +2,8 @@ package pkg
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
 func ParseToCategoryObj(obj interface{}) (categories.Category, *errors.ApiError) {

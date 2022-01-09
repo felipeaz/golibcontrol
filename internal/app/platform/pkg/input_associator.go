@@ -7,9 +7,9 @@ import (
 	replyModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies"
 	reserveModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves"
 	reviewModel "github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/gin-gonic/gin"
 )
 

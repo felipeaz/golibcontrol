@@ -2,14 +2,14 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/router/account/router"
-	auth_handler "github.com/FelipeAz/golibcontrol/internal/app/account/auth/handler"
-	auth_module "github.com/FelipeAz/golibcontrol/internal/app/account/auth/module"
+	authHandler "github.com/FelipeAz/golibcontrol/internal/app/account/auth/handler"
+	authModule "github.com/FelipeAz/golibcontrol/internal/app/account/auth/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/account/users/handler"
 	"github.com/FelipeAz/golibcontrol/internal/app/account/users/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/account/users/repository"
-	"github.com/FelipeAz/golibcontrol/internal/app/consumer"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
+	"github.com/FelipeAz/golibcontrol/internal/consumer"
+	"github.com/FelipeAz/golibcontrol/internal/database"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 )
 
 // Start initialize the webservice,
@@ -22,7 +22,7 @@ func Start(
 	accountRepository := repository.NewAccountRepository(dbService)
 	accountModule := module.NewAccountModule(accountRepository, consumersService, cache, log)
 	accountHandler := handler.NewAccountHandler(accountModule)
-	authModule := auth_module.NewAuthModule(accountRepository, consumersService, cache, log)
-	authHandler := auth_handler.NewAuthHandler(authModule)
-	return router.Route(accountHandler, authHandler)
+	aModule := authModule.NewAuthModule(accountRepository, consumersService, cache, log)
+	aHandler := authHandler.NewAuthHandler(aModule)
+	return router.Route(accountHandler, aHandler)
 }

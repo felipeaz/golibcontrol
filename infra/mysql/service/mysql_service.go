@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 	"net/http"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"gorm.io/gorm"
 )
 

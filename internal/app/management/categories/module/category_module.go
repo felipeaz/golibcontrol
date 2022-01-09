@@ -1,9 +1,9 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 )
 
 // CategoryModule process the request recieved from handler

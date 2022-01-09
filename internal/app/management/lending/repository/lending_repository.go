@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/lending/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/database"
 	"reflect"
 	"strconv"
 	"strings"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 )
 
 // LendingRepository is responsible for getting/saving information from DB.

@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/stretchr/testify/mock"
 )
 

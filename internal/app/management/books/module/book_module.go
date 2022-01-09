@@ -1,11 +1,11 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	_pkg "github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 )
 
 // BookModule process the request received from handler.

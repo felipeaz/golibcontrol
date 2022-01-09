@@ -2,9 +2,8 @@ package pkg
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
 func ParseToCommentObj(obj interface{}) (comments.Comment, *errors.ApiError) {

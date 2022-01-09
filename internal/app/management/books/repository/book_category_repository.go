@@ -2,11 +2,10 @@ package repository
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/database"
 	"log"
 	"strconv"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 )
 
 type BookCategoryRepository struct {

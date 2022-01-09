@@ -1,8 +1,8 @@
 package pkg
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

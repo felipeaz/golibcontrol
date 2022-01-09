@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/stretchr/testify/mock"
 )
 

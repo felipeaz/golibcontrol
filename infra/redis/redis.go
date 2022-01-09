@@ -2,9 +2,9 @@ package redis
 
 import (
 	"fmt"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 	"log"
 
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	"github.com/garyburd/redigo/redis"
 )
 

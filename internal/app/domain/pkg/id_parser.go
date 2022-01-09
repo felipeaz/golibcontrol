@@ -1,10 +1,9 @@
 package pkg
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
 	"strconv"
-
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 )
 
 func ParseStringToId(id string) (uint, *errors.ApiError) {

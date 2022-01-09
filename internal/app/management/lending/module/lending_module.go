@@ -1,9 +1,9 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 )
 
 // LendingModule process the request received from handler.

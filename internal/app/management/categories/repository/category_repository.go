@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/categories/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/database"
 )
 
 // CategoryRepository is responsible for getting/saving information from DB.
@@ -70,7 +70,7 @@ func (r CategoryRepository) Update(id string, upCategory categories.Category) *e
 	return nil
 }
 
-// Delete delete an existent category from DB.
+// Delete an existent category from DB.
 func (r CategoryRepository) Delete(id string) *errors.ApiError {
 	err := r.DB.Remove(&categories.Category{}, id)
 	if err != nil {

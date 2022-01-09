@@ -2,8 +2,6 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/router/platform/router"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/handler"
 	commentModule "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/module"
 	commentRepository "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/repository"
@@ -22,6 +20,8 @@ import (
 	reviewHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/reviews/handler"
 	reviewModule "github.com/FelipeAz/golibcontrol/internal/app/platform/reviews/module"
 	reviewRepository "github.com/FelipeAz/golibcontrol/internal/app/platform/reviews/repository"
+	"github.com/FelipeAz/golibcontrol/internal/database"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 )
 
 // Start initialize the webservice,

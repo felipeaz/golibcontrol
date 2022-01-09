@@ -1,9 +1,9 @@
 package module
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 )
 
 type CommentModule struct {

@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/errors"
-	"github.com/FelipeAz/golibcontrol/internal/app/database"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/students/pkg"
+	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"github.com/FelipeAz/golibcontrol/internal/database"
 )
 
 // StudentRepository is responsible for getting/saving information from DB.

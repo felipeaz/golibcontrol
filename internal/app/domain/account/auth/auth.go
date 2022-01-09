@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"github.com/FelipeAz/golibcontrol/internal/app/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
+	"github.com/FelipeAz/golibcontrol/internal/constants/login"
 )
 
 type Session struct {

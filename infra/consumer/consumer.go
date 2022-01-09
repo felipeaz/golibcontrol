@@ -3,9 +3,9 @@ package consumer
 import (
 	"encoding/json"
 	"github.com/FelipeAz/golibcontrol/infra/http/interface"
+	"github.com/FelipeAz/golibcontrol/internal/logger"
 
 	"github.com/FelipeAz/golibcontrol/infra/consumer/model"
-	"github.com/FelipeAz/golibcontrol/internal/app/logger"
 )
 
 type Consumer struct {
