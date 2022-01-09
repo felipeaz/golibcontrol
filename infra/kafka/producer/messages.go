@@ -4,7 +4,7 @@ import (
 	kafka "github.com/Shopify/sarama"
 )
 
-func (p Producer) Push(topic string, message []byte) error {
+func (p Producer) Produce(topic string, message []byte) error {
 	producer, err := p.Connect()
 	if err != nil {
 		return err
