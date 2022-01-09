@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
@@ -37,7 +38,8 @@ func (r BookCategoryRepository) CreateCategories(bookId uint, categoriesIds []ui
 
 // DeleteCategories removes a Book categories from DB
 func (r BookCategoryRepository) DeleteCategories(bookId uint) {
-	err := r.DB.RemoveWhere(books.BookCategories{}, "book_id", strconv.Itoa(int(bookId)))
+	tx := r.DB.Where(nil, fmt.Sprintf("book_id = %s", strconv.Itoa(int(bookId))))
+	err := r.DB.Remove(tx, books.BookCategories{})
 	if err != nil {
 		log.Println(err.Error())
 	}

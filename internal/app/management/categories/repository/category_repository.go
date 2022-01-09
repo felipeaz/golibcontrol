@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/categories/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -20,7 +21,7 @@ func NewCategoryRepository(db database.GORMServiceInterface) CategoryRepository 
 
 // Get returns all categories.
 func (r CategoryRepository) Get() ([]categories.Category, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]categories.Category{})
+	result, err := r.DB.Find(nil, &[]categories.Category{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -33,7 +34,8 @@ func (r CategoryRepository) Get() ([]categories.Category, *errors.ApiError) {
 
 // Find return one category from DB by ID.
 func (r CategoryRepository) Find(id string) (categories.Category, *errors.ApiError) {
-	result, err := r.DB.Fetch(&categories.Category{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &categories.Category{})
 	if err != nil {
 		return categories.Category{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -59,7 +61,8 @@ func (r CategoryRepository) Create(category categories.Category) (*categories.Ca
 
 // Update update an existent category.
 func (r CategoryRepository) Update(id string, upCategory categories.Category) *errors.ApiError {
-	err := r.DB.Refresh(&upCategory, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upCategory)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -72,7 +75,8 @@ func (r CategoryRepository) Update(id string, upCategory categories.Category) *e
 
 // Delete an existent category from DB.
 func (r CategoryRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&categories.Category{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &categories.Category{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

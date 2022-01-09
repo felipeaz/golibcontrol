@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reserves"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/reserves/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -18,7 +19,7 @@ func NewReserveRepository(db database.GORMServiceInterface) ReserveRepository {
 }
 
 func (r ReserveRepository) Get() ([]reserves.Reserve, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]reserves.Reserve{})
+	result, err := r.DB.Find(nil, &[]reserves.Reserve{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -30,7 +31,8 @@ func (r ReserveRepository) Get() ([]reserves.Reserve, *errors.ApiError) {
 }
 
 func (r ReserveRepository) Find(id string) (reserves.Reserve, *errors.ApiError) {
-	result, err := r.DB.Fetch(&reserves.Reserve{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &reserves.Reserve{})
 	if err != nil {
 		return reserves.Reserve{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -54,7 +56,8 @@ func (r ReserveRepository) Create(reserve reserves.Reserve) (*reserves.Reserve, 
 }
 
 func (r ReserveRepository) Update(id string, upReserve reserves.Reserve) *errors.ApiError {
-	err := r.DB.Refresh(&upReserve, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upReserve)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -66,7 +69,8 @@ func (r ReserveRepository) Update(id string, upReserve reserves.Reserve) *errors
 }
 
 func (r ReserveRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&reserves.Reserve{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &reserves.Reserve{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

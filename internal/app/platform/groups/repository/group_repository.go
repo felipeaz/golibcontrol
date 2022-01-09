@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/groups/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -18,7 +19,7 @@ func NewGroupRepository(db database.GORMServiceInterface) GroupRepository {
 }
 
 func (r GroupRepository) Get() ([]groups.Group, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]groups.Group{})
+	result, err := r.DB.Find(nil, &[]groups.Group{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -30,7 +31,8 @@ func (r GroupRepository) Get() ([]groups.Group, *errors.ApiError) {
 }
 
 func (r GroupRepository) Find(id string) (groups.Group, *errors.ApiError) {
-	result, err := r.DB.Fetch(&groups.Group{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &groups.Group{})
 	if err != nil {
 		return groups.Group{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -54,7 +56,8 @@ func (r GroupRepository) Create(group groups.Group) (*groups.Group, *errors.ApiE
 }
 
 func (r GroupRepository) Update(id string, upGroup groups.Group) *errors.ApiError {
-	err := r.DB.Refresh(&upGroup, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upGroup)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -66,7 +69,8 @@ func (r GroupRepository) Update(id string, upGroup groups.Group) *errors.ApiErro
 }
 
 func (r GroupRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&groups.Group{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &groups.Group{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

@@ -3,53 +3,64 @@ package service
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/stretchr/testify/mock"
+	"gorm.io/gorm"
 )
 
 type MockMySQLService struct {
 	mock.Mock
 }
 
-func (s *MockMySQLService) FetchAll(domainObj interface{}) (interface{}, *errors.ApiError) {
+func (s *MockMySQLService) Find(tx *gorm.DB, domainObj interface{}) (interface{}, error) {
+	resp := s.Called(tx, domainObj)
+	return resp.Get(0), resp.Error(1)
+}
+
+func (s *MockMySQLService) FindOne(tx *gorm.DB, domainObj interface{}) (interface{}, error) {
+	resp := s.Called(tx, domainObj)
+	return resp.Get(0), resp.Error(1)
+}
+
+func (s *MockMySQLService) Persist(domainObj interface{}) error {
 	resp := s.Called(domainObj)
-	return resp.Get(0), resp.Get(1).(*errors.ApiError)
+	return resp.Error(0)
 }
 
-func (s *MockMySQLService) FetchAllWithPreload(domainObj interface{}, preload string) (interface{}, *errors.ApiError) {
-	resp := s.Called(domainObj, preload)
-	return resp.Get(0), resp.Get(1).(*errors.ApiError)
+func (s *MockMySQLService) Refresh(tx *gorm.DB, domainObj interface{}) error {
+	resp := s.Called(tx, domainObj)
+	return resp.Error(0)
 }
 
-func (s *MockMySQLService) Fetch(domainObj interface{}, id string) (interface{}, *errors.ApiError) {
-	resp := s.Called(domainObj, id)
-	return resp.Get(0), resp.Get(1).(*errors.ApiError)
-}
-
-func (s *MockMySQLService) FetchWithPreload(domainObj interface{}, id, preload string) (interface{}, *errors.ApiError) {
-	resp := s.Called(domainObj, id, preload)
-	return resp.Get(0), resp.Get(1).(*errors.ApiError)
-}
-
-func (s *MockMySQLService) FetchAllWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, *errors.ApiError) {
-	resp := s.Called(domainObj, fieldName, fieldValue)
-	return resp.Get(0), resp.Get(1).(*errors.ApiError)
-}
-
-func (s *MockMySQLService) FetchAllWhereWithQuery(domainObj interface{}, query string) (interface{}, *errors.ApiError) {
-	resp := s.Called(domainObj, query)
-	return resp.Get(0), resp.Get(1).(*errors.ApiError)
-}
-
-func (s *MockMySQLService) Persist(domainObj interface{}) *errors.ApiError {
-	resp := s.Called(domainObj)
-	return resp.Get(0).(*errors.ApiError)
-}
-
-func (s *MockMySQLService) Refresh(domainObj interface{}, id string) *errors.ApiError {
-	resp := s.Called(domainObj, id)
-	return resp.Get(0).(*errors.ApiError)
+func (s *MockMySQLService) Set(tx *gorm.DB, domainObj interface{}, field string, value interface{}) error {
+	resp := s.Called(tx, domainObj, field, value)
+	return resp.Error(0)
 }
 
 func (s *MockMySQLService) Remove(domainObj interface{}, id string) *errors.ApiError {
 	resp := s.Called(domainObj, id)
 	return resp.Get(0).(*errors.ApiError)
+}
+
+func (s *MockMySQLService) Preload(preload ...string) *gorm.DB {
+	resp := s.Called(preload)
+	return resp.Get(0).(*gorm.DB)
+}
+
+func (s *MockMySQLService) Join(tx *gorm.DB, join ...string) *gorm.DB {
+	resp := s.Called(tx, join)
+	return resp.Get(0).(*gorm.DB)
+}
+
+func (s *MockMySQLService) Group(tx *gorm.DB, group ...string) *gorm.DB {
+	resp := s.Called(tx, group)
+	return resp.Get(0).(*gorm.DB)
+}
+
+func (s *MockMySQLService) Where(tx *gorm.DB, where string) *gorm.DB {
+	resp := s.Called(tx, where)
+	return resp.Get(0).(*gorm.DB)
+}
+
+func (s *MockMySQLService) GetErrorStatusCode(err error) int {
+	resp := s.Called(err)
+	return resp.Int(0)
 }

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/conferences"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/conferences/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -18,7 +19,7 @@ func NewConferenceRepository(db database.GORMServiceInterface) ConferenceReposit
 }
 
 func (r ConferenceRepository) Get() ([]conferences.Conference, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]conferences.Conference{})
+	result, err := r.DB.Find(nil, &[]conferences.Conference{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -30,7 +31,8 @@ func (r ConferenceRepository) Get() ([]conferences.Conference, *errors.ApiError)
 }
 
 func (r ConferenceRepository) Find(id string) (conferences.Conference, *errors.ApiError) {
-	result, err := r.DB.Fetch(&conferences.Conference{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &conferences.Conference{})
 	if err != nil {
 		return conferences.Conference{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -54,7 +56,8 @@ func (r ConferenceRepository) Create(conference conferences.Conference) (*confer
 }
 
 func (r ConferenceRepository) Update(id string, upConference conferences.Conference) *errors.ApiError {
-	err := r.DB.Refresh(&upConference, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upConference)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -66,7 +69,8 @@ func (r ConferenceRepository) Update(id string, upConference conferences.Confere
 }
 
 func (r ConferenceRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&conferences.Conference{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &conferences.Conference{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

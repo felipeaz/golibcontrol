@@ -15,7 +15,7 @@ type Book struct {
 	RegisterNumber string           `json:"registerNumber" gorm:"unique"`
 	Available      bool             `json:"available" gorm:"default:true"`
 	CategoriesId   string           `json:"categoriesId,omitempty" gorm:"->"` // Read Only
-	BookCategories []BookCategories `gorm:"->"`
+	BookCategories []BookCategories `json:"categories" gorm:"->"`
 }
 
 func (b Book) TableName() string {
@@ -44,6 +44,7 @@ type BookCategories struct {
 	gorm.Model
 	BookID     uint `json:"bookId" gorm:"not null"`
 	CategoryID uint `json:"categoryId" gorm:"not null"`
+	//Category   []categories.Category `json:"data" gorm:"->,foreignKey:ID;references:CategoryID"`
 }
 
 func (bc BookCategories) TableName() string {
@@ -56,7 +57,7 @@ type CategoryRepository interface {
 }
 
 type Filter struct {
-	Title      string `json:"title,omitempty" column:"books.title" array:"false"`
+	Title      string `json:"title,omitempty" column:"books.title" array:"false" like:"true"`
 	Author     string `json:"author,omitempty" column:"books.author" array:"false"`
 	Available  bool   `form:"available" column:"books.available" array:"false"`
 	Categories string `form:"categ,omitempty" column:"book_categories.category_id" array:"true"`

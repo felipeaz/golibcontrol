@@ -23,7 +23,8 @@ func NewBookRepository(db database.GORMServiceInterface) BookRepository {
 
 // Get returns all books from DB.
 func (r BookRepository) Get() ([]books.Book, *errors.ApiError) {
-	result, err := r.DB.FetchAllWithPreload(&[]books.Book{}, "BookCategories")
+	tx := r.DB.Preload("BookCategories")
+	result, err := r.DB.Find(tx, &[]books.Book{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -36,7 +37,9 @@ func (r BookRepository) Get() ([]books.Book, *errors.ApiError) {
 
 // Find return one book from DB by ID.
 func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
-	result, err := r.DB.FetchWithPreload(&books.Book{}, id, "BookCategories")
+	tx := r.DB.Preload("BookCategories")
+	tx = r.DB.Where(tx, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &books.Book{})
 	if err != nil {
 		return books.Book{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -50,16 +53,16 @@ func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
 // GetByFilter return books from query string.
 func (r BookRepository) GetByFilter(filter books.Filter) ([]books.Book, *errors.ApiError) {
 	queryString := r.buildQueryFromFilter(filter)
-	result, err := r.DB.FetchAllWithQueryAndPreload(
-		&[]books.Book{},
-		queryString,
-		"BookCategories",
-		fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
-			books.BookCategories{}.TableName(),
-			books.BookCategories{}.TableName(),
-			books.Book{}.TableName()),
-		fmt.Sprintf("%s.id", books.Book{}.TableName()),
-	)
+
+	tx := r.DB.Preload("BookCategories")
+	tx = r.DB.Where(tx, queryString)
+	tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
+		books.BookCategories{}.TableName(),
+		books.BookCategories{}.TableName(),
+		books.Book{}.TableName()))
+	tx = r.DB.Group(tx, fmt.Sprintf("%s.id", books.Book{}.TableName()))
+
+	result, err := r.DB.Find(tx, &[]books.Book{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -85,7 +88,8 @@ func (r BookRepository) Create(book books.Book) (*books.Book, *errors.ApiError) 
 
 // Update update an existent book.
 func (r BookRepository) Update(id string, upBook books.Book) *errors.ApiError {
-	err := r.DB.Refresh(&upBook, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upBook)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -93,7 +97,7 @@ func (r BookRepository) Update(id string, upBook books.Book) *errors.ApiError {
 			Error:   err.Error(),
 		}
 	}
-	err = r.DB.Set(&upBook, id, "available", upBook.Available)
+	err = r.DB.Set(tx, &upBook, "available", upBook.Available)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -106,7 +110,8 @@ func (r BookRepository) Update(id string, upBook books.Book) *errors.ApiError {
 
 // Delete delete an existent book from DB.
 func (r BookRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&books.Book{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &books.Book{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -129,16 +134,17 @@ func (r BookRepository) buildQueryFromFilter(filter books.Filter) string {
 		fieldValue := reflect.ValueOf(filter).FieldByName(name)
 		if !fieldValue.IsZero() {
 			var qs string
-
-			switch field.Tag.Get("array") {
-			case "false":
+			switch {
+			case field.Tag.Get("array") == "true":
 				qs = fmt.Sprintf("%s IN (%v)", field.Tag.Get("column"), fieldValue.Interface())
+			case field.Tag.Get("like") == "true":
+				qs = fmt.Sprintf("%s LIKE '%v'", field.Tag.Get("column"), fieldValue.Interface())
 			default:
-				qs = fmt.Sprintf("%s = %v", field.Tag.Get("column"), fieldValue.Interface())
+				qs = fmt.Sprintf("%s = '%v'", field.Tag.Get("column"), fieldValue.Interface())
 			}
-
 			query = append(query, qs)
 		}
 	}
+	fmt.Println(strings.Join(query, " AND "))
 	return strings.Join(query, " AND ")
 }

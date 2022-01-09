@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/account/users/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -19,7 +20,7 @@ func NewAccountRepository(dbService database.GORMServiceInterface) AccountReposi
 
 // Get returns all accounts.
 func (r AccountRepository) Get() ([]users.Account, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]users.Account{})
+	result, err := r.DB.Find(nil, &[]users.Account{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -32,7 +33,8 @@ func (r AccountRepository) Get() ([]users.Account, *errors.ApiError) {
 
 // Find return one user by ID.
 func (r AccountRepository) Find(id string) (users.Account, *errors.ApiError) {
-	result, err := r.DB.Fetch(&users.Account{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &users.Account{})
 	if err != nil {
 		return users.Account{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -45,7 +47,8 @@ func (r AccountRepository) Find(id string) (users.Account, *errors.ApiError) {
 
 // FindWhere user by field and value.
 func (r AccountRepository) FindWhere(fieldName, fieldValue string) (users.Account, *errors.ApiError) {
-	result, err := r.DB.FetchAllWhere(&users.Account{}, fieldName, fieldValue)
+	tx := r.DB.Where(nil, fmt.Sprintf("%s = %s", fieldName, fieldValue))
+	result, err := r.DB.Find(tx, &users.Account{})
 	if err != nil {
 		return users.Account{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -71,7 +74,8 @@ func (r AccountRepository) Create(account users.Account) (*users.Account, *error
 
 // Update update an existent user.
 func (r AccountRepository) Update(id string, upAccount users.Account) *errors.ApiError {
-	err := r.DB.Refresh(&upAccount, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upAccount)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -84,7 +88,8 @@ func (r AccountRepository) Update(id string, upAccount users.Account) *errors.Ap
 
 // Delete delete an existent user by id.
 func (r AccountRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&users.Account{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &users.Account{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
