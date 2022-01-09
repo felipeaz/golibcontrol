@@ -138,13 +138,12 @@ func (r BookRepository) buildQueryFromFilter(filter books.Filter) string {
 			case field.Tag.Get("array") == "true":
 				qs = fmt.Sprintf("%s IN (%v)", field.Tag.Get("column"), fieldValue.Interface())
 			case field.Tag.Get("like") == "true":
-				qs = fmt.Sprintf("%s LIKE '%v'", field.Tag.Get("column"), fieldValue.Interface())
+				qs = fmt.Sprintf("%s LIKE '%s%v%s'", field.Tag.Get("column"), "%", fieldValue.Interface(), "%")
 			default:
 				qs = fmt.Sprintf("%s = '%v'", field.Tag.Get("column"), fieldValue.Interface())
 			}
 			query = append(query, qs)
 		}
 	}
-	fmt.Println(strings.Join(query, " AND "))
 	return strings.Join(query, " AND ")
 }
