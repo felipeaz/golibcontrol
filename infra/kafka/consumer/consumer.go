@@ -6,7 +6,7 @@ type Consumer struct {
 	Brokers []string
 }
 
-func New(brokers []string) *Consumer {
+func New(brokers ...string) *Consumer {
 	return &Consumer{
 		Brokers: brokers,
 	}

@@ -8,7 +8,7 @@ type Producer struct {
 	Brokers []string
 }
 
-func New(brokers []string) *Producer {
+func New(brokers ...string) *Producer {
 	return &Producer{
 		Brokers: brokers,
 	}

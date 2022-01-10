@@ -155,7 +155,7 @@ func (m AuthModule) authUser(credentials users.Account) (string, string, string,
 	if err != nil {
 		return "", "", "", 0, &errors.ApiError{
 			Status:  http.StatusInternalServerError,
-			Message: errors.FailedToMarshalAuthenticationOnCache,
+			Message: errors.FailedToMarshal,
 			Error:   err.Error(),
 		}
 	}
