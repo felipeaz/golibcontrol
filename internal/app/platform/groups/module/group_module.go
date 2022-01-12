@@ -26,8 +26,8 @@ func (m GroupModule) Find(id string) (groups.Group, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-func (m GroupModule) Create(comment groups.Group) (*groups.Group, *errors.ApiError) {
-	return m.Repository.Create(comment)
+func (m GroupModule) Create(group groups.Group) (*groups.Group, *errors.ApiError) {
+	return m.Repository.Create(group)
 }
 
 func (m GroupModule) Update(id string, upGroup groups.Group) *errors.ApiError {

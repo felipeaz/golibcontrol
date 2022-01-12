@@ -35,8 +35,8 @@ func (m ReserveModule) Find(id string) (reserves.Reserve, *errors.ApiError) {
 	return m.Repository.Find(id)
 }
 
-func (m ReserveModule) Create(comment reserves.Reserve) (*reserves.Reserve, *errors.ApiError) {
-	b, err := json.Marshal(comment)
+func (m ReserveModule) Create(reserve reserves.Reserve) (*reserves.Reserve, *errors.ApiError) {
+	b, err := json.Marshal(reserve)
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
@@ -52,7 +52,7 @@ func (m ReserveModule) Create(comment reserves.Reserve) (*reserves.Reserve, *err
 			Error:   err.Error(),
 		}
 	}
-	return m.Repository.Create(comment)
+	return m.Repository.Create(reserve)
 }
 
 func (m ReserveModule) Update(id string, upReserve reserves.Reserve) *errors.ApiError {

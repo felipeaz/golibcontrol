@@ -36,8 +36,8 @@ func (m ReviewModule) Find(id string) (reviews.Review, *errors.ApiError) {
 	return review, nil
 }
 
-func (m ReviewModule) Create(comment reviews.Review) (*reviews.Review, *errors.ApiError) {
-	return m.Repository.Create(comment)
+func (m ReviewModule) Create(review reviews.Review) (*reviews.Review, *errors.ApiError) {
+	return m.Repository.Create(review)
 }
 
 func (m ReviewModule) Update(id string, upReview reviews.Review) *errors.ApiError {

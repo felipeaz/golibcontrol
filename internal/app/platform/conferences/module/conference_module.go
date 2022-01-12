@@ -26,8 +26,8 @@ func (m ConferenceModule) Find(id string) (conferences.Conference, *errors.ApiEr
 	return m.Repository.Find(id)
 }
 
-func (m ConferenceModule) Create(comment conferences.Conference) (*conferences.Conference, *errors.ApiError) {
-	return m.Repository.Create(comment)
+func (m ConferenceModule) Create(conference conferences.Conference) (*conferences.Conference, *errors.ApiError) {
+	return m.Repository.Create(conference)
 }
 
 func (m ConferenceModule) Update(id string, upConference conferences.Conference) *errors.ApiError {
