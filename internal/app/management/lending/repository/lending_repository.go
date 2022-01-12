@@ -24,7 +24,7 @@ func NewLendingRepository(db database.GORMServiceInterface) LendingRepository {
 
 // Get returns all lendings.
 func (r LendingRepository) Get() ([]lending.Lending, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]lending.Lending{})
+	result, err := r.DB.Find(nil, &[]lending.Lending{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -39,7 +39,8 @@ func (r LendingRepository) Get() ([]lending.Lending, *errors.ApiError) {
 // GetByFilter returns all lendings.
 func (r LendingRepository) GetByFilter(filter lending.Filter) ([]lending.Lending, *errors.ApiError) {
 	queryString := r.buildQueryFromFilter(filter)
-	result, err := r.DB.FetchAllWhereWithQuery(&[]lending.Lending{}, queryString)
+	tx := r.DB.Where(nil, queryString)
+	result, err := r.DB.Find(tx, &[]lending.Lending{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -53,7 +54,8 @@ func (r LendingRepository) GetByFilter(filter lending.Filter) ([]lending.Lending
 
 // Find return one lending from DB by ID.
 func (r LendingRepository) Find(id string) (lending.Lending, *errors.ApiError) {
-	result, err := r.DB.Fetch(&lending.Lending{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &lending.Lending{})
 	if err != nil {
 		return lending.Lending{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -84,7 +86,8 @@ func (r LendingRepository) Create(lending lending.Lending) (*lending.Lending, *e
 
 // Update update an existent lending.
 func (r LendingRepository) Update(id string, upLending lending.Lending) *errors.ApiError {
-	err := r.DB.Refresh(&upLending, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upLending)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -97,7 +100,8 @@ func (r LendingRepository) Update(id string, upLending lending.Lending) *errors.
 
 // Delete delete an existent lending from DB.
 func (r LendingRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&lending.Lending{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &lending.Lending{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -110,9 +114,11 @@ func (r LendingRepository) Delete(id string) *errors.ApiError {
 
 // BeforeCreate validate if the book is already lent.
 func (r LendingRepository) beforeCreate(studentId, bookId uint) *errors.ApiError {
-	result, err := r.DB.FetchAllWhereWithQuery(
-		&lending.Lending{},
-		fmt.Sprintf("book_id = %s OR student_id = %s", strconv.Itoa(int(bookId)), strconv.Itoa(int(studentId))))
+	tx := r.DB.Where(nil, fmt.Sprintf("book_id = %s OR student_id = %s",
+		strconv.Itoa(int(bookId)),
+		strconv.Itoa(int(studentId)),
+	))
+	result, err := r.DB.Find(tx, &lending.Lending{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -141,14 +147,12 @@ func (r LendingRepository) buildQueryFromFilter(filter lending.Filter) string {
 		fieldValue := reflect.ValueOf(filter).FieldByName(name)
 		if !fieldValue.IsZero() {
 			var qs string
-
 			switch field.Tag.Get("array") {
 			case "true":
 				qs = fmt.Sprintf("%s IN (%v)", field.Tag.Get("column"), fieldValue.Interface())
 			default:
-				qs = fmt.Sprintf("%s = %v", field.Tag.Get("column"), fieldValue.Interface())
+				qs = fmt.Sprintf("%s = '%v'", field.Tag.Get("column"), fieldValue.Interface())
 			}
-
 			query = append(query, qs)
 		}
 	}

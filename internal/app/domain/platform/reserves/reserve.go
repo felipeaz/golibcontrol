@@ -10,7 +10,7 @@ type Reserve struct {
 	gorm.Model
 	BookId     uint      `json:"bookId" gorm:"unique"`
 	UserId     uint      `json:"userId" gorm:"unique"`
-	RetrieveAt time.Time `json:"retrieveAt" time_format:"2006-01-02 15:04:05"`
+	RetrieveAt time.Time `json:"retrieveAt"`
 }
 
 func (r Reserve) TableName() string {

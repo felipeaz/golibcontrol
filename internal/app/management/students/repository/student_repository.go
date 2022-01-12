@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/students/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -20,7 +21,7 @@ func NewStudentRepository(db database.GORMServiceInterface) StudentRepository {
 
 // Get returns all students.
 func (r StudentRepository) Get() ([]students.Student, *errors.ApiError) {
-	result, err := r.DB.FetchAll(&[]students.Student{})
+	result, err := r.DB.Find(nil, &[]students.Student{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -33,7 +34,8 @@ func (r StudentRepository) Get() ([]students.Student, *errors.ApiError) {
 
 // Find return one student from DB by ID.
 func (r StudentRepository) Find(id string) (students.Student, *errors.ApiError) {
-	result, err := r.DB.Fetch(&students.Student{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &students.Student{})
 	if err != nil {
 		return students.Student{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -59,7 +61,8 @@ func (r StudentRepository) Create(student students.Student) (*students.Student, 
 
 // Update update an existent student.
 func (r StudentRepository) Update(id string, upStudent students.Student) *errors.ApiError {
-	err := r.DB.Refresh(&upStudent, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upStudent)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -72,7 +75,8 @@ func (r StudentRepository) Update(id string, upStudent students.Student) *errors
 
 // Delete delete an existent student from DB.
 func (r StudentRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&students.Student{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &students.Student{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

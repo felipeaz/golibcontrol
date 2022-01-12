@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/replies"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/replies/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -18,7 +19,8 @@ func NewReplyRepository(db database.GORMServiceInterface) ReplyRepository {
 }
 
 func (r ReplyRepository) Get(bookId string) ([]replies.Reply, *errors.ApiError) {
-	result, err := r.DB.FetchAllWhere(&[]replies.Reply{}, "comment_id", bookId)
+	tx := r.DB.Where(nil, fmt.Sprintf("comment_id = %s", bookId))
+	result, err := r.DB.Find(tx, &[]replies.Reply{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -30,7 +32,8 @@ func (r ReplyRepository) Get(bookId string) ([]replies.Reply, *errors.ApiError) 
 }
 
 func (r ReplyRepository) Find(id string) (replies.Reply, *errors.ApiError) {
-	result, err := r.DB.Fetch(&replies.Reply{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &replies.Reply{})
 	if err != nil {
 		return replies.Reply{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -54,7 +57,8 @@ func (r ReplyRepository) Create(reply replies.Reply) (*replies.Reply, *errors.Ap
 }
 
 func (r ReplyRepository) Update(id string, upReply replies.Reply) *errors.ApiError {
-	err := r.DB.Refresh(&upReply, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upReply)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -66,7 +70,8 @@ func (r ReplyRepository) Update(id string, upReply replies.Reply) *errors.ApiErr
 }
 
 func (r ReplyRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&replies.Reply{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &replies.Reply{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

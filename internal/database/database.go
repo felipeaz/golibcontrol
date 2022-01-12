@@ -1,18 +1,17 @@
 package database
 
+import "gorm.io/gorm"
+
 type GORMServiceInterface interface {
-	FetchAll(domainObj interface{}) (interface{}, error)
-	FetchAllWithPreload(domainObj interface{}, preload string) (interface{}, error)
-	FetchAllWithWhereAndPreload(domainObj interface{}, fieldName, fieldValue, preload string) (interface{}, error)
-	FetchAllWithQueryAndPreload(domainObj interface{}, query, preload, join, group string) (interface{}, error)
-	Fetch(domainObj interface{}, id string) (interface{}, error)
-	FetchWithPreload(domainObj interface{}, id, preload string) (interface{}, error)
-	FetchAllWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, error)
-	FetchAllWhereWithQuery(domainObj interface{}, query string) (interface{}, error)
+	Find(tx *gorm.DB, domainObj interface{}) (interface{}, error)
+	FindOne(tx *gorm.DB, domainObj interface{}) (interface{}, error)
 	Persist(domainObj interface{}) error
-	Refresh(domainObj interface{}, id string) error
-	Set(domainObj interface{}, id, fieldName string, fieldValue interface{}) error
-	Remove(domainObj interface{}, id string) error
-	RemoveWhere(domainObj interface{}, fieldName, fieldValue string) error
+	Refresh(tx *gorm.DB, domainObj interface{}) error
+	Set(tx *gorm.DB, domainObj interface{}, field string, value interface{}) error
+	Remove(tx *gorm.DB, domainObj interface{}) error
+	Preload(preload ...string) *gorm.DB
+	Join(tx *gorm.DB, join ...string) *gorm.DB
+	Group(tx *gorm.DB, group ...string) *gorm.DB
+	Where(tx *gorm.DB, where string) *gorm.DB
 	GetErrorStatusCode(err error) int
 }

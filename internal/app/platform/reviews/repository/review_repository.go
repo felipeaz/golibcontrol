@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/reviews"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/reviews/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -18,7 +19,8 @@ func NewReviewRepository(db database.GORMServiceInterface) ReviewRepository {
 }
 
 func (r ReviewRepository) Get(bookId string) ([]reviews.Review, *errors.ApiError) {
-	result, err := r.DB.FetchAllWhere(&[]reviews.Review{}, "book_id", bookId)
+	tx := r.DB.Where(nil, fmt.Sprintf("book_id = %s", bookId))
+	result, err := r.DB.Find(tx, &[]reviews.Review{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -30,7 +32,8 @@ func (r ReviewRepository) Get(bookId string) ([]reviews.Review, *errors.ApiError
 }
 
 func (r ReviewRepository) Find(id string) (reviews.Review, *errors.ApiError) {
-	result, err := r.DB.Fetch(&reviews.Review{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &reviews.Review{})
 	if err != nil {
 		return reviews.Review{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -54,7 +57,8 @@ func (r ReviewRepository) Create(review reviews.Review) (*reviews.Review, *error
 }
 
 func (r ReviewRepository) Update(id string, upReview reviews.Review) *errors.ApiError {
-	err := r.DB.Refresh(&upReview, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upReview)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -66,7 +70,8 @@ func (r ReviewRepository) Update(id string, upReview reviews.Review) *errors.Api
 }
 
 func (r ReviewRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&reviews.Review{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &reviews.Review{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

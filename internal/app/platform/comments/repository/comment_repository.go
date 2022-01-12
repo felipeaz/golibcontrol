@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/comments"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/comments/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -18,7 +19,8 @@ func NewCommentRepository(db database.GORMServiceInterface) CommentRepository {
 }
 
 func (r CommentRepository) Get(bookId string) ([]comments.Comment, *errors.ApiError) {
-	result, err := r.DB.FetchAllWhere(&[]comments.Comment{}, "book_id", bookId)
+	tx := r.DB.Where(nil, fmt.Sprintf("book_id = %s", bookId))
+	result, err := r.DB.Find(tx, &[]comments.Comment{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -30,7 +32,8 @@ func (r CommentRepository) Get(bookId string) ([]comments.Comment, *errors.ApiEr
 }
 
 func (r CommentRepository) Find(id string) (comments.Comment, *errors.ApiError) {
-	result, err := r.DB.Fetch(&comments.Comment{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	result, err := r.DB.FindOne(tx, &comments.Comment{})
 	if err != nil {
 		return comments.Comment{}, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -54,7 +57,8 @@ func (r CommentRepository) Create(comment comments.Comment) (*comments.Comment, 
 }
 
 func (r CommentRepository) Update(id string, upComment comments.Comment) *errors.ApiError {
-	err := r.DB.Refresh(&upComment, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Refresh(tx, &upComment)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -66,7 +70,8 @@ func (r CommentRepository) Update(id string, upComment comments.Comment) *errors
 }
 
 func (r CommentRepository) Delete(id string) *errors.ApiError {
-	err := r.DB.Remove(&comments.Comment{}, id)
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	err := r.DB.Remove(tx, &comments.Comment{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

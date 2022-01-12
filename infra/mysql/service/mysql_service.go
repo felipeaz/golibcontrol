@@ -19,8 +19,13 @@ func NewMySQLService(db *gorm.DB, log logger.LogInterface) *MySQLService {
 	}
 }
 
-func (s MySQLService) FetchAll(domainObj interface{}) (interface{}, error) {
-	result := s.DB.Find(domainObj)
+func (s MySQLService) Find(tx *gorm.DB, domainObj interface{}) (interface{}, error) {
+	var result *gorm.DB
+	if tx != nil {
+		result = tx.Find(domainObj)
+	} else {
+		result = s.DB.Find(domainObj)
+	}
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return nil, err
@@ -31,85 +36,14 @@ func (s MySQLService) FetchAll(domainObj interface{}) (interface{}, error) {
 	return domainObj, nil
 }
 
-func (s MySQLService) FetchAllWithPreload(domainObj interface{}, preload string) (interface{}, error) {
-	result := s.DB.Preload(preload).Find(domainObj)
-	if err := result.Error; err != nil {
-		s.Log.Error(err)
-		return nil, err
-	}
-	if result.RowsAffected == 0 {
-		return nil, nil
-	}
-	return domainObj, nil
-}
-
-func (s MySQLService) FetchAllWithWhereAndPreload(domainObj interface{}, fieldName, fieldValue, preload string) (interface{}, error) {
-	result := s.DB.Preload(preload).Where(fieldName+" = ? ", fieldValue).Find(domainObj)
-	if err := result.Error; err != nil {
-		s.Log.Error(err)
-		return nil, err
-	}
-	if result.RowsAffected == 0 {
-		return nil, nil
-	}
-	return domainObj, nil
-}
-func (s MySQLService) FetchAllWithQueryAndPreload(domainObj interface{}, query, preload, join, group string) (interface{}, error) {
-	result := s.DB.Joins(join).Preload(preload).Where(query).Group(group).Find(domainObj)
-	if err := result.Error; err != nil {
-		s.Log.Error(err)
-		return nil, err
-	}
-	if result.RowsAffected == 0 {
-		return nil, nil
-	}
-	return domainObj, nil
-}
-
-func (s MySQLService) Fetch(domainObj interface{}, id string) (interface{}, error) {
-	result := s.DB.Model(domainObj).Where("id = ?", id).Find(domainObj)
+func (s MySQLService) FindOne(tx *gorm.DB, domainObj interface{}) (interface{}, error) {
+	result := tx.First(domainObj)
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return nil, err
 	}
 	if result.RowsAffected == 0 {
 		return nil, gorm.ErrRecordNotFound
-	}
-	return domainObj, nil
-}
-
-func (s MySQLService) FetchWithPreload(domainObj interface{}, id, preload string) (interface{}, error) {
-	result := s.DB.Preload(preload).Model(domainObj).Where("id = ?", id).Find(domainObj)
-	if err := result.Error; err != nil {
-		s.Log.Error(err)
-		return nil, err
-	}
-	if result.RowsAffected == 0 {
-		return nil, gorm.ErrRecordNotFound
-	}
-	return domainObj, nil
-}
-
-func (s MySQLService) FetchAllWhere(domainObj interface{}, fieldName, fieldValue string) (interface{}, error) {
-	result := s.DB.Model(domainObj).Where(fieldName+" = ? ", fieldValue).Find(domainObj)
-	if err := result.Error; err != nil {
-		s.Log.Error(err)
-		return nil, err
-	}
-	if result.RowsAffected == 0 {
-		return nil, nil
-	}
-	return domainObj, nil
-}
-
-func (s MySQLService) FetchAllWhereWithQuery(domainObj interface{}, query string) (interface{}, error) {
-	result := s.DB.Model(domainObj).Where(query).Find(domainObj)
-	if err := result.Error; err != nil {
-		s.Log.Error(err)
-		return nil, err
-	}
-	if result.RowsAffected == 0 {
-		return nil, nil
 	}
 	return domainObj, nil
 }
@@ -123,8 +57,8 @@ func (s MySQLService) Persist(domainObj interface{}) error {
 	return nil
 }
 
-func (s MySQLService) Refresh(domainObj interface{}, id string) error {
-	result := s.DB.Model(domainObj).Where("id = ?", id).Updates(domainObj)
+func (s MySQLService) Refresh(tx *gorm.DB, domainObj interface{}) error {
+	result := tx.Updates(domainObj)
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return err
@@ -132,8 +66,8 @@ func (s MySQLService) Refresh(domainObj interface{}, id string) error {
 	return nil
 }
 
-func (s MySQLService) Set(domainObj interface{}, id, fieldName string, fieldValue interface{}) error {
-	result := s.DB.Model(domainObj).Where("id = ?", id).Update(fieldName, fieldValue)
+func (s MySQLService) Set(tx *gorm.DB, domainObj interface{}, fieldName string, fieldValue interface{}) error {
+	result := tx.Model(domainObj).Update(fieldName, fieldValue)
 	if err := result.Error; err != nil {
 		s.Log.Error(err)
 		return err
@@ -141,8 +75,8 @@ func (s MySQLService) Set(domainObj interface{}, id, fieldName string, fieldValu
 	return nil
 }
 
-func (s MySQLService) Remove(domainObj interface{}, id string) error {
-	err := s.DB.Where("id = ?", id).Delete(domainObj).Error
+func (s MySQLService) Remove(tx *gorm.DB, domainObj interface{}) error {
+	err := tx.Delete(domainObj).Error
 	if err != nil {
 		s.Log.Error(err)
 		return err
@@ -150,13 +84,47 @@ func (s MySQLService) Remove(domainObj interface{}, id string) error {
 	return nil
 }
 
-func (s MySQLService) RemoveWhere(domainObj interface{}, fieldName, fieldValue string) error {
-	err := s.DB.Where(fieldName+" = ? ", fieldValue).Delete(domainObj).Error
-	if err != nil {
-		s.Log.Error(err)
-		return err
+func (s MySQLService) Preload(preload ...string) *gorm.DB {
+	if preload == nil {
+		return s.DB
 	}
-	return nil
+	tx := s.DB
+	for _, v := range preload {
+		tx = tx.Preload(v)
+	}
+	return tx
+}
+
+func (s MySQLService) Join(tx *gorm.DB, join ...string) *gorm.DB {
+	if join == nil {
+		return tx
+	}
+	txx := tx
+	for _, v := range join {
+		txx = tx.Joins(v)
+	}
+	return txx
+}
+
+func (s MySQLService) Group(tx *gorm.DB, group ...string) *gorm.DB {
+	if group == nil {
+		return tx
+	}
+	txx := tx
+	for _, v := range group {
+		txx = tx.Group(v)
+	}
+	return txx
+}
+
+func (s MySQLService) Where(tx *gorm.DB, where string) *gorm.DB {
+	if where == "" {
+		return tx
+	}
+	if tx == nil {
+		return s.DB.Where(where)
+	}
+	return tx.Where(where)
 }
 
 func (s MySQLService) GetErrorStatusCode(err error) int {

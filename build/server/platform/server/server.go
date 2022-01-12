@@ -26,6 +26,7 @@ import (
 
 // Start initialize the webservice,
 func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (err error) {
+
 	cRepository := commentRepository.NewCommentRepository(dbService)
 	cModule := commentModule.NewCommentModule(cRepository, log)
 	cHandler := commentHandler.NewCommentHandler(cModule)
