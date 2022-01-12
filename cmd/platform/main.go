@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/FelipeAz/golibcontrol/infra/kafka/producer"
 	"log"
 	"os"
 
@@ -23,6 +22,7 @@ var (
 		"PLATFORM_DB_PORT":     "",
 		"PLATFORM_DB_DATABASE": "",
 		"LOG_FILE":             "",
+		"KAFKA_BROKER_CONNECT": "",
 	}
 )
 
@@ -50,8 +50,7 @@ func main() {
 
 	logger := _log.NewLogger(envs["LOG_FILE"], ServiceName)
 	dbService := service.NewMySQLService(db, logger)
-	kafkaProducer := producer.New(os.Getenv("KAFKA_BROKER_CONNECT"))
-	err = server.Start(dbService, logger, kafkaProducer)
+	err = server.Start(dbService, logger)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

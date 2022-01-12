@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/router/platform/router"
-	"github.com/FelipeAz/golibcontrol/infra/kafka/producer"
 	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/handler"
 	commentModule "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/module"
 	commentRepository "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/repository"
@@ -26,10 +25,7 @@ import (
 )
 
 // Start initialize the webservice,
-func Start(
-	dbService database.GORMServiceInterface,
-	log logger.LogInterface,
-	producer producer.ProducerInterface) (err error) {
+func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (err error) {
 
 	cRepository := commentRepository.NewCommentRepository(dbService)
 	cModule := commentModule.NewCommentModule(cRepository, log)
@@ -40,7 +36,7 @@ func Start(
 	replHandler := replyHandler.NewReplyHandler(replModule)
 
 	resRepository := reserveRepository.NewReserveRepository(dbService)
-	resModule := reserveModule.NewReserveModule(resRepository, log, producer)
+	resModule := reserveModule.NewReserveModule(resRepository, log)
 	resHandler := reserveHandler.NewReserveHandler(resModule)
 
 	revRepository := reviewRepository.NewReviewRepository(dbService)

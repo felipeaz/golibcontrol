@@ -20,11 +20,10 @@ type ReserveModule struct {
 	Producer   producer.ProducerInterface
 }
 
-func NewReserveModule(repo reserves.Repository, log logger.LogInterface, producer producer.ProducerInterface) ReserveModule {
+func NewReserveModule(repo reserves.Repository, log logger.LogInterface) ReserveModule {
 	return ReserveModule{
 		Repository: repo,
 		Log:        log,
-		Producer:   producer,
 	}
 }
 
