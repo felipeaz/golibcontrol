@@ -8,7 +8,7 @@ import (
 // AuthRoutes initialize Consumer routes.
 func AuthRoutes(rg *gin.RouterGroup, authHandler handler.AuthHandler) {
 	r := rg.Group("/login")
-	r.POST("/", authHandler.Login)
+	r.POST("", authHandler.Login)
 	r = rg.Group("/logout")
-	r.POST("/", authHandler.Logout)
+	r.POST("", authHandler.Logout)
 }
