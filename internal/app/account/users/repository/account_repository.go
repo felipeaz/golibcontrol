@@ -47,7 +47,7 @@ func (r AccountRepository) Find(id string) (users.Account, *errors.ApiError) {
 
 // FindWhere user by field and value.
 func (r AccountRepository) FindWhere(fieldName, fieldValue string) (users.Account, *errors.ApiError) {
-	tx := r.DB.Where(nil, fmt.Sprintf("%s = %s", fieldName, fieldValue))
+	tx := r.DB.Where(nil, fmt.Sprintf("`%s`='%s'", fieldName, fieldValue))
 	result, err := r.DB.Find(tx, &users.Account{})
 	if err != nil {
 		return users.Account{}, &errors.ApiError{
