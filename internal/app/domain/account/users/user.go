@@ -2,19 +2,21 @@ package users
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
+	"time"
 )
 
 // Account contains all Account's table properties.
 type Account struct {
-	gorm.Model
-	ConsumerId     string `json:"consumerId" gorm:"not null"`
-	Email          string `json:"email" binding:"required" gorm:"unique"`
-	Password       string `json:"password" binding:"required"`
-	FirstName      string `json:"firstName"`
-	LastName       string `json:"lastName"`
-	Phone          string `json:"phone"`
-	StudentAccount bool   `json:"studentAccount" gorm:"<-:create"`
+	ID             uint      `json:"id" gorm:"primarykey"`
+	CreatedAt      time.Time `json:"createdAt"`
+	UpdatedAt      time.Time `json:"updatedAt"`
+	ConsumerId     string    `json:"consumerId" gorm:"not null"`
+	Email          string    `json:"email" binding:"required" gorm:"unique"`
+	Password       string    `json:"password" binding:"required"`
+	FirstName      string    `json:"firstName"`
+	LastName       string    `json:"lastName"`
+	Phone          string    `json:"phone"`
+	StudentAccount bool      `json:"studentAccount" gorm:"<-:create"`
 }
 
 func (a Account) TableName() string {

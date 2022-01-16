@@ -2,14 +2,16 @@ package replies
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Reply struct {
-	gorm.Model
-	CommentId uint   `json:"commentId" gorm:"unique"`
-	UserId    uint   `json:"userId" binding:"required"`
-	Text      string `json:"text" binding:"required"`
+	ID        uint      `json:"id" gorm:"primarykey"`
+	CommentId uint      `json:"commentId" gorm:"unique"`
+	UserId    uint      `json:"userId" binding:"required"`
+	Text      string    `json:"text" binding:"required"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (r Reply) TableName() string {

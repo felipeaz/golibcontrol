@@ -2,14 +2,16 @@ package comments
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Comment struct {
-	gorm.Model
-	BookId uint   `json:"bookId" binding:"required"`
-	UserId uint   `json:"userId" binding:"required"`
-	Text   string `json:"text" binding:"required"`
+	ID        uint      `json:"id" gorm:"primarykey"`
+	BookId    uint      `json:"bookId" binding:"required"`
+	UserId    uint      `json:"userId" binding:"required"`
+	Text      string    `json:"text" binding:"required"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (c Comment) TableName() string {

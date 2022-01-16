@@ -2,20 +2,22 @@ package students
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
 	"strings"
+	"time"
 )
 
 // Student contains all Student's table properties.
 type Student struct {
-	gorm.Model
-	Name      string `json:"name" binding:"required"`
-	Email     string `json:"email" binding:"required"`
-	Password  string `json:"password" binding:"required"`
-	Phone     string `json:"phone" binding:"required"`
-	Grade     string `json:"grade" binding:"required"`
-	Birthday  string `json:"birthday" binding:"required"`
-	AccountId uint   `json:"accountId" gorm:"index;unique;not null"`
+	ID        uint      `json:"id" gorm:"primarykey"`
+	Name      string    `json:"name" binding:"required"`
+	Email     string    `json:"email" binding:"required"`
+	Password  string    `json:"password" binding:"required"`
+	Phone     string    `json:"phone" binding:"required"`
+	Grade     string    `json:"grade" binding:"required"`
+	Birthday  string    `json:"birthday" binding:"required"`
+	AccountId uint      `json:"accountId" gorm:"index;unique;not null"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (s Student) TableName() string {

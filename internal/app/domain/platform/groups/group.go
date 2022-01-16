@@ -2,16 +2,17 @@ package groups
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Group struct {
-	gorm.Model
-	ID          uint   `json:"id" gorm:"primaryKey;autoIncrement;not null"`
-	Name        string `json:"name" binding:"required"`
-	Description string `json:"description" binding:"required"`
-	Status      string `json:"status" binding:"required"`
-	MeetingHash string `json:"meetingHash"`
+	ID          uint      `json:"id" gorm:"primarykey"`
+	Name        string    `json:"name" binding:"required"`
+	Description string    `json:"description" binding:"required"`
+	Status      string    `json:"status" binding:"required"`
+	MeetingHash string    `json:"meetingHash"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 func (g Group) TableName() string {

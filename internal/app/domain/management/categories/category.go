@@ -2,15 +2,17 @@ package categories
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
+	"time"
 )
 
 // Category contains all Category's table properties.
 type Category struct {
-	gorm.Model
-	Name        string `json:"name" binding:"required"`
-	Description string `json:"description"`
-	Image       string `json:"image"`
+	ID          uint      `json:"id" gorm:"primarykey"`
+	Name        string    `json:"name" binding:"required"`
+	Description string    `json:"description"`
+	Image       string    `json:"image"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 func (c Category) TableName() string {

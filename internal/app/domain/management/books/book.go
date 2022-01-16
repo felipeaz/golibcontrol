@@ -3,11 +3,12 @@ package books
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"gorm.io/gorm"
+	"time"
 )
 
 // Book contains all Book's table properties.
 type Book struct {
-	gorm.Model
+	ID             uint             `json:"id" gorm:"primarykey"`
 	Title          string           `json:"title"`
 	Author         string           `json:"author"`
 	Description    string           `json:"description"`
@@ -16,6 +17,8 @@ type Book struct {
 	Available      bool             `json:"available" gorm:"default:true"`
 	CategoriesId   string           `json:"categoriesId,omitempty" gorm:"->"` // Read Only
 	BookCategories []BookCategories `json:"categories" gorm:"->"`
+	CreatedAt      time.Time        `json:"createdAt"`
+	UpdatedAt      time.Time        `json:"updatedAt"`
 }
 
 func (b Book) TableName() string {

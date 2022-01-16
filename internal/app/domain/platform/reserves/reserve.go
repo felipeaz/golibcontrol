@@ -2,15 +2,16 @@ package reserves
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
 	"time"
 )
 
 type Reserve struct {
-	gorm.Model
+	ID         uint      `json:"id" gorm:"primarykey"`
 	BookId     uint      `json:"bookId" gorm:"unique"`
 	UserId     uint      `json:"userId" gorm:"unique"`
 	RetrieveAt time.Time `json:"retrieveAt"`
+	CreatedAt  time.Time `json:"createdAt"`
+	UpdatedAt  time.Time `json:"updatedAt"`
 }
 
 func (r Reserve) TableName() string {
