@@ -8,12 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Route(
-	accountHandler accountHandler.AccountHandler,
-	authHandler authHandler.AuthHandler,
-	mwr *middleware.Middleware) error {
+func Route(accountHandler accountHandler.AccountHandler, authHandler authHandler.AuthHandler) error {
 	router := gin.New()
-	router.Use(mwr.CORSMiddleware())
+	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")

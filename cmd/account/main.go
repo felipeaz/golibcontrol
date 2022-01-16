@@ -6,7 +6,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/http/client"
 	"github.com/FelipeAz/golibcontrol/infra/http/request"
 	_log "github.com/FelipeAz/golibcontrol/infra/logger"
-	"github.com/FelipeAz/golibcontrol/infra/middleware"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/account/database"
 	"github.com/FelipeAz/golibcontrol/infra/mysql/service"
 	"github.com/FelipeAz/golibcontrol/infra/redis"
@@ -20,19 +19,17 @@ const (
 
 var (
 	envs = map[string]string{
-		"ACCOUNT_DB_USER":         "",
-		"ACCOUNT_DB_PASSWORD":     "",
-		"ACCOUNT_DB_HOST":         "",
-		"ACCOUNT_DB_PORT":         "",
-		"ACCOUNT_DB_DATABASE":     "",
-		"ACCOUNT_ALLOWED_ORIGINS": "",
-		"ACCOUNT_ALLOWED_HEADERS": "",
-		"LOG_FILE":                "",
-		"REDIS_HOST":              "",
-		"REDIS_PORT":              "",
-		"REDIS_EXPIRE":            "",
-		"CONSUMERS_HOST":          "",
-		"JWT_SECRET_KEY":          "",
+		"ACCOUNT_DB_USER":     "",
+		"ACCOUNT_DB_PASSWORD": "",
+		"ACCOUNT_DB_HOST":     "",
+		"ACCOUNT_DB_PORT":     "",
+		"ACCOUNT_DB_DATABASE": "",
+		"LOG_FILE":            "",
+		"REDIS_HOST":          "",
+		"REDIS_PORT":          "",
+		"REDIS_EXPIRE":        "",
+		"CONSUMERS_HOST":      "",
+		"JWT_SECRET_KEY":      "",
 	}
 )
 
@@ -74,8 +71,7 @@ func main() {
 	requestClient := request.NewHttpRequest(client.NewHTTPClient(), envs["CONSUMERS_HOST"])
 	consumersService := consumer.NewConsumer(requestClient, logger, envs["JWT_SECRET_KEY"])
 
-	mwr := middleware.New(envs["ACCOUNT_ALLOWED_ORIGINS"], envs["ACCOUNT_ALLOWED_HEADERS"])
-	err = server.Start(dbService, cache, consumersService, logger, mwr)
+	err = server.Start(dbService, cache, consumersService, logger)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

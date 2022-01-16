@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/router/platform/router"
-	"github.com/FelipeAz/golibcontrol/infra/middleware"
 	commentHandler "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/handler"
 	commentModule "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/module"
 	commentRepository "github.com/FelipeAz/golibcontrol/internal/app/platform/comments/repository"
@@ -26,7 +25,7 @@ import (
 )
 
 // Start initialize the webservice,
-func Start(dbService database.GORMServiceInterface, log logger.LogInterface, mwr *middleware.Middleware) (err error) {
+func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (err error) {
 
 	cRepository := commentRepository.NewCommentRepository(dbService)
 	cModule := commentModule.NewCommentModule(cRepository, log)
@@ -52,5 +51,5 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface, mwr
 	grpModule := groupModule.NewGroupModule(grpRepository, log)
 	grpHandler := groupHandler.NewGroupHandler(grpModule)
 
-	return router.Route(cHandler, replHandler, resHandler, revHandler, confHandler, grpHandler, mwr)
+	return router.Route(cHandler, replHandler, resHandler, revHandler, confHandler, grpHandler)
 }

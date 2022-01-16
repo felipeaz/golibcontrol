@@ -19,10 +19,9 @@ func Route(
 	resHandler reserveHandler.ReserveHandler,
 	revHandler reviewHandler.ReviewHandler,
 	confHandler conferenceHandler.ConferenceHandler,
-	grpHandler groupHandler.GroupHandler,
-	mwr *middleware.Middleware) error {
+	grpHandler groupHandler.GroupHandler) error {
 	router := gin.New()
-	router.Use(mwr.CORSMiddleware())
+	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
