@@ -10,11 +10,8 @@ services:
       - lib-net
     env_file:
       - ../.env
-    links:
-      - redis
     depends_on:
       - "account-service-db-host"
-      - "redis"
     restart: unless-stopped
     working_dir: "/go/src/github.com/FelipeAz/golibcontrol/cmd/account/"
     expose:

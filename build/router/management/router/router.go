@@ -15,9 +15,9 @@ func Route(
 	cHandler categoryHandler.CategoryHandler,
 	sHandler studentHandler.StudentHandler,
 	lHandler lendingHandler.LendingHandler,
-) error {
+	mwr *middleware.Middleware) error {
 	router := gin.New()
-	router.Use(middleware.CORSMiddleware())
+	router.Use(mwr.CORSMiddleware())
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")

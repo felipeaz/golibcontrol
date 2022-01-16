@@ -1,21 +1,26 @@
 package middleware
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
+	"strings"
 )
 
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
-			return
-		}
-		c.Next()
+type Middleware struct {
+	allowedOrigins []string
+	allowedHeaders []string
+}
+
+func New(allowedOrigins, allowedHeaders string) *Middleware {
+	return &Middleware{
+		allowedOrigins: strings.Split(strings.ReplaceAll(allowedOrigins, " ", ""), ","),
+		allowedHeaders: strings.Split(strings.ReplaceAll(allowedHeaders, " ", ""), ","),
 	}
+}
+
+func (m Middleware) CORSMiddleware() gin.HandlerFunc {
+	return cors.New(cors.Options{
+		AllowedOrigins: m.allowedOrigins,
+		AllowedHeaders: m.allowedHeaders,
+	})
 }

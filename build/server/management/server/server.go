@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/router/management/router"
+	"github.com/FelipeAz/golibcontrol/infra/middleware"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/management/books/handler"
 	bookModule "github.com/FelipeAz/golibcontrol/internal/app/management/books/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/books/repository"
@@ -19,7 +20,7 @@ import (
 )
 
 // Start initialize the webservice,
-func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (err error) {
+func Start(dbService database.GORMServiceInterface, log logger.LogInterface, mwr *middleware.Middleware) (err error) {
 	bcRepository := repository.NewBookCategoryRepository(dbService)
 	bRepository := repository.NewBookRepository(dbService)
 	bModule := bookModule.NewBookModule(bRepository, bcRepository, log)
@@ -37,5 +38,5 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	lModule := lendingModule.NewLendingModule(lRepository, log)
 	lHandler := lendingHandler.NewLendingHandler(lModule)
 
-	return router.Route(bHandler, cHandler, sHandler, lHandler)
+	return router.Route(bHandler, cHandler, sHandler, lHandler, mwr)
 }

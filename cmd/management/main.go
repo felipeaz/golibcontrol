@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/FelipeAz/golibcontrol/infra/middleware"
 	"log"
 	"os"
 
@@ -16,12 +17,14 @@ const (
 
 var (
 	envs = map[string]string{
-		"MANAGEMENT_DB_USER":     "",
-		"MANAGEMENT_DB_PASSWORD": "",
-		"MANAGEMENT_DB_HOST":     "",
-		"MANAGEMENT_DB_PORT":     "",
-		"MANAGEMENT_DB_DATABASE": "",
-		"LOG_FILE":               "",
+		"MANAGEMENT_DB_USER":         "",
+		"MANAGEMENT_DB_PASSWORD":     "",
+		"MANAGEMENT_DB_HOST":         "",
+		"MANAGEMENT_DB_PORT":         "",
+		"MANAGEMENT_DB_DATABASE":     "",
+		"MANAGEMENT_ALLOWED_ORIGINS": "",
+		"MANAGEMENT_ALLOWED_HEADERS": "",
+		"LOG_FILE":                   "",
 	}
 )
 
@@ -50,7 +53,8 @@ func main() {
 	logger := _log.NewLogger(envs["LOG_FILE"], ServiceName)
 	dbService := service.NewMySQLService(db, logger)
 
-	err = server.Start(dbService, logger)
+	mwr := middleware.New(envs["MANAGEMENT_ALLOWED_ORIGINS"], envs["MANAGEMENT_ALLOWED_HEADERS"])
+	err = server.Start(dbService, logger, mwr)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
