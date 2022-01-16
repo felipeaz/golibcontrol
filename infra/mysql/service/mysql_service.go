@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/FelipeAz/golibcontrol/internal/logger"
 	"net/http"
 
@@ -31,7 +32,7 @@ func (s MySQLService) Find(tx *gorm.DB, domainObj interface{}) (interface{}, err
 		return nil, err
 	}
 	if result.RowsAffected == 0 {
-		return nil, nil
+		return nil, gorm.ErrRecordNotFound
 	}
 	return domainObj, nil
 }
@@ -128,8 +129,8 @@ func (s MySQLService) Where(tx *gorm.DB, where string) *gorm.DB {
 }
 
 func (s MySQLService) GetErrorStatusCode(err error) int {
-	switch err {
-	case gorm.ErrRecordNotFound:
+	switch {
+	case errors.Is(err, gorm.ErrRecordNotFound):
 		return http.StatusNotFound
 	default:
 		return http.StatusInternalServerError

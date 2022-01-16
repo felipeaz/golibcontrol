@@ -12,6 +12,7 @@ import (
 	databaseInterface "github.com/FelipeAz/golibcontrol/internal/database"
 	"github.com/FelipeAz/golibcontrol/internal/logger"
 	"net/http"
+	"strings"
 )
 
 type AuthModule struct {
@@ -49,7 +50,7 @@ func (m AuthModule) Login(credentials users.Account) login.Message {
 	}
 
 	return login.Message{
-		Message: fmt.Sprintf(login.SuccessMessage, userName),
+		Message: fmt.Sprintf(login.SuccessMessage, strings.Title(userName)),
 		Token:   token,
 	}
 }
