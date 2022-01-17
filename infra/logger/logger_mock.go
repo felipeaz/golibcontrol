@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -11,13 +11,13 @@ type Mock struct {
 }
 
 func (l *Mock) Error(err error) {
-	fmt.Println("ERROR: ", err.Error())
+	log.Println("ERROR: ", err.Error())
 }
 
 func (l *Mock) Warn(msg string) {
-	fmt.Println("WARNING: ", msg)
+	log.Println("WARNING: ", msg)
 }
 
 func (l *Mock) Info(msg string) {
-	fmt.Println("INFO: ", msg)
+	log.Println("INFO: ", msg)
 }

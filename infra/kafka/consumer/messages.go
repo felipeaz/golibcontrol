@@ -1,8 +1,8 @@
 package consumer
 
 import (
-	"fmt"
 	kafka "github.com/Shopify/sarama"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -30,11 +30,11 @@ func (c Consumer) Read(consumer kafka.PartitionConsumer) {
 		for {
 			select {
 			case err := <-consumer.Errors():
-				fmt.Println(err)
+				log.Println(err)
 			case msg := <-consumer.Messages():
-				fmt.Printf("Received message | Topic(%s) | Message(%s) \n", msg.Topic, string(msg.Value))
+				log.Printf("Received message | Topic(%s) | Message(%s) \n", msg.Topic, string(msg.Value))
 			case <-sigchan:
-				fmt.Println("Interrupt is detected")
+				log.Println("Interrupt detected")
 				doneCh <- struct{}{}
 			}
 		}
