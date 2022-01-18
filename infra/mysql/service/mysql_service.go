@@ -32,7 +32,7 @@ func (s MySQLService) Find(tx *gorm.DB, domainObj interface{}) (interface{}, err
 		return nil, err
 	}
 	if result.RowsAffected == 0 {
-		return nil, gorm.ErrRecordNotFound
+		return nil, nil
 	}
 	return domainObj, nil
 }
