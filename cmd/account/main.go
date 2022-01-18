@@ -15,6 +15,7 @@ import (
 
 const (
 	ServiceName = "Account Service"
+	AuthPrefix  = "auth"
 )
 
 var (
@@ -62,6 +63,7 @@ func main() {
 		envs["REDIS_HOST"],
 		envs["REDIS_PORT"],
 		envs["REDIS_EXPIRE"],
+		AuthPrefix,
 		logger,
 	)
 	if err != nil {

@@ -17,15 +17,17 @@ type Cache struct {
 	Host   string
 	Port   string
 	Expire string
+	Prefix string
 	Logger logger.LogInterface
 }
 
 // NewCache returns an instance of Cache
-func NewCache(host, port, expire string, logger logger.LogInterface) (*Cache, error) {
+func NewCache(host, port, expire, prefix string, logger logger.LogInterface) (*Cache, error) {
 	cache := &Cache{
 		Host:   host,
 		Port:   port,
 		Expire: expire,
+		Prefix: prefix,
 		Logger: logger,
 	}
 
@@ -60,13 +62,13 @@ func (c *Cache) Set(key string, value []byte) error {
 		}
 	}(conn)
 
-	_, err = conn.Do("SET", key, value)
+	_, err = conn.Do("SET", c.parseKey(key), value)
 	if err != nil {
 		c.Logger.Error(err)
 		return err
 	}
 
-	_, err = conn.Do("EXPIRE", key, c.Expire)
+	_, err = conn.Do("EXPIRE", c.parseKey(key), c.Expire)
 	if err != nil {
 		c.Logger.Error(err)
 		return err
@@ -89,7 +91,7 @@ func (c *Cache) Get(key string) ([]byte, error) {
 		}
 	}(conn)
 
-	data, err := redis.Bytes(conn.Do("GET", key))
+	data, err := redis.Bytes(conn.Do("GET", c.parseKey(key)))
 	if err != nil {
 		if err == redis.ErrNil {
 			return nil, nil
@@ -115,6 +117,10 @@ func (c *Cache) Flush(key string) error {
 		}
 	}(conn)
 
-	_, err = conn.Do("DEL", key)
+	_, err = conn.Do("DEL", c.parseKey(key))
 	return err
+}
+
+func (c *Cache) parseKey(key string) string {
+	return fmt.Sprintf("%s_%s", c.Prefix, key)
 }
