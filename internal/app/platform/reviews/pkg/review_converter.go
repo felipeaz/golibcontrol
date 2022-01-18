@@ -11,7 +11,7 @@ func ParseToReviewObj(obj interface{}) (reviews.Review, *errors.ApiError) {
 	if !ok {
 		return reviews.Review{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceReviewObj(obj interface{}) ([]reviews.Review, *errors.ApiError)
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

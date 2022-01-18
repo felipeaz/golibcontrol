@@ -7,7 +7,7 @@ const (
 	UpdateFailMessage                 = "Failed to update data"
 	DeleteFailMessage                 = "Failed to delete data"
 	FailedFieldsAssociationMessage    = "Failed while associating fields from request"
-	FailedToParsetObj                 = "Failed on object conversion"
+	FailedToParseObj                  = "Failed on object conversion"
 	FailedToCreateBookCategoryMessage = "Failed to create book category"
 
 	LendingNotAvailableError              = "lending not available"

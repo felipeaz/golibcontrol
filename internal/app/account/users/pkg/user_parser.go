@@ -25,7 +25,7 @@ func ParseInterfaceToAccount(obj interface{}) (users.Account, *errors.ApiError) 
 	if !ok {
 		return users.Account{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -39,7 +39,7 @@ func ParseInterfaceToSliceAccount(obj interface{}) ([]users.Account, *errors.Api
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

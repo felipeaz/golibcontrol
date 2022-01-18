@@ -11,7 +11,7 @@ func ParseToLendingObj(obj interface{}) (lending.Lending, *errors.ApiError) {
 	if !ok {
 		return lending.Lending{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceLendingObj(obj interface{}) ([]lending.Lending, *errors.ApiErro
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

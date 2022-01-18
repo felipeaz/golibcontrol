@@ -11,7 +11,7 @@ func ParseToReserveObj(obj interface{}) (reserves.Reserve, *errors.ApiError) {
 	if !ok {
 		return reserves.Reserve{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceReserveObj(obj interface{}) ([]reserves.Reserve, *errors.ApiErr
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

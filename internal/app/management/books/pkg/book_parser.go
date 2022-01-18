@@ -11,7 +11,7 @@ func ParseToBookObj(obj interface{}) (books.Book, *errors.ApiError) {
 	if !ok {
 		return books.Book{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceBookObj(obj interface{}) ([]books.Book, *errors.ApiError) {
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

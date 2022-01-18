@@ -11,7 +11,7 @@ func ParseToCategoryObj(obj interface{}) (categories.Category, *errors.ApiError)
 	if !ok {
 		return categories.Category{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceCategoryObj(obj interface{}) ([]categories.Category, *errors.Ap
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

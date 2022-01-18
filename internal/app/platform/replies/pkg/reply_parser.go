@@ -11,7 +11,7 @@ func ParserToReplyObj(obj interface{}) (replies.Reply, *errors.ApiError) {
 	if !ok {
 		return replies.Reply{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParserToSliceReplyObj(obj interface{}) ([]replies.Reply, *errors.ApiError) 
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

@@ -11,7 +11,7 @@ func ParseToCommentObj(obj interface{}) (comments.Comment, *errors.ApiError) {
 	if !ok {
 		return comments.Comment{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceCommentObj(obj interface{}) ([]comments.Comment, *errors.ApiErr
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

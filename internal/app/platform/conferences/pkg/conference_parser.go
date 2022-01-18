@@ -11,7 +11,7 @@ func ParseToConferenceObj(obj interface{}) (conferences.Conference, *errors.ApiE
 	if !ok {
 		return conferences.Conference{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceConferenceObj(obj interface{}) ([]conferences.Conference, *erro
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

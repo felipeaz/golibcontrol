@@ -11,7 +11,7 @@ func ParseToStudentObj(obj interface{}) (students.Student, *errors.ApiError) {
 	if !ok {
 		return students.Student{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceStudentObj(obj interface{}) ([]students.Student, *errors.ApiErr
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

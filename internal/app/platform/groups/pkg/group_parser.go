@@ -11,7 +11,7 @@ func ParseToGroupObj(obj interface{}) (groups.Group, *errors.ApiError) {
 	if !ok {
 		return groups.Group{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil
@@ -25,7 +25,7 @@ func ParseToSliceGroupObj(obj interface{}) ([]groups.Group, *errors.ApiError) {
 	if !ok {
 		return nil, &errors.ApiError{
 			Status:  http.StatusBadRequest,
-			Message: errors.FailedToParsetObj,
+			Message: errors.FailedToParseObj,
 		}
 	}
 	return *data, nil

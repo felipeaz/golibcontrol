@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/app/account/auth/pkg"
-	userpkg "github.com/FelipeAz/golibcontrol/internal/app/account/users/pkg"
+	userPkg "github.com/FelipeAz/golibcontrol/internal/app/account/users/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +20,7 @@ func NewAuthHandler(module auth.Module) AuthHandler {
 
 // Login authenticate the user
 func (h AuthHandler) Login(c *gin.Context) {
-	credentials, apiError := userpkg.ParseAccountEntry(c)
+	credentials, apiError := userPkg.ParseAccountEntry(c)
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)
 		return
