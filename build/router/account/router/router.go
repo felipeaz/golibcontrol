@@ -8,15 +8,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Route(accountHandler accountHandler.AccountHandler, authHandler authHandler.AuthHandler) error {
+type Handlers struct {
+	AccountHandler accountHandler.AccountHandler
+	AuthHandler    authHandler.AuthHandler
+}
+
+func Route(handlers Handlers) error {
 	router := gin.New()
 	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	routes.UserRoutes(vGroup, accountHandler)
-	routes.AuthRoutes(vGroup, authHandler)
+	routes.UserRoutes(vGroup, handlers.AccountHandler)
+	routes.AuthRoutes(vGroup, handlers.AuthHandler)
 
 	return router.Run(":8082")
 }

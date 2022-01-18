@@ -13,25 +13,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Route(
-	cHandler commentHandler.CommentHandler,
-	replHandler replyHandler.ReplyHandler,
-	resHandler reserveHandler.ReserveHandler,
-	revHandler reviewHandler.ReviewHandler,
-	confHandler conferenceHandler.ConferenceHandler,
-	grpHandler groupHandler.GroupHandler) error {
+type Handlers struct {
+	CommentHandler    commentHandler.CommentHandler
+	ReplyHandler      replyHandler.ReplyHandler
+	ReserveHandler    reserveHandler.ReserveHandler
+	ReviewHandler     reviewHandler.ReviewHandler
+	ConferenceHandler conferenceHandler.ConferenceHandler
+	GroupHandler      groupHandler.GroupHandler
+}
+
+func Route(handlers Handlers) error {
 	router := gin.New()
 	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	routes.CommentRoutes(vGroup, cHandler)
-	routes.ReplyRoutes(vGroup, replHandler)
-	routes.ReserveRoutes(vGroup, resHandler)
-	routes.ReviewRoutes(vGroup, revHandler)
-	routes.ConferenceRoutes(vGroup, confHandler)
-	routes.GroupRoutes(vGroup, grpHandler)
+	routes.CommentRoutes(vGroup, handlers.CommentHandler)
+	routes.ReplyRoutes(vGroup, handlers.ReplyHandler)
+	routes.ReserveRoutes(vGroup, handlers.ReserveHandler)
+	routes.ReviewRoutes(vGroup, handlers.ReviewHandler)
+	routes.ConferenceRoutes(vGroup, handlers.ConferenceHandler)
+	routes.GroupRoutes(vGroup, handlers.GroupHandler)
 
 	return router.Run(":8083")
 }

@@ -10,21 +10,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Route(
-	bHandler bookHandler.BookHandler,
-	cHandler categoryHandler.CategoryHandler,
-	sHandler studentHandler.StudentHandler,
-	lHandler lendingHandler.LendingHandler) error {
+type Handlers struct {
+	BookHandler     bookHandler.BookHandler
+	CategoryHandler categoryHandler.CategoryHandler
+	StudentHandler  studentHandler.StudentHandler
+	LendingHandler  lendingHandler.LendingHandler
+}
+
+func Route(handlers Handlers) error {
 	router := gin.New()
 	router.Use(middleware.CORSMiddleware())
 
 	apiRg := router.Group("/api")
 	vGroup := apiRg.Group("/v1")
 
-	routes.BookRoutes(vGroup, bHandler)
-	routes.CategoryRoutes(vGroup, cHandler)
-	routes.StudentRoutes(vGroup, sHandler)
-	routes.LendingRoutes(vGroup, lHandler)
+	routes.BookRoutes(vGroup, handlers.BookHandler)
+	routes.CategoryRoutes(vGroup, handlers.CategoryHandler)
+	routes.StudentRoutes(vGroup, handlers.StudentHandler)
+	routes.LendingRoutes(vGroup, handlers.LendingHandler)
 
 	return router.Run(":8081")
 }

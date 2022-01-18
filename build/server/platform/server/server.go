@@ -26,7 +26,6 @@ import (
 
 // Start initialize the webservice,
 func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (err error) {
-
 	cRepository := commentRepository.NewCommentRepository(dbService)
 	cModule := commentModule.NewCommentModule(cRepository, log)
 	cHandler := commentHandler.NewCommentHandler(cModule)
@@ -51,5 +50,12 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	grpModule := groupModule.NewGroupModule(grpRepository, log)
 	grpHandler := groupHandler.NewGroupHandler(grpModule)
 
-	return router.Route(cHandler, replHandler, resHandler, revHandler, confHandler, grpHandler)
+	return router.Route(router.Handlers{
+		CommentHandler:    cHandler,
+		ReplyHandler:      replHandler,
+		ReserveHandler:    resHandler,
+		ReviewHandler:     revHandler,
+		ConferenceHandler: confHandler,
+		GroupHandler:      grpHandler,
+	})
 }

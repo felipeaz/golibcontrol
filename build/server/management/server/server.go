@@ -37,5 +37,10 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	lModule := lendingModule.NewLendingModule(lRepository, log)
 	lHandler := lendingHandler.NewLendingHandler(lModule)
 
-	return router.Route(bHandler, cHandler, sHandler, lHandler)
+	return router.Route(router.Handlers{
+		BookHandler:     bHandler,
+		CategoryHandler: cHandler,
+		StudentHandler:  sHandler,
+		LendingHandler:  lHandler,
+	})
 }
