@@ -15,6 +15,6 @@ func (s Session) TableName() string {
 }
 
 type Module interface {
-	Login(credentials users.Account) login.Message
-	Logout(session Session) (message login.Message)
+	Login(credentials users.Account) login.Data
+	Logout(session Session) (message login.Data)
 }

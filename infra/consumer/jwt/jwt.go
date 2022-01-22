@@ -9,7 +9,7 @@ import (
 )
 
 // CreateToken generates a JWT Token
-func CreateToken(email, kid, secret string) (string, error) {
+func CreateToken(userId uint, email, kid, secret string) (string, error) {
 	td := model.TokenDetails{
 		AtExpires:  time.Now().Add(time.Minute * 15).Unix(),
 		AccessUuid: uuid.NewV4().String(),
@@ -19,6 +19,7 @@ func CreateToken(email, kid, secret string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss":         kid,
 		"authorized":  true,
+		"user_id":     userId,
 		"email":       email,
 		"access_uuid": td.AccessUuid,
 		"exp":         td.AtExpires,

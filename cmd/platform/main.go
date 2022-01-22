@@ -22,7 +22,6 @@ var (
 		"PLATFORM_DB_PORT":     "",
 		"PLATFORM_DB_DATABASE": "",
 		"LOG_FILE":             "",
-		"KAFKA_BROKER_CONNECT": "",
 	}
 )
 
