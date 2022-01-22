@@ -59,12 +59,14 @@ curl --location --request POST 'http://localhost:8001/services/platform-service/
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'name=jwt' \
 --data-urlencode 'config.secret_is_base64=false' \
+--data-urlencode 'config.claims_to_verify=exp' \
 --data-urlencode 'config.run_on_preflight=true'
 
 curl --location --request POST 'http://localhost:8001/services/management-service/plugins' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'name=jwt' \
 --data-urlencode 'config.secret_is_base64=false' \
+--data-urlencode 'config.claims_to_verify=exp' \
 --data-urlencode 'config.run_on_preflight=true'
 
 curl --location --request POST 'http://localhost:8001/plugins' \
