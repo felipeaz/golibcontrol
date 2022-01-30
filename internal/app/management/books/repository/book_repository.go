@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	registry "github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
 	"github.com/FelipeAz/golibcontrol/internal/app/filters"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/books/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
@@ -22,7 +23,7 @@ func NewBookRepository(db database.GORMServiceInterface) BookRepository {
 
 // Get returns all books from DB.
 func (r BookRepository) Get() ([]books.Book, *errors.ApiError) {
-	tx := r.DB.Preload("BookCategories")
+	tx := r.DB.Preload("BookCategories", "Registry")
 	result, err := r.DB.Find(tx, &[]books.Book{})
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -36,7 +37,7 @@ func (r BookRepository) Get() ([]books.Book, *errors.ApiError) {
 
 // Find return one book from DB by ID.
 func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
-	tx := r.DB.Preload("BookCategories")
+	tx := r.DB.Preload("BookCategories", "Registry")
 	tx = r.DB.Where(tx, fmt.Sprintf("id = %s", id))
 	result, err := r.DB.FindOne(tx, &books.Book{})
 	if err != nil {
@@ -53,11 +54,15 @@ func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
 func (r BookRepository) GetByFilter(filter books.Filter) ([]books.Book, *errors.ApiError) {
 	queryString := filters.BuildQueryFromFilter(filter)
 
-	tx := r.DB.Preload("BookCategories")
+	tx := r.DB.Preload("BookCategories", "Registry")
 	tx = r.DB.Where(tx, queryString)
 	tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
 		books.BookCategories{}.TableName(),
 		books.BookCategories{}.TableName(),
+		books.Book{}.TableName()))
+	tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
+		registry.Registry{}.TableName(),
+		registry.Registry{}.TableName(),
 		books.Book{}.TableName()))
 	tx = r.DB.Group(tx, fmt.Sprintf("%s.id", books.Book{}.TableName()))
 

@@ -1,6 +1,7 @@
 package books
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"gorm.io/gorm"
 	"time"
@@ -8,17 +9,17 @@ import (
 
 // Book contains all Book's table properties.
 type Book struct {
-	ID             uint             `json:"id" gorm:"primarykey"`
-	Title          string           `json:"title"`
-	Author         string           `json:"author"`
-	Description    string           `json:"description"`
-	Image          string           `json:"image"`
-	RegisterNumber string           `json:"registerNumber" gorm:"unique"`
-	Available      bool             `json:"available" gorm:"default:true"`
-	CategoriesId   string           `json:"categoriesId,omitempty" gorm:"->"` // Read Only
-	BookCategories []BookCategories `json:"categories" gorm:"->"`
-	CreatedAt      time.Time        `json:"createdAt"`
-	UpdatedAt      time.Time        `json:"updatedAt"`
+	ID             uint                  `json:"id" gorm:"primarykey"`
+	Title          string                `json:"title"`
+	Author         string                `json:"author"`
+	Description    string                `json:"description"`
+	Image          string                `json:"image"`
+	Available      bool                  `json:"available" gorm:"default:true"`
+	CategoriesId   string                `json:"categoriesId,omitempty" gorm:"->"` // Read Only
+	Registry       []registries.Registry `json:"registries" gorm:"->"`
+	BookCategories []BookCategories      `json:"categories" gorm:"->"`
+	CreatedAt      time.Time             `json:"createdAt"`
+	UpdatedAt      time.Time             `json:"updatedAt"`
 }
 
 func (b Book) TableName() string {
@@ -60,12 +61,13 @@ type CategoryRepository interface {
 }
 
 type Filter struct {
-	Title      string `json:"title,omitempty" column:"books.title" array:"false" like:"true"`
-	Author     string `json:"author,omitempty" column:"books.author" array:"false"`
-	Available  bool   `form:"available" column:"books.available" array:"false"`
-	Categories string `form:"categ,omitempty" column:"book_categories.category_id" array:"true"`
+	Title          string `json:"title,omitempty" column:"books.title" array:"false" like:"true"`
+	Author         string `json:"author,omitempty" column:"books.author" array:"false"`
+	Available      bool   `form:"available" column:"books.available" array:"false"`
+	Categories     string `form:"categ,omitempty" column:"book_categories.category_id" array:"true"`
+	RegistryNumber string `form:"reg,omitempty" column:"book_registry_numbers.registry_number" array:"true"`
 }
 
 func (f Filter) GetFieldNames() []string {
-	return []string{"Title", "Author", "Categories", "Available"}
+	return []string{"Title", "Author", "Categories", "Available", "RegistryNumber"}
 }
