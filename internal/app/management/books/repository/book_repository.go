@@ -3,11 +3,10 @@ package repository
 import (
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	"github.com/FelipeAz/golibcontrol/internal/app/filters"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/books/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
-	"reflect"
-	"strings"
 )
 
 // BookRepository is responsible for getting/saving information from DB.
@@ -52,7 +51,7 @@ func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
 
 // GetByFilter return books from query string.
 func (r BookRepository) GetByFilter(filter books.Filter) ([]books.Book, *errors.ApiError) {
-	queryString := r.buildQueryFromFilter(filter)
+	queryString := filters.BuildQueryFromFilter(filter)
 
 	tx := r.DB.Preload("BookCategories")
 	tx = r.DB.Where(tx, queryString)
@@ -120,30 +119,4 @@ func (r BookRepository) Delete(id string) *errors.ApiError {
 		}
 	}
 	return nil
-}
-
-func (r BookRepository) buildQueryFromFilter(filter books.Filter) string {
-	var query []string
-	// reflect allows accessing type metadata (ex: struct tags)
-	fields := reflect.TypeOf(filter)
-	for _, name := range filter.GetFieldNames() {
-		field, ok := fields.FieldByName(name)
-		if !ok {
-			continue
-		}
-		fieldValue := reflect.ValueOf(filter).FieldByName(name)
-		if !fieldValue.IsZero() {
-			var qs string
-			switch {
-			case field.Tag.Get("array") == "true":
-				qs = fmt.Sprintf("%s IN (%v)", field.Tag.Get("column"), fieldValue.Interface())
-			case field.Tag.Get("like") == "true":
-				qs = fmt.Sprintf("%s LIKE '%s%v%s'", field.Tag.Get("column"), "%", fieldValue.Interface(), "%")
-			default:
-				qs = fmt.Sprintf("%s = '%v'", field.Tag.Get("column"), fieldValue.Interface())
-			}
-			query = append(query, qs)
-		}
-	}
-	return strings.Join(query, " AND ")
 }

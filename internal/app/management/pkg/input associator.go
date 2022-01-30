@@ -4,6 +4,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"net/http"
@@ -30,6 +31,20 @@ func AssociateCategoryInput(c *gin.Context) (category categories.Category, apiEr
 	err := c.ShouldBindJSON(&category)
 	if err != nil {
 		return categories.Category{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
+// AssociateRegistryInput is responsible for associating the params to the registry model.
+func AssociateRegistryInput(c *gin.Context) (registry registries.Registry, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&registry)
+	if err != nil {
+		return registries.Registry{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

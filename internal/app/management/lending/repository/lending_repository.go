@@ -3,12 +3,11 @@ package repository
 import (
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	"github.com/FelipeAz/golibcontrol/internal/app/filters"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/lending/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
-	"reflect"
 	"strconv"
-	"strings"
 )
 
 // LendingRepository is responsible for getting/saving information from DB.
@@ -38,7 +37,7 @@ func (r LendingRepository) Get() ([]lending.Lending, *errors.ApiError) {
 
 // GetByFilter returns all lendings.
 func (r LendingRepository) GetByFilter(filter lending.Filter) ([]lending.Lending, *errors.ApiError) {
-	queryString := r.buildQueryFromFilter(filter)
+	queryString := filters.BuildQueryFromFilter(filter)
 	tx := r.DB.Where(nil, queryString)
 	result, err := r.DB.Find(tx, &[]lending.Lending{})
 	if err != nil {
@@ -133,28 +132,4 @@ func (r LendingRepository) beforeCreate(studentId, bookId uint) *errors.ApiError
 		}
 	}
 	return nil
-}
-
-func (r LendingRepository) buildQueryFromFilter(filter lending.Filter) string {
-	var query []string
-	// reflect allows accessing type metadata (ex: struct tags)
-	fields := reflect.TypeOf(filter)
-	for _, name := range filter.GetFieldNames() {
-		field, ok := fields.FieldByName(name)
-		if !ok {
-			continue
-		}
-		fieldValue := reflect.ValueOf(filter).FieldByName(name)
-		if !fieldValue.IsZero() {
-			var qs string
-			switch field.Tag.Get("array") {
-			case "true":
-				qs = fmt.Sprintf("%s IN (%v)", field.Tag.Get("column"), fieldValue.Interface())
-			default:
-				qs = fmt.Sprintf("%s = '%v'", field.Tag.Get("column"), fieldValue.Interface())
-			}
-			query = append(query, qs)
-		}
-	}
-	return strings.Join(query, " AND ")
 }
