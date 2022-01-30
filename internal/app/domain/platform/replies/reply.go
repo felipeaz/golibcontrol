@@ -6,7 +6,7 @@ import (
 )
 
 type Reply struct {
-	ID        uint      `json:"id" gorm:"primarykey"`
+	ID        uint      `json:"id" gorm:"primaryKey"`
 	CommentId uint      `json:"commentId" gorm:"unique"`
 	UserId    uint      `json:"userId" binding:"required"`
 	Text      string    `json:"text" binding:"required"`

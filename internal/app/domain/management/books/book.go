@@ -1,15 +1,15 @@
 package books
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
 	"time"
 )
 
 // Book contains all Book's table properties.
 type Book struct {
-	ID             uint                  `json:"id" gorm:"primarykey"`
+	ID             uint                  `json:"id" gorm:"primaryKey"`
 	Title          string                `json:"title"`
 	Author         string                `json:"author"`
 	Description    string                `json:"description"`
@@ -45,10 +45,12 @@ type Repository interface {
 }
 
 type BookCategories struct {
-	gorm.Model
-	BookID     uint `json:"bookId" gorm:"not null"`
-	CategoryID uint `json:"categoryId" gorm:"not null"`
-	//Category   []categories.Category `json:"data" gorm:"->,foreignKey:ID;references:CategoryID"`
+	ID         uint                `json:"id" gorm:"primaryKey"`
+	BookID     uint                `json:"bookId" gorm:"not null"`
+	CategoryID uint                `json:"categoryId" gorm:"not null"`
+	Category   categories.Category `json:"info" gorm:"->"`
+	CreatedAt  time.Time           `json:"createdAt"`
+	UpdatedAt  time.Time           `json:"updatedAt"`
 }
 
 func (bc BookCategories) TableName() string {

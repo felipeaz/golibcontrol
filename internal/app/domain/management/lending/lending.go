@@ -7,7 +7,7 @@ import (
 
 // Lending contains all Lending's table properties.
 type Lending struct {
-	ID        uint      `json:"id" gorm:"primarykey"`
+	ID        uint      `json:"id" gorm:"primaryKey"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 	BookID    uint      `json:"bookId" binding:"required" gorm:"unique"`

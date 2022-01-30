@@ -23,7 +23,7 @@ func NewBookRepository(db database.GORMServiceInterface) BookRepository {
 
 // Get returns all books from DB.
 func (r BookRepository) Get() ([]books.Book, *errors.ApiError) {
-	tx := r.DB.Preload("BookCategories", "Registry")
+	tx := r.DB.Preload("BookCategories", "BookCategories.Category", "Registry")
 	result, err := r.DB.Find(tx, &[]books.Book{})
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -37,7 +37,7 @@ func (r BookRepository) Get() ([]books.Book, *errors.ApiError) {
 
 // Find return one book from DB by ID.
 func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
-	tx := r.DB.Preload("BookCategories", "Registry")
+	tx := r.DB.Preload("BookCategories", "BookCategories.Category", "Registry")
 	tx = r.DB.Where(tx, fmt.Sprintf("id = %s", id))
 	result, err := r.DB.FindOne(tx, &books.Book{})
 	if err != nil {
@@ -54,7 +54,7 @@ func (r BookRepository) Find(id string) (books.Book, *errors.ApiError) {
 func (r BookRepository) GetByFilter(filter books.Filter) ([]books.Book, *errors.ApiError) {
 	queryString := filters.BuildQueryFromFilter(filter)
 
-	tx := r.DB.Preload("BookCategories", "Registry")
+	tx := r.DB.Preload("BookCategories", "BookCategories.Category", "Registry")
 	tx = r.DB.Where(tx, queryString)
 	tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
 		books.BookCategories{}.TableName(),

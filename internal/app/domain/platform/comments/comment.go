@@ -6,7 +6,7 @@ import (
 )
 
 type Comment struct {
-	ID        uint      `json:"id" gorm:"primarykey"`
+	ID        uint      `json:"id" gorm:"primaryKey"`
 	BookId    uint      `json:"bookId" binding:"required"`
 	UserId    uint      `json:"userId" binding:"required"`
 	Text      string    `json:"text" binding:"required"`

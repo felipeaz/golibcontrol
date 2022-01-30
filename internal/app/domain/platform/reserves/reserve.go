@@ -6,7 +6,7 @@ import (
 )
 
 type Reserve struct {
-	ID         uint      `json:"id" gorm:"primarykey"`
+	ID         uint      `json:"id" gorm:"primaryKey"`
 	BookId     uint      `json:"bookId" gorm:"unique"`
 	UserId     uint      `json:"userId" gorm:"unique"`
 	RetrieveAt time.Time `json:"retrieveAt"`

@@ -23,7 +23,11 @@ func NewRegistryHandler(module registries.Module) RegistryHandler {
 // Get returns all registries.
 func (h RegistryHandler) Get(c *gin.Context) {
 	var params registries.Filter
-	if err := c.Bind(&params); err == nil {
+	err := c.Bind(&params)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "invalid parameters")
+	}
+	if params != (registries.Filter{}) {
 		resp, apiError := h.Module.GetByFilter(params)
 		if apiError != nil {
 			c.JSON(apiError.Status, apiError)

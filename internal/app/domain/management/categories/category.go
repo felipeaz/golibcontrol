@@ -7,7 +7,7 @@ import (
 
 // Category contains all Category's table properties.
 type Category struct {
-	ID          uint      `json:"id" gorm:"primarykey"`
+	ID          uint      `json:"id" gorm:"primaryKey"`
 	Name        string    `json:"name" binding:"required"`
 	Description string    `json:"description"`
 	Image       string    `json:"image"`

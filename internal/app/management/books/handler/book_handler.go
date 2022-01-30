@@ -23,7 +23,11 @@ func NewBookHandler(module books.Module) BookHandler {
 // Get returns all books.
 func (h BookHandler) Get(c *gin.Context) {
 	var params books.Filter
-	if err := c.Bind(&params); err == nil {
+	err := c.Bind(&params)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "invalid parameters")
+	}
+	if params != (books.Filter{}) {
 		resp, apiError := h.Module.GetByFilter(params)
 		if apiError != nil {
 			c.JSON(apiError.Status, apiError)

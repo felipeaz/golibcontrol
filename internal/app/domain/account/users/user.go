@@ -7,7 +7,7 @@ import (
 
 // Account contains all Account's table properties.
 type Account struct {
-	ID             uint      `json:"id" gorm:"primarykey"`
+	ID             uint      `json:"id" gorm:"primaryKey"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 	ConsumerId     string    `json:"consumerId" gorm:"not null"`

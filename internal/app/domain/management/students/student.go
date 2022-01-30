@@ -8,7 +8,7 @@ import (
 
 // Student contains all Student's table properties.
 type Student struct {
-	ID        uint      `json:"id" gorm:"primarykey"`
+	ID        uint      `json:"id" gorm:"primaryKey"`
 	Name      string    `json:"name" binding:"required"`
 	Email     string    `json:"email" binding:"required"`
 	Password  string    `json:"password" binding:"required"`

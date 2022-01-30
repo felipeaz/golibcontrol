@@ -12,7 +12,7 @@ import (
 //)
 
 type Conference struct {
-	ID          uint      `json:"id" gorm:"primarykey"`
+	ID          uint      `json:"id" gorm:"primaryKey"`
 	Subject     string    `json:"subject" binding:"required"`
 	StartDate   time.Time `json:"startDate" binding:"required" time_format:"2006-01-02 15:04:05"`
 	EndDate     time.Time `json:"endDate" binding:"required" time_format:"2006-01-02 15:04:05"`
