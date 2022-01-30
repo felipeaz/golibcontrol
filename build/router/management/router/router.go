@@ -6,6 +6,7 @@ import (
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/management/books/handler"
 	categoryHandler "github.com/FelipeAz/golibcontrol/internal/app/management/categories/handler"
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/management/lending/handler"
+	registryHandler "github.com/FelipeAz/golibcontrol/internal/app/management/registries/handler"
 	studentHandler "github.com/FelipeAz/golibcontrol/internal/app/management/students/handler"
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +16,7 @@ type Handlers struct {
 	CategoryHandler categoryHandler.CategoryHandler
 	StudentHandler  studentHandler.StudentHandler
 	LendingHandler  lendingHandler.LendingHandler
+	RegistryHandler registryHandler.RegistryHandler
 }
 
 func Route(handlers Handlers) error {
@@ -28,6 +30,7 @@ func Route(handlers Handlers) error {
 	routes.CategoryRoutes(vGroup, handlers.CategoryHandler)
 	routes.StudentRoutes(vGroup, handlers.StudentHandler)
 	routes.LendingRoutes(vGroup, handlers.LendingHandler)
+	routes.RegistryRoutes(vGroup, handlers.RegistryHandler)
 
 	return router.Run(":8081")
 }

@@ -11,6 +11,9 @@ import (
 	lendingHandler "github.com/FelipeAz/golibcontrol/internal/app/management/lending/handler"
 	lendingModule "github.com/FelipeAz/golibcontrol/internal/app/management/lending/module"
 	lendingRepository "github.com/FelipeAz/golibcontrol/internal/app/management/lending/repository"
+	registryHandler "github.com/FelipeAz/golibcontrol/internal/app/management/registries/handler"
+	registryModule "github.com/FelipeAz/golibcontrol/internal/app/management/registries/module"
+	registryRepository "github.com/FelipeAz/golibcontrol/internal/app/management/registries/repository"
 	studentHandler "github.com/FelipeAz/golibcontrol/internal/app/management/students/handler"
 	studentModule "github.com/FelipeAz/golibcontrol/internal/app/management/students/module"
 	studentRepository "github.com/FelipeAz/golibcontrol/internal/app/management/students/repository"
@@ -29,6 +32,10 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	cModule := categoryModule.NewCategoryModule(cRepository, log)
 	cHandler := categoryHandler.NewCategoryHandler(cModule)
 
+	rRepository := registryRepository.NewRegistryRepository(dbService)
+	rModule := registryModule.NewRegistryModule(rRepository, log)
+	rHandler := registryHandler.NewRegistryHandler(rModule)
+
 	sRepository := studentRepository.NewStudentRepository(dbService)
 	sModule := studentModule.NewStudentModule(sRepository, log)
 	sHandler := studentHandler.NewStudentHandler(sModule)
@@ -42,5 +49,6 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 		CategoryHandler: cHandler,
 		StudentHandler:  sHandler,
 		LendingHandler:  lHandler,
+		RegistryHandler: rHandler,
 	})
 }

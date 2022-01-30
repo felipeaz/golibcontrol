@@ -5,6 +5,7 @@ import (
 	bookModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	categoryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	lendingModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
+	registryModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
 	studentModel "github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"log"
 
@@ -56,5 +57,6 @@ func (db *DBHandler) autoMigrateTables() error {
 		&bookModel.Book{},
 		&bookModel.BookCategories{},
 		&lendingModel.Lending{},
+		&registryModel.Registry{},
 	)
 }

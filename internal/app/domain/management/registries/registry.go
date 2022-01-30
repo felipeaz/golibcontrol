@@ -2,13 +2,15 @@ package registries
 
 import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Registry struct {
-	gorm.Model
-	BookID         uint `json:"bookId" gorm:"not null"`
-	RegistryNumber int  `json:"registryNumber" gorm:"not null"`
+	ID             uint      `json:"id" gorm:"primarykey"`
+	BookID         uint      `json:"bookId" gorm:"not null"`
+	RegistryNumber int       `json:"registryNumber" gorm:"not null"`
+	CreatedAt      time.Time `json:"createdAt"`
+	UpdatedAt      time.Time `json:"updatedAt"`
 }
 
 func (brn Registry) TableName() string {
@@ -16,8 +18,8 @@ func (brn Registry) TableName() string {
 }
 
 type Filter struct {
-	BookID         string `json:"bookId,omitempty" column:"book_registry_numbers.book_id" array:"false"`
-	RegistryNumber string `json:"registryNumber,omitempty" column:"book_registry_numbers.registry_number" array:"false"`
+	BookID         string `form:"bookId,omitempty" column:"book_registry_numbers.book_id" array:"false"`
+	RegistryNumber string `form:"registryNumber,omitempty" column:"book_registry_numbers.registry_number" array:"false"`
 }
 
 func (f Filter) GetFieldNames() []string {

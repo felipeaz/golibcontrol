@@ -2,7 +2,6 @@ package repository
 
 import (
 	"fmt"
-	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
 	"github.com/FelipeAz/golibcontrol/internal/app/filters"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/registries/pkg"
@@ -38,15 +37,8 @@ func (r RegistryRepository) Get() ([]registries.Registry, *errors.ApiError) {
 func (r RegistryRepository) GetByFilter(filter registries.Filter) ([]registries.Registry, *errors.ApiError) {
 	queryString := filters.BuildQueryFromFilter(filter)
 
-	tx := r.DB.Preload("BookCategories")
-	tx = r.DB.Where(tx, queryString)
-	tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
-		books.BookCategories{}.TableName(),
-		books.BookCategories{}.TableName(),
-		books.Book{}.TableName()))
-	tx = r.DB.Group(tx, fmt.Sprintf("%s.id", books.Book{}.TableName()))
-
-	result, err := r.DB.Find(tx, &[]books.Book{})
+	tx := r.DB.Where(nil, queryString)
+	result, err := r.DB.Find(tx, &[]registries.Registry{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
