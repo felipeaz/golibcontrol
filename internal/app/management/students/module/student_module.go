@@ -36,7 +36,13 @@ func (m StudentModule) Find(id string) (students.Student, *errors.ApiError) {
 }
 
 // Create persist a student to the database.
-func (m StudentModule) Create(student students.Student, accountHost, accountRoute, tokenName, tokenValue string) (*students.Student, *errors.ApiError) {
+func (m StudentModule) Create(
+	student students.Student,
+	accountHost,
+	accountRoute,
+	tokenName,
+	tokenValue string) (*students.Student, *errors.ApiError) {
+
 	accountId, apiError := m.createAccountOnAccountService(student, accountHost, accountRoute, tokenName, tokenValue)
 	if apiError != nil {
 		return nil, apiError
@@ -55,7 +61,13 @@ func (m StudentModule) Delete(id string) *errors.ApiError {
 	return m.Repository.Delete(id)
 }
 
-func (m StudentModule) createAccountOnAccountService(student students.Student, host, route, tokenName, tokenValue string) (uint, *errors.ApiError) {
+func (m StudentModule) createAccountOnAccountService(
+	student students.Student,
+	host,
+	route,
+	tokenName,
+	tokenValue string) (uint, *errors.ApiError) {
+
 	studentBody := pkg.ParseStudentToStudentAccount(student)
 	body, err := json.Marshal(studentBody)
 	if err != nil {

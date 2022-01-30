@@ -13,7 +13,12 @@ import (
 )
 
 // Start initialize the webservice,
-func Start(dbService database.GORMServiceInterface, cache database.Cache, consumersService consumer.Interface, log logger.LogInterface) (err error) {
+func Start(
+	dbService database.GORMServiceInterface,
+	cache database.Cache,
+	consumersService consumer.Interface,
+	log logger.LogInterface) (err error) {
+
 	accRepository := accountRepository.NewAccountRepository(dbService)
 	accModule := accountModule.NewAccountModule(accRepository, consumersService, cache, log)
 	accHandler := accountHandler.NewAccountHandler(accModule)
