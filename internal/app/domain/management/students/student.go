@@ -9,12 +9,12 @@ import (
 // Student contains all Student's table properties.
 type Student struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name" binding:"required"`
-	Email     string    `json:"email" binding:"required"`
-	Password  string    `json:"password" binding:"required"`
-	Phone     string    `json:"phone" binding:"required"`
-	Grade     string    `json:"grade" binding:"required"`
-	Birthday  string    `json:"birthday" binding:"required"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Password  string    `json:"password"`
+	Phone     string    `json:"phone"`
+	Grade     string    `json:"grade"`
+	Birthday  string    `json:"birthday"`
 	AccountId uint      `json:"accountId" gorm:"index;unique;not null"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`

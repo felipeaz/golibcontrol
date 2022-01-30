@@ -1,17 +1,21 @@
 package lending
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"time"
 )
 
 // Lending contains all Lending's table properties.
 type Lending struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	BookID    uint      `json:"bookId" binding:"required" gorm:"unique"`
-	StudentID uint      `json:"studentId" binding:"required" gorm:"unique"`
+	ID        uint             `json:"id" gorm:"primaryKey"`
+	CreatedAt time.Time        `json:"createdAt"`
+	UpdatedAt time.Time        `json:"updatedAt"`
+	BookID    uint             `json:"bookID" binding:"required" gorm:"unique"`
+	Book      books.Book       `json:"book,omitempty" gorm:"->"`
+	StudentID uint             `json:"studentID" binding:"required" gorm:"unique"`
+	Student   students.Student `json:"student,omitempty" gorm:"->"`
 }
 
 func (l Lending) TableName() string {

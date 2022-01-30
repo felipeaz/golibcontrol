@@ -4,26 +4,39 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/categories"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"gorm.io/gorm"
 	"time"
 )
 
 // Book contains all Book's table properties.
 type Book struct {
-	ID             uint                  `json:"id" gorm:"primaryKey"`
-	Title          string                `json:"title"`
-	Author         string                `json:"author"`
-	Description    string                `json:"description"`
-	Image          string                `json:"image"`
-	Available      bool                  `json:"available" gorm:"default:true"`
-	CategoriesId   string                `json:"categoriesId,omitempty" gorm:"->"` // Read Only
-	Registry       []registries.Registry `json:"registries" gorm:"->"`
-	BookCategories []BookCategories      `json:"categories" gorm:"->"`
-	CreatedAt      time.Time             `json:"createdAt"`
-	UpdatedAt      time.Time             `json:"updatedAt"`
+	ID              uint                  `json:"id" gorm:"primaryKey"`
+	Title           string                `json:"title"`
+	Author          string                `json:"author"`
+	Description     string                `json:"description"`
+	Image           string                `json:"image"`
+	Available       bool                  `json:"available" gorm:"default:true"`
+	CategoriesId    string                `json:"categoriesId,omitempty" gorm:"->"` // Read Only
+	Registry        []registries.Registry `json:"registries" gorm:"->"`
+	BookCategories  []BookCategories      `json:"categories" gorm:"->"`
+	AvailableCopies int                   `json:"availableCopies" gorm:"->"`
+	CreatedAt       time.Time             `json:"createdAt"`
+	UpdatedAt       time.Time             `json:"updatedAt"`
 }
 
 func (b Book) TableName() string {
 	return "books"
+}
+
+func (b *Book) AfterFind(tx *gorm.DB) error {
+	copies := 0
+	for _, c := range b.Registry {
+		if c.Available {
+			copies++
+		}
+	}
+	b.AvailableCopies = copies
+	return nil
 }
 
 type Module interface {

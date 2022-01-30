@@ -23,7 +23,8 @@ func NewLendingRepository(db database.GORMServiceInterface) LendingRepository {
 
 // Get returns all lendings.
 func (r LendingRepository) Get() ([]lending.Lending, *errors.ApiError) {
-	result, err := r.DB.Find(nil, &[]lending.Lending{})
+	tx := r.DB.Preload("Book", "Student")
+	result, err := r.DB.Find(tx, &[]lending.Lending{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -38,7 +39,8 @@ func (r LendingRepository) Get() ([]lending.Lending, *errors.ApiError) {
 // GetByFilter returns all lendings.
 func (r LendingRepository) GetByFilter(filter lending.Filter) ([]lending.Lending, *errors.ApiError) {
 	queryString := filters.BuildQueryFromFilter(filter)
-	tx := r.DB.Where(nil, queryString)
+	tx := r.DB.Preload("Book", "Student")
+	tx = r.DB.Where(tx, queryString)
 	result, err := r.DB.Find(tx, &[]lending.Lending{})
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -53,7 +55,8 @@ func (r LendingRepository) GetByFilter(filter lending.Filter) ([]lending.Lending
 
 // Find return one lending from DB by ID.
 func (r LendingRepository) Find(id string) (lending.Lending, *errors.ApiError) {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	tx := r.DB.Preload("Book", "Student")
+	tx = r.DB.Where(nil, fmt.Sprintf("id = %s", id))
 	result, err := r.DB.FindOne(tx, &lending.Lending{})
 	if err != nil {
 		return lending.Lending{}, &errors.ApiError{

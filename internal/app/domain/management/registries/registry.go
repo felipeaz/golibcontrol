@@ -8,7 +8,7 @@ import (
 type Registry struct {
 	ID             uint      `json:"id" gorm:"primaryKey"`
 	BookID         uint      `json:"bookId" gorm:"not null"`
-	RegistryNumber int       `json:"registryNumber" gorm:"not null"`
+	RegistryNumber int       `json:"registryNumber" gorm:"not null;unique"`
 	Available      bool      `json:"available"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
