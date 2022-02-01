@@ -112,8 +112,9 @@ func (r LendingRepository) Update(id string, upLending lending.Lending) *errors.
 
 // Delete delete an existent lending from DB.
 func (r LendingRepository) Delete(id string) *errors.ApiError {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
-	err := r.DB.Remove(tx, &lending.Lending{})
+	var l lending.Lending
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id)).First(&l)
+	err := r.DB.Remove(tx, &l)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

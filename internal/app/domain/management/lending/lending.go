@@ -30,20 +30,27 @@ func (l Lending) TableName() string {
 	return "lending"
 }
 
+func (l *Lending) BeforeDelete(tx *gorm.DB) error {
+	l.updateRegistry(tx, true)
+	return nil
+}
+
 func (l *Lending) BeforeCreate(tx *gorm.DB) error {
-	rows := tx.Model(&registries.Registry{}).
-		Where("registry_number = ? AND available = true", l.RegistryNumber).
-		RowsAffected
-	if rows == 0 {
+	res := tx.Find(&registries.Registry{}, "registry_number = ? AND available = ?", l.RegistryNumber, true)
+	if res.RowsAffected == 0 {
 		return BookUnavailableError
 	}
 	return nil
 }
 
 func (l *Lending) AfterCreate(tx *gorm.DB) error {
-	tx.Model(&registries.Registry{}).Where("registry_number = ?", l.RegistryNumber).
-		Update("available", false)
+	l.updateRegistry(tx, false)
 	return nil
+}
+
+func (l *Lending) updateRegistry(tx *gorm.DB, availability bool) {
+	tx.Model(&registries.Registry{}).Where("registry_number = ?", l.RegistryNumber).
+		Update("available", availability)
 }
 
 type Filter struct {
