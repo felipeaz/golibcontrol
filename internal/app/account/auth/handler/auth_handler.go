@@ -27,7 +27,7 @@ func (h AuthHandler) Login(c *gin.Context) {
 	}
 	authData := h.Module.Login(credentials)
 	c.Header("token", authData.Token)
-	c.JSON(authData.Status, authData)
+	c.JSON(authData.Status, gin.H{"data": authData, "token": authData.Token})
 }
 
 // Logout authenticate the user
