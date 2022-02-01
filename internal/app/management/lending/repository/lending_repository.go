@@ -1,12 +1,14 @@
 package repository
 
 import (
+	errorsx "errors"
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/lending"
 	"github.com/FelipeAz/golibcontrol/internal/app/filters"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/lending/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
+	"net/http"
 	"strconv"
 )
 
@@ -69,13 +71,21 @@ func (r LendingRepository) Find(id string) (lending.Lending, *errors.ApiError) {
 }
 
 // Create persist a lending to the DB.
-func (r LendingRepository) Create(lending lending.Lending) (*lending.Lending, *errors.ApiError) {
-	apiError := r.beforeCreate(lending.StudentID, lending.BookID)
+func (r LendingRepository) Create(lendObj lending.Lending) (*lending.Lending, *errors.ApiError) {
+	apiError := r.beforeCreate(lendObj.StudentID, lendObj.BookID)
 	if apiError != nil {
 		return nil, apiError
 	}
-	err := r.DB.Persist(&lending)
+	err := r.DB.Persist(&lendObj)
 	if err != nil {
+		if errorsx.Is(err, lending.BookUnavailableError) {
+			return nil, &errors.ApiError{
+				Status:  http.StatusConflict,
+				Message: errors.CreateFailMessage,
+				Error:   err.Error(),
+			}
+		}
+
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.CreateFailMessage,
@@ -83,7 +93,7 @@ func (r LendingRepository) Create(lending lending.Lending) (*lending.Lending, *e
 		}
 	}
 
-	return &lending, nil
+	return &lendObj, nil
 }
 
 // Update update an existent lending.
