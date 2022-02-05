@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/FelipeAz/golibcontrol/build/router/management/router"
+	"github.com/FelipeAz/golibcontrol/build/server/management/grpc"
 	bookHandler "github.com/FelipeAz/golibcontrol/internal/app/management/books/handler"
 	bookModule "github.com/FelipeAz/golibcontrol/internal/app/management/books/module"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/books/repository"
@@ -43,6 +44,13 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	lRepository := lendingRepository.NewLendingRepository(dbService)
 	lModule := lendingModule.NewLendingModule(lRepository, log)
 	lHandler := lendingHandler.NewLendingHandler(lModule)
+
+	go func() {
+		err = grpc.Start(rModule)
+		if err != nil {
+			panic(err)
+		}
+	}()
 
 	return router.Route(router.Handlers{
 		BookHandler:     bHandler,

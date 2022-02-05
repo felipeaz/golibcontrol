@@ -13,5 +13,6 @@ type GORMServiceInterface interface {
 	Join(tx *gorm.DB, join ...string) *gorm.DB
 	Group(tx *gorm.DB, group ...string) *gorm.DB
 	Where(tx *gorm.DB, where string) *gorm.DB
+	GetTx() *gorm.DB
 	GetErrorStatusCode(err error) int
 }

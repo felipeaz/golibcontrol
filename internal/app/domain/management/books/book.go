@@ -15,7 +15,7 @@ type Book struct {
 	Author          string                `json:"author"`
 	Description     string                `json:"description"`
 	Image           string                `json:"image"`
-	Available       bool                  `json:"available" gorm:"default:true"`
+	Available       bool                  `json:"available" gorm:"default:false"`
 	CategoriesId    string                `json:"categoriesId,omitempty" gorm:"->"` // Read Only
 	Registry        []registries.Registry `json:"registries" gorm:"->"`
 	BookCategories  []BookCategories      `json:"categories" gorm:"->"`

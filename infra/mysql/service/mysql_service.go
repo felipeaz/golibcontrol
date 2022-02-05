@@ -128,6 +128,10 @@ func (s MySQLService) Where(tx *gorm.DB, where string) *gorm.DB {
 	return tx.Where(where)
 }
 
+func (s MySQLService) GetTx() *gorm.DB {
+	return s.DB
+}
+
 func (s MySQLService) GetErrorStatusCode(err error) int {
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):

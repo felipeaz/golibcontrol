@@ -171,5 +171,8 @@ POSTGRESQL is the Api Gateway Database
 # Tests
 The tests can be executed using the command `make tests`
 
+# GRPC
+protoc --proto_path=internal/app/plugins/protofiles --go_out=internal/app/plugins/grpc --go_opt=paths=source_relative reserve.proto
+
 # API
 (Documentation soon)

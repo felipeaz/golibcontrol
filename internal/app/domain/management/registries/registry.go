@@ -6,11 +6,10 @@ import (
 )
 
 type Registry struct {
-	ID             uint      `json:"id" gorm:"primaryKey"`
+	RegistryNumber int       `json:"registryNumber" gorm:"primaryKey;not null;unique"`
 	BookID         uint      `json:"bookId" gorm:"not null"`
-	RegistryNumber int       `json:"registryNumber" gorm:"not null;unique"`
-	Available      bool      `json:"available"`
-	Reserved       bool      `json:"reserved"`
+	Available      bool      `json:"available" gorm:"default:false"`
+	Reserved       bool      `json:"reserved" gorm:"default:false"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 }

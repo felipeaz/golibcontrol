@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "./internal/app/plugins/grpc";
+
+service Reserve {
+  rpc Reserve(ReserveRequest) returns (ReserveResponse) {}
+}
+
+message ReserveRequest {
+  string registryNumber = 1;
+  bool   deleted = 2;
+}
+
+message ReserveResponse {
+  bool reserved = 1;
+}

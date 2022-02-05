@@ -51,7 +51,7 @@ func (r RegistryRepository) GetByFilter(filter registries.Filter) ([]registries.
 
 // Find return one registry from DB by ID.
 func (r RegistryRepository) Find(id string) (registries.Registry, *errors.ApiError) {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	tx := r.DB.Where(nil, fmt.Sprintf("registry_number = %s", id))
 	result, err := r.DB.FindOne(tx, &registries.Registry{})
 	if err != nil {
 		return registries.Registry{}, &errors.ApiError{
@@ -78,7 +78,7 @@ func (r RegistryRepository) Create(registry registries.Registry) (*registries.Re
 
 // Update update an existent registry.
 func (r RegistryRepository) Update(id string, upRegistry registries.Registry) *errors.ApiError {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	tx := r.DB.Where(nil, fmt.Sprintf("registry_number = %s", id))
 	err := r.DB.Refresh(tx, &upRegistry)
 	if err != nil {
 		return &errors.ApiError{
@@ -92,7 +92,7 @@ func (r RegistryRepository) Update(id string, upRegistry registries.Registry) *e
 
 // Delete an existent registry from DB.
 func (r RegistryRepository) Delete(id string) *errors.ApiError {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	tx := r.DB.Where(nil, fmt.Sprintf("registry_number = %s", id))
 	err := r.DB.Remove(tx, &registries.Registry{})
 	if err != nil {
 		return &errors.ApiError{

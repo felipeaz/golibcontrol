@@ -6,6 +6,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/reserves/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
+	"gorm.io/gorm"
 )
 
 type ReserveRepository struct {
@@ -44,7 +45,14 @@ func (r ReserveRepository) Find(id string) (reserves.Reserve, *errors.ApiError) 
 }
 
 func (r ReserveRepository) Create(reserve reserves.Reserve) (*reserves.Reserve, *errors.ApiError) {
-	err := r.DB.Persist(&reserve)
+	tx := r.DB.GetTx()
+	err := tx.Transaction(func(tx *gorm.DB) error {
+		txErr := r.DB.Persist(&reserve)
+		if txErr != nil {
+			return txErr
+		}
+		return nil
+	})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
