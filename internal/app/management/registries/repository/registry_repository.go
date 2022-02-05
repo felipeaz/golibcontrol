@@ -87,6 +87,22 @@ func (r RegistryRepository) Update(id string, upRegistry registries.Registry) *e
 			Error:   err.Error(),
 		}
 	}
+	err = r.DB.Set(tx, &upRegistry, "available", upRegistry.Available)
+	if err != nil {
+		return &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	err = r.DB.Set(tx, &upRegistry, "reserved", upRegistry.Reserved)
+	if err != nil {
+		return &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
 	return nil
 }
 

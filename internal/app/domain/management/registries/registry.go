@@ -8,13 +8,13 @@ import (
 type Registry struct {
 	RegistryNumber int       `json:"registryNumber" gorm:"primaryKey;not null;unique"`
 	BookID         uint      `json:"bookId" gorm:"not null"`
-	Available      bool      `json:"available" gorm:"default:false"`
+	Available      bool      `json:"available" gorm:"default:true"`
 	Reserved       bool      `json:"reserved" gorm:"default:false"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 }
 
-func (brn Registry) TableName() string {
+func (r Registry) TableName() string {
 	return "book_registry_numbers"
 }
 

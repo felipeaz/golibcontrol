@@ -83,6 +83,14 @@ func (r AccountRepository) Update(id string, upAccount users.Account) *errors.Ap
 			Error:   err.Error(),
 		}
 	}
+	err = r.DB.Set(tx, &upAccount, "student_account", upAccount.StudentAccount)
+	if err != nil {
+		return &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.UpdateFailMessage,
+			Error:   err.Error(),
+		}
+	}
 	return nil
 }
 
