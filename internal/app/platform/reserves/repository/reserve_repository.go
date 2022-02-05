@@ -77,8 +77,9 @@ func (r ReserveRepository) Update(id string, upReserve reserves.Reserve) *errors
 }
 
 func (r ReserveRepository) Delete(id string) *errors.ApiError {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
-	err := r.DB.Remove(tx, &reserves.Reserve{})
+	var reserve reserves.Reserve
+	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id)).Find(&reserve)
+	err := r.DB.Remove(tx, &reserve)
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

@@ -23,7 +23,7 @@ func (s *RegistryGRPCServer) Reserve(ctx context.Context, rsv *reserve.ReserveRe
 		return &reserve.ReserveResponse{Reserved: false}, errors.New(err.Error)
 	}
 	switch rsv.Deleted {
-	case true:
+	case false:
 		registry.Reserved = true
 		registry.Available = false
 	default:
