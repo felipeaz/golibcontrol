@@ -9,7 +9,6 @@ import (
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
 	"net/http"
-	"strconv"
 )
 
 // LendingRepository is responsible for getting/saving information from DB.
@@ -72,10 +71,6 @@ func (r LendingRepository) Find(id string) (lending.Lending, *errors.ApiError) {
 
 // Create persist a lending to the DB.
 func (r LendingRepository) Create(lendObj lending.Lending) (*lending.Lending, *errors.ApiError) {
-	apiError := r.beforeCreate(lendObj.StudentID, lendObj.BookID)
-	if apiError != nil {
-		return nil, apiError
-	}
 	err := r.DB.Persist(&lendObj)
 	if err != nil {
 		if errorsx.Is(err, lending.BookUnavailableError) {
@@ -120,29 +115,6 @@ func (r LendingRepository) Delete(id string) *errors.ApiError {
 			Status:  r.DB.GetErrorStatusCode(err),
 			Message: errors.DeleteFailMessage,
 			Error:   err.Error(),
-		}
-	}
-	return nil
-}
-
-// BeforeCreate validate if the book is already lent.
-func (r LendingRepository) beforeCreate(studentId, bookId uint) *errors.ApiError {
-	tx := r.DB.Where(nil, fmt.Sprintf("book_id = %s OR student_id = %s",
-		strconv.Itoa(int(bookId)),
-		strconv.Itoa(int(studentId)),
-	))
-	result, err := r.DB.Find(tx, &lending.Lending{})
-	if err != nil {
-		return &errors.ApiError{
-			Status:  r.DB.GetErrorStatusCode(err),
-			Message: errors.FailMessage,
-			Error:   err.Error(),
-		}
-	}
-	if result != nil {
-		return &errors.ApiError{
-			Status: r.DB.GetErrorStatusCode(err),
-			Error:  errors.LendingNotAvailableError,
 		}
 	}
 	return nil

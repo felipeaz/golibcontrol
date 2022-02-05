@@ -10,6 +10,7 @@ type Registry struct {
 	BookID         uint      `json:"bookId" gorm:"not null"`
 	RegistryNumber int       `json:"registryNumber" gorm:"not null;unique"`
 	Available      bool      `json:"available"`
+	Reserved       bool      `json:"reserved"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 }
@@ -22,6 +23,7 @@ type Filter struct {
 	BookID         string `form:"bookId,omitempty" column:"book_registry_numbers.book_id" array:"false"`
 	RegistryNumber string `form:"registryNumber,omitempty" column:"book_registry_numbers.registry_number" array:"false"`
 	Available      string `form:"available,omitempty" column:"book_registry_numbers.available" array:"false"`
+	Reserved       string `form:"reserved,omitempty" column:"book_registry_numbers.reserved" array:"false"`
 }
 
 func (f Filter) GetFieldNames() []string {

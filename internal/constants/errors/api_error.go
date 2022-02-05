@@ -10,7 +10,6 @@ const (
 	FailedToParseObj                  = "Failed on object conversion"
 	FailedToCreateBookCategoryMessage = "Failed to create book category"
 
-	LendingNotAvailableError              = "lending not available"
 	FailedToStoreAuthenticationKeyOnCache = "Failed to store authentication key on cache"
 	FailedToGetAuthenticationOnCache      = "Failed to get authentication on cache"
 	FailedToParseAuthenticationFromCache  = "Failed to parse authentication from cache"

@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	BookUnavailableError = errorsx.New("book unavailable")
+	BookUnavailableError    = errorsx.New("book unavailable")
+	StudentHasActiveLending = errorsx.New("student already have an active lending")
 )
 
 // Lending contains all Lending's table properties.
@@ -36,8 +37,25 @@ func (l *Lending) BeforeDelete(tx *gorm.DB) error {
 }
 
 func (l *Lending) BeforeCreate(tx *gorm.DB) error {
-	res := tx.Find(&registries.Registry{}, "registry_number = ? AND available = ?", l.RegistryNumber, true)
-	if res.RowsAffected == 0 {
+	var respLending Lending
+	resp := tx.Find(&respLending, "registry_number = ? OR student_id = ?", l.RegistryNumber, l.StudentID)
+	if resp.Error != nil {
+		return resp.Error
+	}
+	if resp.RowsAffected != 0 {
+		switch {
+		case respLending.StudentID == l.StudentID:
+			return StudentHasActiveLending
+		case respLending.RegistryNumber == l.RegistryNumber:
+			return BookUnavailableError
+		}
+	}
+
+	resp = tx.Find(&registries.Registry{}, "registry_number = ? AND available = ?", l.RegistryNumber, true)
+	if resp.Error != nil {
+		return resp.Error
+	}
+	if resp.RowsAffected == 0 {
 		return BookUnavailableError
 	}
 	return nil
