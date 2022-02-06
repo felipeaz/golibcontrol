@@ -30,12 +30,15 @@ func (b Book) TableName() string {
 
 func (b *Book) AfterFind(tx *gorm.DB) error {
 	copies := 0
+	var isAvailable bool
 	for _, c := range b.Registry {
 		if c.Available {
 			copies++
+			isAvailable = true
 		}
 	}
 	b.AvailableCopies = copies
+	b.Available = isAvailable
 	return nil
 }
 
