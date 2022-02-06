@@ -16,7 +16,7 @@ type Account struct {
 	FirstName      string    `json:"firstName"`
 	LastName       string    `json:"lastName"`
 	Phone          string    `json:"phone"`
-	StudentAccount bool      `json:"studentAccount" gorm:"<-:create;default:true"`
+	StudentAccount bool      `json:"studentAccount" gorm:"<-:create;default:false"`
 }
 
 func (a Account) TableName() string {
