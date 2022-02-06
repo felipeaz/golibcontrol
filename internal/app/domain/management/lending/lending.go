@@ -51,13 +51,14 @@ func (l *Lending) BeforeCreate(tx *gorm.DB) error {
 		}
 	}
 
-	resp = tx.Find(&registries.Registry{}, "registry_number = ? AND available = ?", l.RegistryNumber, true)
+	resp = tx.Find(&registries.Registry{}, "registry_number = ?", l.RegistryNumber)
 	if resp.Error != nil {
 		return resp.Error
 	}
 	if resp.RowsAffected == 0 {
 		return BookUnavailableError
 	}
+
 	return nil
 }
 
