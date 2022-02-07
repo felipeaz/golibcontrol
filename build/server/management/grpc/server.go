@@ -1,22 +1,36 @@
 package grpc
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/books"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
-	grpcserver "github.com/FelipeAz/golibcontrol/internal/app/management/registries/grpc"
-	reserve "github.com/FelipeAz/golibcontrol/internal/app/plugins/grpc"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
+	bookGRPC "github.com/FelipeAz/golibcontrol/internal/app/management/books/grpc"
+	registryGRPC "github.com/FelipeAz/golibcontrol/internal/app/management/registries/grpc"
+	studentGRPC "github.com/FelipeAz/golibcontrol/internal/app/management/students/grpc"
+	grpcService "github.com/FelipeAz/golibcontrol/internal/app/plugins/grpc"
 	"google.golang.org/grpc"
 	"net"
 )
 
-func Start(registryModule registries.Module) error {
+type Modules struct {
+	RegistryModule registries.Module
+	BookModule     books.Module
+	StudentModule  students.Module
+}
+
+func Start(modules Modules) error {
 	listener, err := net.Listen("tcp", ":4040")
 	if err != nil {
 		return err
 	}
 
-	grpcSv := grpcserver.NewRegistryGRPCServer(registryModule)
+	registryGRPCServer := registryGRPC.NewRegistryGRPCServer(modules.RegistryModule)
+	bookGRPCServer := bookGRPC.NewBookGRPCServer(modules.BookModule)
+	studentGRPCServer := studentGRPC.NewStudentGRPCServer(modules.StudentModule)
 	sv := grpc.NewServer()
-	reserve.RegisterReserveServer(sv, grpcSv)
+	grpcService.RegisterReserveServer(sv, registryGRPCServer)
+	grpcService.RegisterGetBookInfoServer(sv, bookGRPCServer)
+	grpcService.RegisterGetStudentInfoServer(sv, studentGRPCServer)
 
 	if err = sv.Serve(listener); err != nil {
 		return err

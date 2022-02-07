@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/registries"
-	reserve "github.com/FelipeAz/golibcontrol/internal/app/plugins/grpc"
+	"github.com/FelipeAz/golibcontrol/internal/app/plugins/grpc"
 )
 
 type RegistryGRPCServer struct {
@@ -17,10 +17,10 @@ func NewRegistryGRPCServer(module registries.Module) *RegistryGRPCServer {
 	}
 }
 
-func (s *RegistryGRPCServer) Reserve(ctx context.Context, rsv *reserve.ReserveRequest) (*reserve.ReserveResponse, error) {
+func (s *RegistryGRPCServer) Reserve(ctx context.Context, rsv *grpc.ReserveRequest) (*grpc.ReserveResponse, error) {
 	registry, err := s.RegistryModule.Find(rsv.GetRegistryNumber())
 	if err != nil {
-		return &reserve.ReserveResponse{Reserved: false}, errors.New(err.Error)
+		return &grpc.ReserveResponse{Reserved: false}, errors.New(err.Error)
 	}
 	switch rsv.Deleted {
 	case false:
@@ -32,7 +32,7 @@ func (s *RegistryGRPCServer) Reserve(ctx context.Context, rsv *reserve.ReserveRe
 	}
 	err = s.RegistryModule.Update(rsv.GetRegistryNumber(), registry)
 	if err != nil {
-		return &reserve.ReserveResponse{Reserved: false}, errors.New(err.Error)
+		return &grpc.ReserveResponse{Reserved: false}, errors.New(err.Error)
 	}
-	return &reserve.ReserveResponse{Reserved: true}, nil
+	return &grpc.ReserveResponse{Reserved: true}, nil
 }

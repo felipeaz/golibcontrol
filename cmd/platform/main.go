@@ -16,12 +16,13 @@ const (
 
 var (
 	envs = map[string]string{
-		"PLATFORM_DB_USER":     "",
-		"PLATFORM_DB_PASSWORD": "",
-		"PLATFORM_DB_HOST":     "",
-		"PLATFORM_DB_PORT":     "",
-		"PLATFORM_DB_DATABASE": "",
-		"LOG_FILE":             "",
+		"PLATFORM_DB_USER":            "",
+		"PLATFORM_DB_PASSWORD":        "",
+		"PLATFORM_DB_HOST":            "",
+		"PLATFORM_DB_PORT":            "",
+		"PLATFORM_DB_DATABASE":        "",
+		"LOG_FILE":                    "",
+		"MANAGEMENT_GRPC_SERVER_HOST": "",
 	}
 )
 
@@ -29,7 +30,7 @@ func init() {
 	for env := range envs {
 		var exist bool
 		if envs[env], exist = os.LookupEnv(env); !exist {
-			log.Fatalf("missing environment variable")
+			log.Fatalf("missing environment variable: %s", env)
 		}
 	}
 }

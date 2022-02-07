@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "./internal/app/plugins/grpc";
+
+service GetBookInfo {
+  rpc GetBookInfo(GetBookRequest) returns (GetBookResponse) {}
+}
+
+message GetBookRequest {
+  string id = 1;
+  string registryNumber = 2;
+}
+
+message GetBookResponse {
+  string title = 1;
+  string author = 2;
+  string image = 3;
+}

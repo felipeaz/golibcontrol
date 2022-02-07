@@ -46,7 +46,11 @@ func Start(dbService database.GORMServiceInterface, log logger.LogInterface) (er
 	lHandler := lendingHandler.NewLendingHandler(lModule)
 
 	go func() {
-		err = grpc.Start(rModule)
+		err = grpc.Start(grpc.Modules{
+			RegistryModule: rModule,
+			BookModule:     bModule,
+			StudentModule:  sModule,
+		})
 		if err != nil {
 			panic(err)
 		}

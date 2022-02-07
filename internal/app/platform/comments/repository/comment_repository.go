@@ -19,7 +19,8 @@ func NewCommentRepository(db database.GORMServiceInterface) CommentRepository {
 }
 
 func (r CommentRepository) Get(bookId string) ([]comments.Comment, *errors.ApiError) {
-	tx := r.DB.Where(nil, fmt.Sprintf("book_id = %s", bookId))
+	tx := r.DB.Preload("Reply")
+	tx = r.DB.Where(tx, fmt.Sprintf("book_id = %s", bookId))
 	result, err := r.DB.Find(tx, &[]comments.Comment{})
 	if err != nil {
 		return nil, &errors.ApiError{
@@ -32,7 +33,8 @@ func (r CommentRepository) Get(bookId string) ([]comments.Comment, *errors.ApiEr
 }
 
 func (r CommentRepository) Find(id string) (comments.Comment, *errors.ApiError) {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	tx := r.DB.Preload("Reply")
+	tx = r.DB.Where(tx, fmt.Sprintf("id = %s", id))
 	result, err := r.DB.FindOne(tx, &comments.Comment{})
 	if err != nil {
 		return comments.Comment{}, &errors.ApiError{
