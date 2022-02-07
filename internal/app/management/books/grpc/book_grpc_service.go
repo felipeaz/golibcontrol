@@ -45,6 +45,7 @@ func (s *BookGRPCServer) GetBookInfo(ctx context.Context, req *grpc.GetBookReque
 	}
 
 	return &grpc.GetBookResponse{
+		Id:     int32(book.ID),
 		Title:  book.Title,
 		Author: book.Author,
 		Image:  book.Image,
