@@ -1,25 +1,53 @@
 package reviews
 
 import (
+	"context"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/grpc"
+	grpcServer "github.com/FelipeAz/golibcontrol/internal/app/plugins/grpc"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"gorm.io/gorm"
 	"math"
+	"strconv"
 	"time"
 )
 
+var (
+	grpcService *grpc.Server
+)
+
 type Review struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	BookId    uint      `json:"bookId"`
-	UserId    uint      `json:"userId"`
-	Rating    int       `json:"rating" binding:"required"`
-	AvgReview float64   `json:"avgReview"`
-	Title     string    `json:"title"`
-	Review    string    `json:"review"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID        uint        `json:"id" gorm:"primaryKey"`
+	BookId    uint        `json:"bookId"`
+	UserId    uint        `json:"userId"`
+	Rating    int         `json:"rating" binding:"required"`
+	AvgReview float64     `json:"avgReview"`
+	Title     string      `json:"title"`
+	Review    string      `json:"review"`
+	Book      interface{} `json:"book" gorm:"-"`
+	Student   interface{} `json:"student" gorm:"-"`
+	CreatedAt time.Time   `json:"createdAt"`
+	UpdatedAt time.Time   `json:"updatedAt"`
 }
 
 func (r Review) TableName() string {
 	return "reviews"
+}
+
+func (r *Review) AfterFind(tx *gorm.DB) (err error) {
+	ctx := context.Background()
+	r.Book, err = grpcService.GetBookInfo(ctx, &grpcServer.GetBookRequest{
+		Id: strconv.Itoa(int(r.BookId)),
+	})
+	if err != nil {
+		return err
+	}
+	r.Student, err = grpcService.GetStudentInfo(ctx, &grpcServer.GetStudentRequest{
+		Id: strconv.Itoa(int(r.UserId)),
+	})
+	if err != nil {
+		return err
+	}
+	return
 }
 
 type Module interface {

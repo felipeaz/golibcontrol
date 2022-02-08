@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.19.4
-// source: internal/app/plugins/grpc/reserve.proto
+// source: reserve.proto
 
 package grpc
 
@@ -100,5 +100,5 @@ var Reserve_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "internal/app/plugins/grpc/reserve.proto",
+	Metadata: "reserve.proto",
 }

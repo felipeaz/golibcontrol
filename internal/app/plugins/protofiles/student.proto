@@ -1,0 +1,16 @@
+syntax = "proto3";
+option go_package = "./internal/app/plugins/grpc";
+
+service GetStudentInfo {
+  rpc GetStudentInfo(GetStudentRequest) returns (GetStudentResponse) {}
+}
+
+message GetStudentRequest {
+  string id = 1;
+}
+
+message GetStudentResponse {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+}

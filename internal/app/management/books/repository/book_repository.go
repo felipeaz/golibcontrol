@@ -55,15 +55,19 @@ func (r BookRepository) GetByFilter(filter books.Filter) ([]books.Book, *errors.
 	queryString := filters.BuildQueryFromFilter(filter)
 
 	tx := r.DB.Preload("BookCategories", "BookCategories.Category", "Registry")
+	if filter.Categories != "" {
+		tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
+			books.BookCategories{}.TableName(),
+			books.BookCategories{}.TableName(),
+			books.Book{}.TableName()))
+	}
+	if filter.RegistryNumber != "" {
+		tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
+			registry.Registry{}.TableName(),
+			registry.Registry{}.TableName(),
+			books.Book{}.TableName()))
+	}
 	tx = r.DB.Where(tx, queryString)
-	tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
-		books.BookCategories{}.TableName(),
-		books.BookCategories{}.TableName(),
-		books.Book{}.TableName()))
-	tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.book_id = %s.id",
-		registry.Registry{}.TableName(),
-		registry.Registry{}.TableName(),
-		books.Book{}.TableName()))
 	tx = r.DB.Group(tx, fmt.Sprintf("%s.id", books.Book{}.TableName()))
 
 	result, err := r.DB.Find(tx, &[]books.Book{})

@@ -2,26 +2,27 @@ package reserves
 
 import (
 	"context"
-	reserve "github.com/FelipeAz/golibcontrol/internal/app/plugins/grpc"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/grpc"
+	grpcServer "github.com/FelipeAz/golibcontrol/internal/app/plugins/grpc"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"gorm.io/gorm"
 	"strconv"
 	"time"
 )
 
 var (
-	grpcAddr = "management-service:4040"
+	grpcService *grpc.Server
 )
 
 type Reserve struct {
-	ID             uint      `json:"id" gorm:"primaryKey"`
-	UserId         uint      `json:"userId" gorm:"unique"`
-	RegistryNumber int       `json:"registryNumber" gorm:"unique"`
-	RetrieveAt     time.Time `json:"retrieveAt"`
-	CreatedAt      time.Time `json:"createdAt"`
-	UpdatedAt      time.Time `json:"updatedAt"`
+	ID             uint        `json:"id" gorm:"primaryKey"`
+	UserId         uint        `json:"userId" gorm:"unique"`
+	RegistryNumber int         `json:"registryNumber" gorm:"unique"`
+	RetrieveAt     time.Time   `json:"retrieveAt"`
+	Book           interface{} `json:"book" gorm:"-"`
+	Student        interface{} `json:"student" gorm:"-"`
+	CreatedAt      time.Time   `json:"createdAt"`
+	UpdatedAt      time.Time   `json:"updatedAt"`
 }
 
 func (r Reserve) TableName() string {
@@ -30,8 +31,7 @@ func (r Reserve) TableName() string {
 
 func (r *Reserve) BeforeCreate(tx *gorm.DB) error {
 	ctx := context.Background()
-	cli, err := connectToGRPCClient()
-	resp, err := cli.Reserve(ctx, &reserve.ReserveRequest{
+	resp, err := grpcService.Reserve(ctx, &grpcServer.ReserveRequest{
 		RegistryNumber: strconv.Itoa(r.RegistryNumber),
 		Deleted:        false,
 	})
@@ -43,8 +43,7 @@ func (r *Reserve) BeforeCreate(tx *gorm.DB) error {
 
 func (r *Reserve) BeforeDelete(tx *gorm.DB) error {
 	ctx := context.Background()
-	cli, err := connectToGRPCClient()
-	resp, err := cli.Reserve(ctx, &reserve.ReserveRequest{
+	resp, err := grpcService.Reserve(ctx, &grpcServer.ReserveRequest{
 		RegistryNumber: strconv.Itoa(r.RegistryNumber),
 		Deleted:        true,
 	})
@@ -52,6 +51,23 @@ func (r *Reserve) BeforeDelete(tx *gorm.DB) error {
 		return err
 	}
 	return nil
+}
+
+func (r *Reserve) AfterFind(tx *gorm.DB) (err error) {
+	ctx := context.Background()
+	r.Book, err = grpcService.GetBookInfo(ctx, &grpcServer.GetBookRequest{
+		RegistryNumber: strconv.Itoa(r.RegistryNumber),
+	})
+	if err != nil {
+		return err
+	}
+	r.Student, err = grpcService.GetStudentInfo(ctx, &grpcServer.GetStudentRequest{
+		Id: strconv.Itoa(int(r.UserId)),
+	})
+	if err != nil {
+		return err
+	}
+	return
 }
 
 type Module interface {
@@ -68,13 +84,4 @@ type Repository interface {
 	Create(reserve Reserve) (*Reserve, *errors.ApiError)
 	Update(id string, upReserve Reserve) *errors.ApiError
 	Delete(id string) *errors.ApiError
-}
-
-func connectToGRPCClient() (reserve.ReserveClient, error) {
-	opts := grpc.WithTransportCredentials(insecure.NewCredentials())
-	cc, err := grpc.Dial(grpcAddr, opts)
-	if err != nil {
-		return nil, err
-	}
-	return reserve.NewReserveClient(cc), nil
 }
