@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/management/students"
+	"github.com/FelipeAz/golibcontrol/internal/app/filters"
 	"github.com/FelipeAz/golibcontrol/internal/app/management/students/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
@@ -22,6 +23,24 @@ func NewStudentRepository(db database.GORMServiceInterface) StudentRepository {
 // Get returns all students.
 func (r StudentRepository) Get() ([]students.Student, *errors.ApiError) {
 	result, err := r.DB.Find(nil, &[]students.Student{})
+	if err != nil {
+		return nil, &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return pkg.ParseToSliceStudentObj(result)
+}
+
+// GetByFilter return student from query string.
+func (r StudentRepository) GetByFilter(filter students.Filter) ([]students.Student, *errors.ApiError) {
+	queryString := filters.BuildQueryFromFilter(filter)
+
+	tx := r.DB.Where(nil, queryString)
+	tx = r.DB.Group(tx, fmt.Sprintf("%s.id", students.Student{}.TableName()))
+
+	result, err := r.DB.Find(tx, &[]students.Student{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

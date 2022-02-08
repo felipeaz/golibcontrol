@@ -30,6 +30,10 @@ func (m StudentModule) Get() ([]students.Student, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
+func (m StudentModule) GetByFilter(filter students.Filter) ([]students.Student, *errors.ApiError) {
+	return m.Repository.GetByFilter(filter)
+}
+
 // Find return one student by ID.
 func (m StudentModule) Find(id string) (students.Student, *errors.ApiError) {
 	return m.Repository.Find(id)

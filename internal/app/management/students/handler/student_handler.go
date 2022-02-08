@@ -23,6 +23,22 @@ func NewStudentHandler(module students.Module) StudentHandler {
 
 // Get returns all students.
 func (h StudentHandler) Get(c *gin.Context) {
+	var params students.Filter
+	err := c.Bind(&params)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "invalid parameters")
+	}
+	if params != (students.Filter{}) {
+		resp, apiError := h.Module.GetByFilter(params)
+		if apiError != nil {
+			c.JSON(apiError.Status, apiError)
+			return
+		}
+
+		c.JSON(http.StatusOK, resp)
+		return
+	}
+
 	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)

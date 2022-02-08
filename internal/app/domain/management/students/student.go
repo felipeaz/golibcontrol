@@ -35,6 +35,17 @@ func (s Student) GetLastName() string {
 	return nameArr[len(nameArr)-1]
 }
 
+type Filter struct {
+	AccountId string `form:"accountId,omitempty" column:"students.account_id" array:"false"`
+	Name      string `form:"name,omitempty" column:"students.name" array:"false" like:"true"`
+	Email     string `form:"email,omitempty" column:"students.email" array:"false"`
+	Birthday  bool   `form:"available" column:"students.birthday" array:"false"`
+}
+
+func (f Filter) GetFieldNames() []string {
+	return []string{"AccountId", "Name", "Email", "Birthday"}
+}
+
 type Account struct {
 	Email          string `json:"email" binding:"required"`
 	Password       string `json:"password" binding:"required"`
@@ -58,6 +69,7 @@ type AccountResponse struct {
 
 type Module interface {
 	Get() ([]Student, *errors.ApiError)
+	GetByFilter(filter Filter) ([]Student, *errors.ApiError)
 	Find(id string) (Student, *errors.ApiError)
 	Create(student Student, accountHost, accountRoute, tokenName, tokenValue string) (*Student, *errors.ApiError)
 	Update(id string, upStudent Student) *errors.ApiError
@@ -66,6 +78,7 @@ type Module interface {
 
 type Repository interface {
 	Get() (students []Student, apiError *errors.ApiError)
+	GetByFilter(filter Filter) ([]Student, *errors.ApiError)
 	Find(id string) (student Student, apiError *errors.ApiError)
 	Create(student Student) (*Student, *errors.ApiError)
 	Update(id string, upStudent Student) *errors.ApiError

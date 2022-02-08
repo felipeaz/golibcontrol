@@ -52,12 +52,12 @@ type Module interface {
 }
 
 type Repository interface {
-	Get() (books []Book, apiError *errors.ApiError)
-	GetByFilter(filter Filter) (books []Book, apiError *errors.ApiError)
-	Find(id string) (book Book, apiError *errors.ApiError)
+	Get() ([]Book, *errors.ApiError)
+	GetByFilter(filter Filter) ([]Book, *errors.ApiError)
+	Find(id string) (Book, *errors.ApiError)
 	Create(book Book) (*Book, *errors.ApiError)
 	Update(id string, upBook Book) *errors.ApiError
-	Delete(id string) (apiError *errors.ApiError)
+	Delete(id string) *errors.ApiError
 }
 
 type BookCategories struct {
