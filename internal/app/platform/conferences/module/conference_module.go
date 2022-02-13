@@ -37,3 +37,11 @@ func (m ConferenceModule) Update(id string, upConference conferences.Conference)
 func (m ConferenceModule) Delete(id string) *errors.ApiError {
 	return m.Repository.Delete(id)
 }
+
+func (m ConferenceModule) Subscribe(subscription conferences.ConferenceSubscribers) (*conferences.ConferenceSubscribers, *errors.ApiError) {
+	return m.Repository.Subscribe(subscription)
+}
+
+func (m ConferenceModule) Unsubscribe(subscription conferences.ConferenceSubscribers) *errors.ApiError {
+	return m.Repository.Unsubscribe(subscription)
+}

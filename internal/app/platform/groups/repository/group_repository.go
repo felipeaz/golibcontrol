@@ -19,7 +19,8 @@ func NewGroupRepository(db database.GORMServiceInterface) GroupRepository {
 }
 
 func (r GroupRepository) Get() ([]groups.Group, *errors.ApiError) {
-	result, err := r.DB.Find(nil, &[]groups.Group{})
+	tx := r.DB.Preload("GroupSubscribers")
+	result, err := r.DB.Find(tx, &[]groups.Group{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -31,7 +32,8 @@ func (r GroupRepository) Get() ([]groups.Group, *errors.ApiError) {
 }
 
 func (r GroupRepository) Find(id string) (groups.Group, *errors.ApiError) {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	tx := r.DB.Preload("GroupSubscribers")
+	tx = r.DB.Where(tx, fmt.Sprintf("id = %s", id))
 	result, err := r.DB.FindOne(tx, &groups.Group{})
 	if err != nil {
 		return groups.Group{}, &errors.ApiError{
@@ -71,6 +73,32 @@ func (r GroupRepository) Update(id string, upGroup groups.Group) *errors.ApiErro
 func (r GroupRepository) Delete(id string) *errors.ApiError {
 	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
 	err := r.DB.Remove(tx, &groups.Group{})
+	if err != nil {
+		return &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
+}
+
+func (r GroupRepository) Subscribe(subscription groups.GroupSubscribers) (*groups.GroupSubscribers, *errors.ApiError) {
+	err := r.DB.Persist(&subscription)
+	if err != nil {
+		return nil, &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return &subscription, nil
+}
+
+func (r GroupRepository) Unsubscribe(subscription groups.GroupSubscribers) *errors.ApiError {
+	tx := r.DB.Where(nil, fmt.Sprintf("student_id = %d AND group_id = %d",
+		subscription.StudentID, subscription.GroupID))
+	err := r.DB.Remove(tx, &groups.GroupSubscribers{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

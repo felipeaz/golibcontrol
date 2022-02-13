@@ -6,13 +6,14 @@ import (
 )
 
 type Group struct {
-	ID          uint      `json:"id" gorm:"primaryKey"`
-	Name        string    `json:"name" binding:"required"`
-	Description string    `json:"description" binding:"required"`
-	Status      string    `json:"status" binding:"required"`
-	MeetingHash string    `json:"meetingHash"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
+	ID               uint               `json:"id" gorm:"primaryKey"`
+	Name             string             `json:"name" binding:"required"`
+	Description      string             `json:"description" binding:"required"`
+	Status           string             `json:"status" binding:"required"`
+	MeetingHash      string             `json:"meetingHash"`
+	GroupSubscribers []GroupSubscribers `json:"subscribers"`
+	CreatedAt        time.Time          `json:"createdAt"`
+	UpdatedAt        time.Time          `json:"updatedAt"`
 }
 
 func (g Group) TableName() string {
@@ -25,6 +26,8 @@ type Module interface {
 	Create(group Group) (*Group, *errors.ApiError)
 	Update(id string, upGroup Group) *errors.ApiError
 	Delete(id string) *errors.ApiError
+	Subscribe(subscription GroupSubscribers) (*GroupSubscribers, *errors.ApiError)
+	Unsubscribe(subscription GroupSubscribers) *errors.ApiError
 }
 
 type GroupRepositoryInterface interface {
@@ -33,4 +36,15 @@ type GroupRepositoryInterface interface {
 	Create(group Group) (*Group, *errors.ApiError)
 	Update(id string, upGroup Group) *errors.ApiError
 	Delete(id string) *errors.ApiError
+	Subscribe(subscription GroupSubscribers) (*GroupSubscribers, *errors.ApiError)
+	Unsubscribe(subscription GroupSubscribers) *errors.ApiError
+}
+
+type GroupSubscribers struct {
+	GroupID   uint `json:"groupId"`
+	StudentID uint `json:"studentId" binding:"required"`
+}
+
+func (s GroupSubscribers) TableName() string {
+	return "group_subscribers"
 }

@@ -58,6 +58,8 @@ func (db *DBHandler) autoMigrateTables() error {
 		&reserveModel.Reserve{},
 		&reviewModel.Review{},
 		&conferenceModel.Conference{},
+		&conferenceModel.ConferenceSubscribers{},
 		&groupModel.Group{},
+		&groupModel.GroupSubscribers{},
 	)
 }

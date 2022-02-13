@@ -19,7 +19,8 @@ func NewConferenceRepository(db database.GORMServiceInterface) ConferenceReposit
 }
 
 func (r ConferenceRepository) Get() ([]conferences.Conference, *errors.ApiError) {
-	result, err := r.DB.Find(nil, &[]conferences.Conference{})
+	tx := r.DB.Preload("ConferenceSubscribers")
+	result, err := r.DB.Find(tx, &[]conferences.Conference{})
 	if err != nil {
 		return nil, &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),
@@ -31,7 +32,8 @@ func (r ConferenceRepository) Get() ([]conferences.Conference, *errors.ApiError)
 }
 
 func (r ConferenceRepository) Find(id string) (conferences.Conference, *errors.ApiError) {
-	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
+	tx := r.DB.Preload("ConferenceSubscribers")
+	tx = r.DB.Where(tx, fmt.Sprintf("id = %s", id))
 	result, err := r.DB.FindOne(tx, &conferences.Conference{})
 	if err != nil {
 		return conferences.Conference{}, &errors.ApiError{
@@ -71,6 +73,32 @@ func (r ConferenceRepository) Update(id string, upConference conferences.Confere
 func (r ConferenceRepository) Delete(id string) *errors.ApiError {
 	tx := r.DB.Where(nil, fmt.Sprintf("id = %s", id))
 	err := r.DB.Remove(tx, &conferences.Conference{})
+	if err != nil {
+		return &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.DeleteFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return nil
+}
+
+func (r ConferenceRepository) Subscribe(subscription conferences.ConferenceSubscribers) (*conferences.ConferenceSubscribers, *errors.ApiError) {
+	err := r.DB.Persist(&subscription)
+	if err != nil {
+		return nil, &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.CreateFailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return &subscription, nil
+}
+
+func (r ConferenceRepository) Unsubscribe(subscription conferences.ConferenceSubscribers) *errors.ApiError {
+	tx := r.DB.Where(nil, fmt.Sprintf("student_id = %d AND conference_id = %d",
+		subscription.StudentID, subscription.ConferenceID))
+	err := r.DB.Remove(tx, &conferences.ConferenceSubscribers{})
 	if err != nil {
 		return &errors.ApiError{
 			Status:  r.DB.GetErrorStatusCode(err),

@@ -83,11 +83,39 @@ func AssociateConferenceInput(c *gin.Context) (conference conferenceModel.Confer
 	return
 }
 
+// AssociateConferenceSubscriberInput is responsible for associating the params to the user model.
+func AssociateConferenceSubscriberInput(c *gin.Context) (conference conferenceModel.ConferenceSubscribers, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&conference)
+	if err != nil {
+		return conferenceModel.ConferenceSubscribers{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
 // AssociateGroupInput is responsible for associating the params to the user model.
 func AssociateGroupInput(c *gin.Context) (group groupModel.Group, apiError *errors.ApiError) {
 	err := c.ShouldBindJSON(&group)
 	if err != nil {
 		return groupModel.Group{}, &errors.ApiError{
+			Status:  http.StatusBadRequest,
+			Message: errors.FailedFieldsAssociationMessage,
+			Error:   err.Error(),
+		}
+	}
+
+	return
+}
+
+// AssociateGroupSubscriberInput is responsible for associating the params to the user model.
+func AssociateGroupSubscriberInput(c *gin.Context) (group groupModel.GroupSubscribers, apiError *errors.ApiError) {
+	err := c.ShouldBindJSON(&group)
+	if err != nil {
+		return groupModel.GroupSubscribers{}, &errors.ApiError{
 			Status:  http.StatusBadRequest,
 			Message: errors.FailedFieldsAssociationMessage,
 			Error:   err.Error(),

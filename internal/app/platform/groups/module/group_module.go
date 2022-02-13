@@ -37,3 +37,11 @@ func (m GroupModule) Update(id string, upGroup groups.Group) *errors.ApiError {
 func (m GroupModule) Delete(id string) *errors.ApiError {
 	return m.Repository.Delete(id)
 }
+
+func (m GroupModule) Subscribe(subscription groups.GroupSubscribers) (*groups.GroupSubscribers, *errors.ApiError) {
+	return m.Repository.Subscribe(subscription)
+}
+
+func (m GroupModule) Unsubscribe(subscription groups.GroupSubscribers) *errors.ApiError {
+	return m.Repository.Unsubscribe(subscription)
+}

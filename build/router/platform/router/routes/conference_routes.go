@@ -10,6 +10,8 @@ func ConferenceRoutes(rg *gin.RouterGroup, conferenceHandler handler.ConferenceH
 	r.GET("", conferenceHandler.Get)
 	r.GET("/:id", conferenceHandler.Find)
 	r.POST("", conferenceHandler.Create)
+	r.POST("/:id/subscribe", conferenceHandler.Subscribe)
+	r.POST("/:id/unsubscribe", conferenceHandler.Unsubscribe)
 	r.PUT("/:id", conferenceHandler.Update)
 	r.DELETE("/:id", conferenceHandler.Delete)
 }

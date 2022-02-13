@@ -1,6 +1,7 @@
 package handler
 
 import (
+	domainpkg "github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/pkg"
 	"net/http"
 
@@ -52,6 +53,48 @@ func (h ConferenceHandler) Create(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, resp)
+}
+
+func (h ConferenceHandler) Subscribe(c *gin.Context) {
+	subscription, apiError := pkg.AssociateConferenceSubscriberInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
+		return
+	}
+	id, err := domainpkg.ParseStringToId(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	subscription.ConferenceID = id
+	resp, apiError := h.Module.Subscribe(subscription)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
+		return
+	}
+
+	c.JSON(http.StatusCreated, resp)
+}
+
+func (h ConferenceHandler) Unsubscribe(c *gin.Context) {
+	subscription, apiError := pkg.AssociateConferenceSubscriberInput(c)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
+		return
+	}
+	id, err := domainpkg.ParseStringToId(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	subscription.ConferenceID = id
+	apiError = h.Module.Unsubscribe(subscription)
+	if apiError != nil {
+		c.JSON(apiError.Status, apiError)
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }
 
 func (h ConferenceHandler) Update(c *gin.Context) {
