@@ -1,6 +1,7 @@
 package students
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"gorm.io/gorm"
 	"strings"
@@ -33,6 +34,16 @@ func (s Student) GetFirstName() string {
 func (s Student) GetLastName() string {
 	nameArr := strings.Split(s.Name, " ")
 	return nameArr[len(nameArr)-1]
+}
+
+func (s *Student) BeforeCreate(tx *gorm.DB) error {
+	var err error
+	crypto := &pkg.Cryptor{}
+	s.Password, err = crypto.EncryptPassword(s.Password)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 type Filter struct {

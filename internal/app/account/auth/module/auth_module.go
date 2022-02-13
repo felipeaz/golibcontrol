@@ -6,6 +6,7 @@ import (
 	"github.com/FelipeAz/golibcontrol/infra/consumer/jwt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/auth"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/account/users"
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/constants/login"
 	"github.com/FelipeAz/golibcontrol/internal/consumer"
@@ -122,7 +123,7 @@ func (m AuthModule) authUser(credentials users.Account) (string, string, *errors
 		}
 	}
 
-	if account.Password != credentials.Password {
+	if !pkg.ComparePasswordAndHash(credentials.Password, account.Password) {
 		return "", "", &errors.ApiError{
 			Status:  http.StatusUnauthorized,
 			Message: login.FailMessage,

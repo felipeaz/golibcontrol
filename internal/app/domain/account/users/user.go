@@ -1,7 +1,9 @@
 package users
 
 import (
+	"github.com/FelipeAz/golibcontrol/internal/app/domain/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -21,6 +23,16 @@ type Account struct {
 
 func (a Account) TableName() string {
 	return "accounts"
+}
+
+func (a *Account) BeforeCreate(tx *gorm.DB) error {
+	var err error
+	crypto := &pkg.Cryptor{}
+	a.Password, err = crypto.EncryptPassword(a.Password)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 type Module interface {
