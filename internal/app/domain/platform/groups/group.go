@@ -6,14 +6,15 @@ import (
 )
 
 type Group struct {
-	ID               uint               `json:"id" gorm:"primaryKey"`
-	Name             string             `json:"name" binding:"required"`
-	Description      string             `json:"description" binding:"required"`
-	Status           string             `json:"status" binding:"required"`
-	MeetingHash      string             `json:"meetingHash"`
-	GroupSubscribers []GroupSubscribers `json:"subscribers"`
-	CreatedAt        time.Time          `json:"createdAt"`
-	UpdatedAt        time.Time          `json:"updatedAt"`
+	ID                 uint               `json:"id" gorm:"primaryKey"`
+	Name               string             `json:"name" binding:"required"`
+	Description        string             `json:"description" binding:"required"`
+	Status             string             `json:"status" binding:"required"`
+	MeetingHash        string             `json:"meetingHash"`
+	MeetingDescription string             `json:"meetingDescription"`
+	GroupSubscribers   []GroupSubscribers `json:"subscribers"`
+	CreatedAt          time.Time          `json:"createdAt"`
+	UpdatedAt          time.Time          `json:"updatedAt"`
 }
 
 func (g Group) TableName() string {
