@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"github.com/FelipeAz/golibcontrol/internal/app/domain/platform/groups"
+	"github.com/FelipeAz/golibcontrol/internal/app/filters"
 	"github.com/FelipeAz/golibcontrol/internal/app/platform/groups/pkg"
 	"github.com/FelipeAz/golibcontrol/internal/constants/errors"
 	"github.com/FelipeAz/golibcontrol/internal/database"
@@ -20,6 +21,30 @@ func NewGroupRepository(db database.GORMServiceInterface) GroupRepository {
 
 func (r GroupRepository) Get() ([]groups.Group, *errors.ApiError) {
 	tx := r.DB.Preload("GroupSubscribers")
+	result, err := r.DB.Find(tx, &[]groups.Group{})
+	if err != nil {
+		return nil, &errors.ApiError{
+			Status:  r.DB.GetErrorStatusCode(err),
+			Message: errors.FailMessage,
+			Error:   err.Error(),
+		}
+	}
+	return pkg.ParseToSliceGroupObj(result)
+}
+
+func (r GroupRepository) GetByFilter(filter groups.Filter) ([]groups.Group, *errors.ApiError) {
+	queryString := filters.BuildQueryFromFilter(filter)
+
+	tx := r.DB.Preload("GroupSubscribers")
+	if filter.StudentID != "" {
+		tx = r.DB.Join(tx, fmt.Sprintf("JOIN %s ON %s.group_id = %s.id",
+			groups.GroupSubscribers{}.TableName(),
+			groups.GroupSubscribers{}.TableName(),
+			groups.Group{}.TableName()))
+	}
+	tx = r.DB.Where(tx, queryString)
+	tx = r.DB.Group(tx, fmt.Sprintf("%s.id", groups.Group{}.TableName()))
+
 	result, err := r.DB.Find(tx, &[]groups.Group{})
 	if err != nil {
 		return nil, &errors.ApiError{
