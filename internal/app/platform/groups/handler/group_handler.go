@@ -20,6 +20,21 @@ func NewGroupHandler(module groups.Module) GroupHandler {
 }
 
 func (h GroupHandler) Get(c *gin.Context) {
+	var params groups.Filter
+	err := c.Bind(&params)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "invalid parameters")
+	}
+	if params != (groups.Filter{}) {
+		resp, apiError := h.Module.GetByFilter(params)
+		if apiError != nil {
+			c.JSON(apiError.Status, apiError)
+			return
+		}
+
+		c.JSON(http.StatusOK, resp)
+		return
+	}
 	resp, apiError := h.Module.Get()
 	if apiError != nil {
 		c.JSON(apiError.Status, apiError)

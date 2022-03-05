@@ -22,6 +22,10 @@ func (m GroupModule) Get() ([]groups.Group, *errors.ApiError) {
 	return m.Repository.Get()
 }
 
+func (m GroupModule) GetByFilter(filter groups.Filter) ([]groups.Group, *errors.ApiError) {
+	return m.Repository.GetByFilter(filter)
+}
+
 func (m GroupModule) Find(id string) (groups.Group, *errors.ApiError) {
 	return m.Repository.Find(id)
 }

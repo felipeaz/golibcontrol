@@ -21,8 +21,17 @@ func (g Group) TableName() string {
 	return "groups"
 }
 
+type Filter struct {
+	StudentID string `form:"studentId,omitempty" column:"group_subscribers.student_id" array:"false" like:"false"`
+}
+
+func (f Filter) GetFieldNames() []string {
+	return []string{"StudentID"}
+}
+
 type Module interface {
 	Get() ([]Group, *errors.ApiError)
+	GetByFilter(filter Filter) ([]Group, *errors.ApiError)
 	Find(id string) (Group, *errors.ApiError)
 	Create(group Group) (*Group, *errors.ApiError)
 	Update(id string, upGroup Group) *errors.ApiError
@@ -33,6 +42,7 @@ type Module interface {
 
 type GroupRepositoryInterface interface {
 	Get() ([]Group, *errors.ApiError)
+	GetByFilter(filter Filter) ([]Group, *errors.ApiError)
 	Find(id string) (Group, *errors.ApiError)
 	Create(group Group) (*Group, *errors.ApiError)
 	Update(id string, upGroup Group) *errors.ApiError
