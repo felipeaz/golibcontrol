@@ -49,6 +49,10 @@ Reference: `https://github.com/golang-standards/project-layout`
 
 The project follows the Hexagonal Architecture which allow us to isolate the dependencies, focus on a simplified code, focus on tests development and has an organized structure that includes better names for functions, packages and folders. You can also see more about the hexagonal architecture on the link bellow.
 
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/32846823/156942843-8dbf1811-83d5-4097-89cb-22dfd0c18e69.jpg" alt="hexagonal-architecture-design">
+</p>
+
 Reference: `https://idevoid.medium.com/stygis-golang-hexagonal-architecture-a2d89d01f84b`
 
 ### Flow
