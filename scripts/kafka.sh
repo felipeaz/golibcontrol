@@ -1,1 +1,0 @@
-docker-compose -f docker/kafka.yaml up --build
